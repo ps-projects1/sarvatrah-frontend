@@ -2,8 +2,7 @@
 
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import ContactCallBackSection from "../../components/holiday/Contactcallbacksection";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -119,7 +118,7 @@ interface HolidayPackagesResponse {
   };
 }
 
-const HolidayPage = () => {
+function HolidayContent() {
   const searchParams = useSearchParams();
   const urlSearchQuery = searchParams.get("search") || "";
   const router = useRouter();
@@ -134,10 +133,8 @@ const HolidayPage = () => {
   );
 
   const [priceRange, setPriceRange] = useState<[number, number]>([500, 50000]);
-  const [selectedPackageTypes, setSelectedPackageTypes] = useState<string[]>(
-    []
-  );
-  const [selectedSelectTypes, setSelectedSelectTypes] = useState<string[]>([]);
+  const [selectedPackageTypes] = useState<string[]>([]);
+  const [selectedSelectTypes] = useState<string[]>([]);
   const [minMaxPrice, setMinMaxPrice] = useState<{ min: number; max: number }>({
     min: 500,
     max: 50000,
@@ -174,13 +171,13 @@ const HolidayPage = () => {
     if (searchInput.trim()) {
       router.push(`/holiday?search=${encodeURIComponent(searchInput.trim())}`);
     } else {
-      router.push('/holiday');
+      router.push("/holiday");
     }
   };
 
   // Handle Enter key press in search input
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
@@ -318,7 +315,6 @@ const HolidayPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen ">
-      <Header />
       <main className="grow">
         {/* Hero Section */}
         <section className="relative overflow-hidden">
@@ -373,13 +369,14 @@ const HolidayPage = () => {
                     placeholder="Enter Destination or Package name"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
+                    onKeyDown={handleKeyPress}
                     className="w-full bg-transparent outline-none text-[14px] sm:text-[16px] placeholder:text-[#61666B] min-w-0"
                   />
                 </div>
                 <button
                   onClick={handleSearch}
-                  className="h-10 sm:h-12 rounded-full bg-[#2789FF] text-white px-4 sm:px-8 text-[13px] sm:text-[16px] font-medium hover:bg-[#1a73e8] transition-colors shrink-0 flex items-center justify-center gap-2">
+                  className="h-10 sm:h-12 rounded-full bg-[#2789FF] text-white px-4 sm:px-8 text-[13px] sm:text-[16px] font-medium hover:bg-[#1a73e8] transition-colors shrink-0 flex items-center justify-center gap-2"
+                >
                   <Search className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="hidden sm:inline">Search</span>
                   <span className="sm:hidden">Go</span>
@@ -412,7 +409,7 @@ const HolidayPage = () => {
                   step={100}
                   value={[priceRange[0], priceRange[1]]}
                   onValueChange={handlePriceChange}
-                  className="w-full [&_[role=slider]]:bg-[#2789FF] [&_[role=slider]]:border-[#2789FF] [&>span>span]:bg-[#2789FF]"
+                  className="w-full **:[[role=slider]]:bg-[#2789FF] **:[[role=slider]]:border-[#2789FF] [&>span>span]:bg-[#2789FF]"
                 />
                 <div className="flex justify-between mt-4 text-[12px] text-[#999FA8]">
                   <span>{formatPrice(minMaxPrice.min)}</span>
@@ -803,8 +800,25 @@ const HolidayPage = () => {
         {/* Contact Call Back Section */}
         <RequestCallBackSection />
       </main>
-      <Footer />
     </div>
+  );
+}
+
+const HolidayPage = () => {
+  return (
+    <>
+      <Header />
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          </div>
+        }
+      >
+        <HolidayContent />
+      </Suspense>
+      <Footer />
+    </>
   );
 };
 

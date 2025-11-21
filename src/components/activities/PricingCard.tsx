@@ -34,10 +34,8 @@ const ImprovedPricingCard = ({ activity }: PricingCardProps) => {
   const [numSeniors, setNumSeniors] = useState(0);
   const [numChildren, setNumChildren] = useState(0);
 
-  const lowestPrice =
-    activity.pricing?.length > 0
-      ? Math.min(...activity.pricing.map((p: any) => p.price))
-      : 0;
+  // Use pricePerPerson from new API structure
+  const lowestPrice = activity.pricePerPerson || activity.price || 0;
 
   const originalPrice = lowestPrice * 1.67;
   const discount = 40;
@@ -303,31 +301,50 @@ const ImprovedPricingCard = ({ activity }: PricingCardProps) => {
           Book Now
         </Link>
 
-        {/* Free Cancellation Info */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-3 flex items-start gap-2">
-          <div className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center shrink-0 mt-0.5">
-            <svg
-              className="w-3 h-3 text-white"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path d="M5 13l4 4L19 7"></path>
-            </svg>
+        {/* Cancellation Info */}
+        {activity?.cancellationPolicy && (
+          <div className={`border rounded-lg p-3 flex items-start gap-2 ${
+            activity.cancellationPolicy.isRefundable
+              ? 'bg-green-50 border-green-200'
+              : 'bg-red-50 border-red-200'
+          }`}>
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+              activity.cancellationPolicy.isRefundable
+                ? 'bg-green-600'
+                : 'bg-red-600'
+            }`}>
+              <svg
+                className="w-3 h-3 text-white"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {activity.cancellationPolicy.isRefundable ? (
+                  <path d="M5 13l4 4L19 7"></path>
+                ) : (
+                  <path d="M6 18L18 6M6 6l12 12"></path>
+                )}
+              </svg>
+            </div>
+            <div className="text-sm">
+              <span className="font-semibold text-gray-900">
+                {activity.cancellationPolicy.isRefundable
+                  ? `${activity.cancellationPolicy.refundPercentage}% Refundable`
+                  : 'Non-refundable'}
+              </span>
+              <span className="text-gray-700">
+                {" "}
+                {activity.cancellationPolicy.policyDescription ||
+                  (activity.cancellationPolicy.cancellationWindowHours
+                    ? `if canceled ${activity.cancellationPolicy.cancellationWindowHours} hours before the start`
+                    : '')}
+              </span>
+            </div>
           </div>
-          <div className="text-sm">
-            <span className="font-semibold text-gray-900">
-              Free cancellation
-            </span>
-            <span className="text-gray-700">
-              {" "}
-              up to 24 hours before the experience starts (local time)
-            </span>
-          </div>
-        </div>
+        )}
       </div>
     </>
   );

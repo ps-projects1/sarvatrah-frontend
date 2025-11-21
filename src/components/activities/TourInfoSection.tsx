@@ -10,38 +10,27 @@ interface TourInfoSectionProps {
 }
 
 const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
-  // Add this function inside your component
-  const getFirstImage = (activity: any) => {
-    try {
-      if (activity?.img_link && Array.isArray(activity.img_link)) {
-        const firstImg = activity.img_link[0];
+  // Helper function to format duration - handles both number and string formats
+  const formatDuration = (duration?: number | string) => {
+    if (!duration) return "TBD";
 
-        if (firstImg?.path) {
-          const path = firstImg.path;
+    // If it's already a string (old API), return as is
+    if (typeof duration === 'string') return duration;
 
-          if (path.startsWith("data:image")) {
-            return path;
-          }
-
-          if (
-            path.includes("public") ||
-            path.includes("\\") ||
-            path.includes("activities")
-          ) {
-            let cleanPath = path.replace(/\\/g, "/");
-            cleanPath = cleanPath.replace(/^public\/?/, "");
-            const finalUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/${cleanPath}`;
-            return finalUrl;
-          }
-
-          return `data:image/jpeg;base64,${path}`;
-        }
+    // If it's a number (new API), format it
+    if (typeof duration === 'number') {
+      if (duration < 24) {
+        return `${duration} hour${duration !== 1 ? 's' : ''}`;
       }
-    } catch (e) {
-      console.error("Error processing image:", e);
+      const days = Math.floor(duration / 24);
+      const remainingHours = duration % 24;
+      if (remainingHours === 0) {
+        return `${days} day${days !== 1 ? 's' : ''}`;
+      }
+      return `${days} day${days !== 1 ? 's' : ''} ${remainingHours} hour${remainingHours !== 1 ? 's' : ''}`;
     }
 
-    return "/logo.svg";
+    return "TBD";
   };
   return (
     <div className="min-h-screen bg-[#F1F4F8] pt-5">
@@ -54,14 +43,30 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
           <div className="flex gap-2 pt-3">
             <MapPin />
             <h3 className="font-roboto text-clr">
-              {activity.location.city},&nbsp; {activity.location.state}.
+              {activity.location?.address ||
+               (activity.location?.city && activity.location?.state
+                 ? `${activity.location.city}, ${activity.location.state}`
+                 : "Location not available")}
             </h3>
-            <Link
-              href={activity.location.location}
-              className="text-blue-500 font-roboto"
-            >
-              View on map.
-            </Link>
+            {(activity.location?.latitude && activity.location?.longitude) ? (
+              <Link
+                href={`https://www.google.com/maps?q=${activity.location.latitude},${activity.location.longitude}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 font-roboto"
+              >
+                View on map.
+              </Link>
+            ) : (activity.location?.location && (
+              <Link
+                href={activity.location.location}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 font-roboto"
+              >
+                View on map.
+              </Link>
+            ))}
           </div>
 
           {/* Two Column Layout */}
@@ -84,7 +89,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                         <span className="text-sm">Duration</span>
                       </div>
                       <div className="text-lg font-semibold text-clr">
-                        {activity.duration}
+                        {formatDuration(activity.duration)}
                       </div>
                     </div>
 
@@ -106,9 +111,13 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                         <span className="text-sm">Travel Facility</span>
                       </div>
                       <div className="text-lg font-semibold text-clr">
-                        {activity.traveller_facilty === "meet_on_location"
+                        {activity.publicTransportUsed && activity.publicTransportUsed.length > 0
+                          ? activity.publicTransportUsed.join(", ")
+                          : activity.traveller_facilty === "meet_on_location"
                           ? "Meet on Location"
-                          : "Pickup Available"}
+                          : activity.traveller_facilty === "pickup_available"
+                          ? "Pickup Available"
+                          : "Not Available"}
                       </div>
                     </div>
 
@@ -136,35 +145,45 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                       <h3 className="text-clr font-roboto text-xl font-semibold mb-3">
                         Overview
                       </h3>
-                      <p className="text-gray-700 text-sm leading-relaxed mb-2">
-                        {activity?.description?.short_des}
-                      </p>
-                      <div
-                        className="text-gray-700 text-sm leading-relaxed"
-                        dangerouslySetInnerHTML={{
-                          __html: DOMPurify.sanitize(
-                            activity?.description?.detail_dec || ""
-                          ),
-                        }}
-                      />
-                      <Link
-                        href="#"
-                        className="text-blue-500 text-sm font-semibold hover:underline"
-                      >
-                        More
-                      </Link>
+                      {/* New API - plain strings */}
+                      {activity?.overview && typeof activity.overview === 'string' && (
+                        <p className="text-gray-700 text-sm leading-relaxed mb-2">
+                          {activity.overview}
+                        </p>
+                      )}
+                      {activity?.description && typeof activity.description === 'string' && (
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          {activity.description}
+                        </p>
+                      )}
+                      {/* Old API - object with short_des and detail_dec */}
+                      {activity?.description && typeof activity.description === 'object' && (
+                        <>
+                          {activity.description.short_des && (
+                            <p className="text-gray-700 text-sm leading-relaxed mb-2">
+                              {activity.description.short_des}
+                            </p>
+                          )}
+                          {activity.description.detail_dec && activity.description.detail_dec !== "<p><br></p>" && (
+                            <div className="text-gray-700 text-sm leading-relaxed">
+                              {activity.description.detail_dec}
+                            </div>
+                          )}
+                        </>
+                      )}
                     </div>
 
                     {/* Two columns section */}
                     <div className="grid grid-cols-2 gap-8 mb-6">
-                      {/* Available languages - HARDCODED */}
+                      {/* Available languages */}
                       <div>
                         <h3 className="text-clr font-roboto text-base font-semibold mb-3">
                           Available languages
                         </h3>
                         <p className="text-gray-700 text-sm">
-                          German, Chinese, Portuguese, Japanese, English,
-                          Italian, Chinese, French, Spanish
+                          {activity?.availableLanguages && activity.availableLanguages.length > 0
+                            ? activity.availableLanguages.join(", ")
+                            : "English"}
                         </p>
                       </div>
 
@@ -174,41 +193,41 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                           Cancellation policy
                         </h3>
                         <p className="text-gray-700 text-sm">
-                          For a full refund, cancel at least 24 hours in advance
-                          of the start date of the experience.
+                          {activity?.cancellationPolicy?.policyDescription ? (
+                            activity.cancellationPolicy.policyDescription
+                          ) : activity?.cancellationPolicy ? (
+                            `${activity.cancellationPolicy.isRefundable ? 'Refundable' : 'Non-refundable'}${
+                              activity.cancellationPolicy.refundPercentage
+                                ? ` - ${activity.cancellationPolicy.refundPercentage}% refund`
+                                : ''
+                            }${
+                              activity.cancellationPolicy.cancellationWindowHours
+                                ? ` if canceled ${activity.cancellationPolicy.cancellationWindowHours} hours before`
+                                : ''
+                            }`
+                          ) : (
+                            'For a full refund, cancel at least 24 hours in advance of the start date of the experience.'
+                          )}
                         </p>
                       </div>
                     </div>
 
-                    {/* Highlights - HARDCODED */}
-                    <div className="mb-6 border-b border-[#EBEBEB] pb-8">
-                      <h3 className="text-clr font-roboto text-xl font-semibold mb-3">
-                        Highlights
-                      </h3>
-                      <ul className="space-y-2">
-                        <li className="text-gray-700 text-sm flex items-start">
-                          <span className="mr-2">•</span>
-                          <span>
-                            Travel between the UNESCO World Heritage sites
-                            aboard a comfortable coach
-                          </span>
-                        </li>
-                        <li className="text-gray-700 text-sm flex items-start">
-                          <span className="mr-2">•</span>
-                          <span>
-                            Explore with a guide to delve deeper into the
-                            history
-                          </span>
-                        </li>
-                        <li className="text-gray-700 text-sm flex items-start">
-                          <span className="mr-2">•</span>
-                          <span>
-                            Great for history buffs and travelers with limited
-                            time
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
+                    {/* Highlights */}
+                    {activity?.targetPlaces && activity.targetPlaces.length > 0 && (
+                      <div className="mb-6 border-b border-[#EBEBEB] pb-8">
+                        <h3 className="text-clr font-roboto text-xl font-semibold mb-3">
+                          Target Places
+                        </h3>
+                        <ul className="space-y-2">
+                          {activity.targetPlaces.map((place: string, index: number) => (
+                            <li key={index} className="text-gray-700 text-sm flex items-start">
+                              <span className="mr-2">•</span>
+                              <span>{place}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
                     {/* What's included */}
                     <div className="border-b border-[#EBEBEB] pb-8">
@@ -218,83 +237,88 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                       <div className="grid grid-cols-2 gap-4">
                         {/* Inclusions */}
                         <div className="space-y-2">
-                          <div className="flex items-start text-sm">
-                            <span className="text-green-600 mr-2 mt-0.5">
-                              ✓
-                            </span>
-                            <span className="text-gray-700">
-                              {activity.inclusions.short_des}
-                            </span>
-                          </div>
-                          {activity.inclusions.detail_dec &&
-                            activity.inclusions.detail_dec !==
-                              "<p><br></p>" && (
-                              <div className="flex items-start text-sm">
-                                <span className="text-green-600 mr-2 mt-0.5">
-                                  ✓
-                                </span>
-                                <div
-                                  className="text-gray-700"
-                                  dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(
-                                      activity?.inclusions?.detail_dec || ""
-                                    ),
-                                  }}
-                                />
+                          {/* New API - array of strings */}
+                          {activity?.included && Array.isArray(activity.included) && activity.included.length > 0 ? (
+                            activity.included.map((item: string, index: number) => (
+                              <div key={`inc-${index}`} className="flex items-start text-sm">
+                                <span className="text-green-600 mr-2 mt-0.5">✓</span>
+                                <span className="text-gray-700">{item}</span>
                               </div>
-                            )}
+                            ))
+                          ) : activity?.inclusions ? (
+                            /* Old API - object with short_des and detail_dec */
+                            <>
+                              <div className="flex items-start text-sm">
+                                <span className="text-green-600 mr-2 mt-0.5">✓</span>
+                                <span className="text-gray-700">{activity.inclusions.short_des}</span>
+                              </div>
+                              {activity.inclusions.detail_dec && activity.inclusions.detail_dec !== "<p><br></p>" && (
+                                <div className="flex items-start text-sm">
+                                  <span className="text-green-600 mr-2 mt-0.5">✓</span>
+                                  <div className="text-gray-700">
+                                    {activity.inclusions.detail_dec}
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <div className="flex items-start text-sm">
+                              <span className="text-gray-700">No inclusions specified</span>
+                            </div>
+                          )}
                         </div>
 
                         {/* Exclusions */}
                         <div className="space-y-2">
-                          <div className="flex items-start text-sm">
-                            <span className="text-red-600 mr-2 mt-0.5">✕</span>
-                            <span className="text-gray-700">
-                              {activity.exclusions.short_des}
-                            </span>
-                          </div>
-                          {activity.exclusions.detail_dec &&
-                            activity.exclusions.detail_dec !==
-                              "<p><br></p>" && (
-                              <div className="flex items-start text-sm">
-                                <span className="text-red-600 mr-2 mt-0.5">
-                                  ✕
-                                </span>
-                                <div
-                                  className="text-gray-700"
-                                  dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(
-                                      activity?.exclusions?.detail_dec || ""
-                                    ),
-                                  }}
-                                />
+                          {/* New API - array of strings */}
+                          {activity?.excluded && Array.isArray(activity.excluded) && activity.excluded.length > 0 ? (
+                            activity.excluded.map((item: string, index: number) => (
+                              <div key={`exc-${index}`} className="flex items-start text-sm">
+                                <span className="text-red-600 mr-2 mt-0.5">✕</span>
+                                <span className="text-gray-700">{item}</span>
                               </div>
-                            )}
+                            ))
+                          ) : activity?.exclusions ? (
+                            /* Old API - object with short_des and detail_dec */
+                            <>
+                              <div className="flex items-start text-sm">
+                                <span className="text-red-600 mr-2 mt-0.5">✕</span>
+                                <span className="text-gray-700">{activity.exclusions.short_des}</span>
+                              </div>
+                              {activity.exclusions.detail_dec && activity.exclusions.detail_dec !== "<p><br></p>" && (
+                                <div className="flex items-start text-sm">
+                                  <span className="text-red-600 mr-2 mt-0.5">✕</span>
+                                  <div className="text-gray-700">
+                                    {activity.exclusions.detail_dec}
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <div className="flex items-start text-sm">
+                              <span className="text-gray-700">No exclusions specified</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
 
                     {/* map */}
+                    {(activity.location?.latitude && activity.location?.longitude) ||
+                     (activity.location?.location && activity.location.location.includes("iframe")) ? (
+                      <div className="pt-6">
+                        <h3 className="text-clr font-roboto text-xl font-semibold mb-4">
+                          Activity's Location
+                        </h3>
 
-                    {activity.location?.location &&
-                      activity.location.location.includes("iframe") &&
-                      activity.location.location.match(
-                        /src="([^"]+)"/
-                      )?.[1] && (
-                        <div className=" pt-6">
-                          <h3 className="text-clr font-roboto text-xl font-semibold mb-4">
-                            Activity's Location
-                          </h3>
-
-                          <div className="w-full h-[300px] rounded-lg overflow-hidden">
+                        <div className="w-full h-[300px] rounded-lg overflow-hidden">
+                          {activity.location?.latitude && activity.location?.longitude ? (
+                            /* New API - use coordinates */
                             <iframe
-                              src={
-                                activity.location.location.match(
-                                  /src="([^"]+)"/
-                                )?.[1] || ""
-                              }
+                              src={`https://www.google.com/maps?q=${activity.location.latitude},${activity.location.longitude}&output=embed`}
                               width="100%"
                               height="100%"
+                              title="Activity Location Map"
                               style={{
                                 border: 0,
                                 width: "100%",
@@ -305,9 +329,27 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                               referrerPolicy="no-referrer-when-downgrade"
                               className="w-full h-full rounded-lg"
                             />
-                          </div>
+                          ) : (
+                            /* Old API - use iframe from location.location */
+                            <iframe
+                              src={activity.location.location.match(/src="([^"]+)"/)?.[1] || ""}
+                              width="100%"
+                              height="100%"
+                              title="Activity Location Map"
+                              style={{
+                                border: 0,
+                                width: "100%",
+                                height: "100%",
+                              }}
+                              allowFullScreen
+                              loading="lazy"
+                              referrerPolicy="no-referrer-when-downgrade"
+                              className="w-full h-full rounded-lg"
+                            />
+                          )}
                         </div>
-                      )}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </div>
