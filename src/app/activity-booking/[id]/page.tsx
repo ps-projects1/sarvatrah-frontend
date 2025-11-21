@@ -33,9 +33,17 @@ export default function ActivityBookingPage({
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/experience/${id}`
         );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
         setActivity(data);
+        setError(null);
       } catch (error) {
+        console.error("Error fetching activity:", error);
+        setError("Failed to load activity details. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -47,7 +55,44 @@ export default function ActivityBookingPage({
   if (loading) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center">
-        <div>Loading...</div>
+        <div className="text-center">
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
+          <p className="mt-4 text-gray-600 text-lg" role="status" aria-live="polite">
+            Loading activity details...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 text-xl mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!activity) {
+    return (
+      <div className="w-full min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600 text-xl mb-4">Activity not found</p>
+          <a
+            href="/activities"
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition inline-block"
+          >
+            Browse Activities
+          </a>
+        </div>
       </div>
     );
   }

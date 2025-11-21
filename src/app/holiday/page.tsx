@@ -19,6 +19,7 @@ import { Slider } from "@/components/ui/slider";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import RequestCallBackSection from "@/components/home/RequestCallBackSection";
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface PackageDuration {
   days: number;
@@ -119,15 +120,19 @@ interface HolidayPackagesResponse {
 }
 
 const HolidayPage = () => {
+  const searchParams = useSearchParams();
+  const urlSearchQuery = searchParams.get("search") || "";
+  const router = useRouter();
+
   const [packages, setPackages] = useState<HolidayPackage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(urlSearchQuery);
+  const [searchInput, setSearchInput] = useState(urlSearchQuery);
   const [filteredPackages, setFilteredPackages] = useState<HolidayPackage[]>(
     []
   );
 
-  // Filter states
   const [priceRange, setPriceRange] = useState<[number, number]>([500, 50000]);
   const [selectedPackageTypes, setSelectedPackageTypes] = useState<string[]>(
     []
@@ -141,10 +146,6 @@ const HolidayPage = () => {
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-
-  // Package types and select type options
-  const packageTypeOptions = ["honeymoon", "adventure", "family", "pilgrimage"];
-  const selectTypeOptions = ["domestic", "international"];
 
   // Calculate min/max price from packages
   const calculatePriceRange = (packageList: HolidayPackage[]) => {
@@ -162,6 +163,28 @@ const HolidayPage = () => {
     return { min, max };
   };
 
+  // Sync search query from URL params
+  useEffect(() => {
+    setSearchQuery(urlSearchQuery);
+    setSearchInput(urlSearchQuery);
+  }, [urlSearchQuery]);
+
+  // Handle search button click
+  const handleSearch = () => {
+    if (searchInput.trim()) {
+      router.push(`/holiday?search=${encodeURIComponent(searchInput.trim())}`);
+    } else {
+      router.push('/holiday');
+    }
+  };
+
+  // Handle Enter key press in search input
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   // Fetch packages from API
   useEffect(() => {
     const fetchPackages = async () => {
@@ -170,18 +193,17 @@ const HolidayPage = () => {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/holiday/get-holiday-package/`
         );
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+
         const result: HolidayPackagesResponse = await response.json();
 
         if (result.status && result.data) {
           const dataArray = result.data.holidayPackages || [];
 
-          if (dataArray.length === 0) {
-            const activePackages = dataArray.filter((p) => p.active === true);
-          }
-
+          // Filter only active packages
           const activePackages = dataArray.filter((p) => p.active !== false);
           setPackages(activePackages);
           setFilteredPackages(activePackages);
@@ -195,6 +217,7 @@ const HolidayPage = () => {
           setError("Failed to load holiday packages");
         }
       } catch (err) {
+        console.error("Error fetching holiday packages:", err);
         setError("Error loading packages. Please try again.");
       } finally {
         setLoading(false);
@@ -251,20 +274,6 @@ const HolidayPage = () => {
     selectedSelectTypes,
     packages,
   ]);
-
-  // Toggle package type filter
-  const togglePackageType = (type: string) => {
-    setSelectedPackageTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
-  };
-
-  // Toggle select type filter
-  const toggleSelectType = (type: string) => {
-    setSelectedSelectTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
-  };
 
   // Handle price range change
   const handlePriceChange = (values: number[]) => {
@@ -362,12 +371,15 @@ const HolidayPage = () => {
                   <input
                     type="text"
                     placeholder="Enter Destination or Package name"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     className="w-full bg-transparent outline-none text-[14px] sm:text-[16px] placeholder:text-[#61666B] min-w-0"
                   />
                 </div>
-                <button className="h-10 sm:h-12 rounded-full bg-[#2789FF] text-white px-4 sm:px-8 text-[13px] sm:text-[16px] font-medium hover:bg-[#1a73e8] transition-colors shrink-0 flex items-center justify-center gap-2">
+                <button
+                  onClick={handleSearch}
+                  className="h-10 sm:h-12 rounded-full bg-[#2789FF] text-white px-4 sm:px-8 text-[13px] sm:text-[16px] font-medium hover:bg-[#1a73e8] transition-colors shrink-0 flex items-center justify-center gap-2">
                   <Search className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="hidden sm:inline">Search</span>
                   <span className="sm:hidden">Go</span>
@@ -400,7 +412,7 @@ const HolidayPage = () => {
                   step={100}
                   value={[priceRange[0], priceRange[1]]}
                   onValueChange={handlePriceChange}
-                  className="w-full **:[[role=slider]]:bg-[#2789FF] **:[[role=slider]]:border-[#2789FF] [&>span>span]:bg-[#2789FF]"
+                  className="w-full [&_[role=slider]]:bg-[#2789FF] [&_[role=slider]]:border-[#2789FF] [&>span>span]:bg-[#2789FF]"
                 />
                 <div className="flex justify-between mt-4 text-[12px] text-[#999FA8]">
                   <span>{formatPrice(minMaxPrice.min)}</span>

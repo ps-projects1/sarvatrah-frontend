@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import ActivityCardSection from "./ActivityCardSection";
 
 interface ActivityData {
@@ -26,7 +26,11 @@ interface ActivityData {
   }>;
 }
 
-const ActivitySecondSection = () => {
+interface ActivitySecondSectionProps {
+  searchQuery?: string;
+}
+
+const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQuery = "" }) => {
   const [activities, setActivities] = useState<ActivityData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +56,26 @@ const ActivitySecondSection = () => {
     };
     fetchActivities();
   }, []);
+
+  // Filter activities based on search query
+  const filteredActivities = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return activities;
+    }
+
+    const query = searchQuery.toLowerCase();
+    return activities.filter((activity) => {
+      return (
+        activity.title?.toLowerCase().includes(query) ||
+        activity.location?.city?.toLowerCase().includes(query) ||
+        activity.location?.state?.toLowerCase().includes(query) ||
+        activity.meeting_point?.some(mp =>
+          mp.city?.toLowerCase().includes(query) ||
+          mp.address?.toLowerCase().includes(query)
+        )
+      );
+    });
+  }, [activities, searchQuery]);
 
   const getFirstImage = (activity: ActivityData) => {
     try {
@@ -81,7 +105,9 @@ const ActivitySecondSection = () => {
           return `data:image/jpeg;base64,${path}`;
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error("Error processing image:", e);
+    }
 
     return "/logo.svg";
   };
@@ -124,24 +150,39 @@ const ActivitySecondSection = () => {
   return (
     <div className="w-full min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-8">Popular Activities</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {activities.map((activity) => (
-            <ActivityCardSection
-              id={activity._id}
-              key={activity._id}
-              title={activity.title || "Untitled"}
-              locationFrom={activity.location?.city || "Unknown"}
-              locationTo={activity.location?.state || "Unknown"}
-              duration={formatDuration(activity.duration)}
-              startLocation={activity.meeting_point[0]?.city || "TBD"}
-              currentPrice={activity.pricing[0]?.price || 0}
-              image={getFirstImage(activity)}
-              badge={calculateBadge(activity.duration)}
-            />
-          ))}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold">
+            {searchQuery ? `Search Results for "${searchQuery}"` : "Popular Activities"}
+          </h2>
+          {searchQuery && (
+            <p className="text-gray-600 mt-2">
+              Found {filteredActivities.length} {filteredActivities.length === 1 ? 'activity' : 'activities'}
+            </p>
+          )}
         </div>
+
+        {filteredActivities.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">No activities found matching your search.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredActivities.map((activity) => (
+              <ActivityCardSection
+                id={activity._id}
+                key={activity._id}
+                title={activity.title || "Untitled"}
+                locationFrom={activity.location?.city || "Unknown"}
+                locationTo={activity.location?.state || "Unknown"}
+                duration={formatDuration(activity.duration)}
+                startLocation={activity.meeting_point[0]?.city || "TBD"}
+                currentPrice={activity.pricing[0]?.price || 0}
+                image={getFirstImage(activity)}
+                badge={calculateBadge(activity.duration)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

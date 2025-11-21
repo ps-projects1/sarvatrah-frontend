@@ -1,21 +1,27 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search } from "lucide-react";
+import { Search, Palmtree, Activity, Church } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface HeroSectionProps {
   onSearch?: (query: string) => void;
   onCategoryClick?: (category: string) => void;
 }
 
-const categories = [
-  "Hotel",
-  "Tour",
-  "Activity",
-  "Holiday Rentals",
-  "Car",
-  "Cruise",
-  "Flights",
+type CategoryType = "holiday" | "activities" | "pilgrimage";
+
+interface Category {
+  id: CategoryType;
+  label: string;
+  icon: React.ReactNode;
+  route: string;
+}
+
+const categories: Category[] = [
+  { id: "holiday", label: "Holiday", icon: <Palmtree size={20} />, route: "/holiday" },
+  { id: "activities", label: "Activities", icon: <Activity size={20} />, route: "/activities" },
+  { id: "pilgrimage", label: "Pilgrimage", icon: <Church size={20} />, route: "/pilgrimage" },
 ];
 
 const HeroSection: React.FC<HeroSectionProps> = ({
@@ -23,8 +29,18 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   onCategoryClick,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>("holiday");
+  const router = useRouter();
 
   const handleSearch = () => {
+    if (searchQuery.trim()) {
+      // Route to the appropriate page based on selected category
+      const category = categories.find(c => c.id === selectedCategory);
+      if (category) {
+        router.push(`${category.route}?search=${encodeURIComponent(searchQuery.trim())}`);
+      }
+    }
+
     if (onSearch) {
       onSearch(searchQuery);
     }
@@ -36,9 +52,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     }
   };
 
-  const handleCategoryClick = (category: string) => {
+  const handleCategorySelect = (categoryId: CategoryType) => {
+    setSelectedCategory(categoryId);
     if (onCategoryClick) {
-      onCategoryClick(category);
+      onCategoryClick(categoryId);
     }
   };
 
@@ -72,32 +89,38 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <p className="text-sm sm:text-base lg:text-lg text-white/90 text-center mb-6 sm:mb-8 max-w-2xl">
             Discover amazing places at exclusive deals
           </p>
+        </div>
 
-          {/* Category Tabs - With Borders */}
-          <div className="flex flex-wrap justify-center mb-6 sm:mb-8">
+        {/* Category Tabs & Search Bar - At Bottom */}
+        <div className="relative flex flex-col items-center justify-center w-full px-4 gap-4">
+          {/* Category Tabs */}
+          <div className="flex items-center gap-2 sm:gap-3 bg-white/90 backdrop-blur-sm rounded-full px-2 py-2 shadow-lg">
             {categories.map((category) => (
               <button
-                key={category}
-                onClick={() => handleCategoryClick(category)}
-                className="px-5 sm:px-6 py-2 sm:py-2.5 border-b-2 border-transparent text-white text-sm sm:text-base  hover:border-white font-medium transition-all duration-200"
+                key={category.id}
+                onClick={() => handleCategorySelect(category.id)}
+                className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-medium text-sm sm:text-base transition-all duration-300 ${
+                  selectedCategory === category.id
+                    ? "bg-blue-500 text-white shadow-md"
+                    : "bg-transparent text-gray-700 hover:bg-gray-100"
+                }`}
               >
-                {category}
+                <span className="hidden sm:inline">{category.icon}</span>
+                {category.label}
               </button>
             ))}
           </div>
-        </div>
 
-        {/* Search Bar - At Bottom */}
-        <div className="relative flex items-center justify-center w-full px-4">
-          <div className="flex items-center gap-3 w-full max-w-2xl bg-white rounded-full px-4 py-1">
+          {/* Search Bar */}
+          <div className="flex items-center gap-3 w-full max-w-2xl bg-white rounded-full pr-1 py-1 shadow-lg">
             {/* Search Input */}
             <input
               type="text"
-              placeholder="Explore SARVATRAH"
+              placeholder={`Search ${selectedCategory}...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="flex-1 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base placeholder:text-gray-500 border-0 focus:outline-none focus:ring-0 bg-transparent text-black/70"
+              className="flex-1 sm:px-6 py-2 sm:py-3 text-sm sm:text-base placeholder:text-gray-500 border-0 focus:outline-none focus:ring-0 bg-transparent text-black/70"
             />
 
             {/* Search Button */}

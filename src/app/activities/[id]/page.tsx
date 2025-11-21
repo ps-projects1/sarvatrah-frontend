@@ -1,5 +1,4 @@
 // page.tsx
-import { notFound } from "next/navigation";
 import RequestCallBackSection from "@/components/home/RequestCallBackSection";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -13,7 +12,7 @@ interface ActivityDetailPageProps {
 
 export default async function ActivityDetailPage({
   params,
-}: ActivityDetailPageProps) {
+}: Readonly<ActivityDetailPageProps>) {
   const id = (await params).id;
 
   return (

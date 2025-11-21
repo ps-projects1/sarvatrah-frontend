@@ -86,7 +86,7 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
           <div className="mt-4 grid grid-cols-4 md:grid-cols-6 gap-2">
             {images.map((image, index) => (
               <button
-                key={index}
+                key={`thumbnail-${image.src}-${index}`}
                 onClick={() => goToSlide(index)}
                 className={`relative h-20 rounded-lg overflow-hidden border-2 transition-all ${
                   index === currentIndex

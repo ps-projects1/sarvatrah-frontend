@@ -3,10 +3,9 @@
 import { Youtube } from "lucide-react";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import Itinery from "./Itinerary";
+import Itinerary from "./Itinerary";
 import Policies from "./Policies";
 import Summary from "./Summary";
-import Itinerary from "./Itinerary";
 import BookingSidebar from "./itinerary/BookingSidebar";
 
 interface PackageDuration {
@@ -96,6 +95,10 @@ const DetailsSection = ({ params }: { params: { id: string } }) => {
           }
         );
 
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const result: ApiResponse = await response.json();
 
         if (result.status && result.data) {
@@ -105,6 +108,7 @@ const DetailsSection = ({ params }: { params: { id: string } }) => {
           setError("Failed to load package details");
         }
       } catch (err) {
+        console.error("Error fetching package details:", err);
         setError("Error loading package. Please try again.");
       } finally {
         setLoading(false);

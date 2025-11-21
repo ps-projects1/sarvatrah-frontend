@@ -8,24 +8,30 @@ interface ActivityDetailsSectionProps {
 }
 
 const ActivityDetailsSection = async ({ id }: ActivityDetailsSectionProps) => {
-  const activity = await fetch(
+  const response = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/experience/${id}`,
     {
       cache: "no-store",
     }
-  ).then((res) => res.json());
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch activity: ${response.status}`);
+  }
+
+  const activity = await response.json();
 
   let images = [];
 
-  if (activity.img_link && Array.isArray(activity.img_link)) {
+  if (activity?.img_link && Array.isArray(activity.img_link)) {
     images = activity.img_link.map((img: any) => {
-      const path = img.path;
+      const path = img?.path;
 
       // If it's base64, use it directly
       if (path?.startsWith("data:image")) {
         return {
           src: path,
-          alt: activity.title,
+          alt: activity?.title || "Activity image",
         };
       }
 
@@ -42,21 +48,21 @@ const ActivityDetailsSection = async ({ id }: ActivityDetailsSectionProps) => {
 
         return {
           src: finalUrl,
-          alt: activity.title,
+          alt: activity?.title || "Activity image",
         };
       }
 
       // Fallback
       return {
         src: "/logo.svg",
-        alt: activity.title,
+        alt: activity?.title || "Activity image",
       };
     });
-  } else if (activity.img_link && typeof activity.img_link === "object") {
+  } else if (activity?.img_link && typeof activity.img_link === "object") {
     images = [
       {
         src: "/logo.svg",
-        alt: activity.title,
+        alt: activity?.title || "Activity image",
       },
     ];
   }

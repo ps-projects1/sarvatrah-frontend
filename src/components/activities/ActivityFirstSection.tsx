@@ -1,11 +1,37 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MapPin, Search, ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-const ActivityFirstSection = () => {
-  const [location, setLocation] = useState("");
+interface ActivityFirstSectionProps {
+  initialSearch?: string;
+}
+
+const ActivityFirstSection: React.FC<ActivityFirstSectionProps> = ({ initialSearch = "" }) => {
+  const [location, setLocation] = useState(initialSearch);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (initialSearch) {
+      setLocation(initialSearch);
+    }
+  }, [initialSearch]);
+
+  const handleSearch = () => {
+    if (location.trim()) {
+      router.push(`/activities?search=${encodeURIComponent(location.trim())}`);
+    } else {
+      router.push('/activities');
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   return (
     <div className="w-full min-h-screen relative flex items-center justify-center">
@@ -37,6 +63,7 @@ const ActivityFirstSection = () => {
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
+                onKeyPress={handleKeyPress}
                 placeholder="Enter Location"
                 className="w-full text-gray-700 text-sm sm:text-base md:text-lg focus:outline-none placeholder:text-gray-400 placeholder:text-sm sm:placeholder:text-base"
               />
@@ -44,7 +71,9 @@ const ActivityFirstSection = () => {
             </div>
 
             <div className="p-2 sm:p-0">
-              <button className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white px-6 sm:px-8 md:px-10 lg:px-12 py-3 sm:py-4 md:py-5 font-medium sm:font-semibold text-sm sm:text-base md:text-lg flex items-center justify-center gap-2 transition-all duration-200 w-full sm:w-auto rounded-xl sm:rounded-full sm:rounded-l-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:focus:ring-0">
+              <button
+                onClick={handleSearch}
+                className="bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white px-6 sm:px-8 md:px-10 lg:px-12 py-3 sm:py-4 md:py-5 font-medium sm:font-semibold text-sm sm:text-base md:text-lg flex items-center justify-center gap-2 transition-all duration-200 w-full sm:w-auto rounded-xl sm:rounded-full sm:rounded-l-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:focus:ring-0">
                 <Search className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>Search</span>
               </button>
