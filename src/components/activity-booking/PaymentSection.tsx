@@ -1,15 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown, MapPin, Lock } from "lucide-react";
+import { ChevronDown, Lock } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { Activity } from "@/types/activity";
 
 interface PaymentSectionProps {
-  activity: any;
+  activity: Activity;
   tourLanguage: string;
 }
 
@@ -126,7 +127,7 @@ export default function PaymentSection({
           {/* Terms & Conditions */}
           <div className="mb-6 p-4 bg-gray-50 rounded-lg">
             <p className="text-xs text-gray-600 leading-relaxed">
-              By clicking 'Book Now', you agree to Viator's{" "}
+              By clicking &apos;Book Now&apos;, you agree to Viator&apos;s{" "}
               <a
                 href="#"
                 className="text-blue-600 hover:text-blue-700 underline"

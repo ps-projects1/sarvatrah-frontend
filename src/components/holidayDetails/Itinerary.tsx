@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import DateSection from "./DateSection";
 import DayHeader from "./itinerary/DayHeader";
 import HotelCard from "./itinerary/HotelCard";

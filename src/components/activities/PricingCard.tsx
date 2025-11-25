@@ -3,8 +3,6 @@
 import React, { useState } from "react";
 import {
   Calendar,
-  MapPin,
-  Clock,
   Users,
   ChevronDown,
   Plus,
@@ -18,14 +16,14 @@ import {
 } from "@/components/ui/popover";
 import { format } from "date-fns";
 import Link from "next/link";
+import { Activity } from "@/types/activity";
 
 interface PricingCardProps {
-  activity: any;
+  activity: Activity;
 }
 
 const ImprovedPricingCard = ({ activity }: PricingCardProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [startTime, setStartTime] = useState("");
   const [isDateOpen, setIsDateOpen] = useState(false);
   const [isTravelersOpen, setIsTravelersOpen] = useState(false);
 
@@ -37,15 +35,10 @@ const ImprovedPricingCard = ({ activity }: PricingCardProps) => {
   // Use pricePerPerson from new API structure
   const lowestPrice = activity.pricePerPerson || activity.price || 0;
 
-  const originalPrice = lowestPrice * 1.67;
   const discount = 40;
 
   const getTotalTravelers = () => {
     return numAdults + numSeniors + numChildren;
-  };
-
-  const calculateTotalPrice = () => {
-    return lowestPrice * getTotalTravelers();
   };
 
   const bookingUrl = `/activity-booking/${

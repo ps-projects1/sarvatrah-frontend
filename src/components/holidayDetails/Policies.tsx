@@ -94,7 +94,7 @@ const Policies = () => {
                 <span className="shrink-0">•</span>
                 <span>
                   Package price does not include Gala dinner charges applicable
-                  on Christmas and New Year's Eve
+                  on Christmas and New Year&apos;s Eve
                 </span>
               </li>
             </ul>
@@ -320,7 +320,7 @@ export default Policies;
         <span className="shrink-0">•</span>
         <span>
           Package price does not include Gala dinner charges applicable on
-          Christmas and New Year's Eve
+          Christmas and New Year&apos;s Eve
         </span>
       </li>
     </ul>

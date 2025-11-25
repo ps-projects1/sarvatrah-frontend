@@ -7,6 +7,7 @@ import TravellerDetails, { TravellerDetailsRef } from "./TravellerDetails";
 import BookingSummary from "./BookingSummary";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
+import { HolidayPackage } from "@/types/holiday";
 
 interface BookingDetailsProps {
   params: {
@@ -19,7 +20,7 @@ const BookingDetails = ({ params }: BookingDetailsProps) => {
   const [activeTab, setActiveTab] = useState<"summary" | "traveller">(
     "summary"
   );
-  const [packageData, setPackageData] = useState<any>(null);
+  const [packageData, setPackageData] = useState<HolidayPackage | null>(null);
   const [loading, setLoading] = useState(true);
   const travellerDetailsRef = useRef<TravellerDetailsRef>(null);
 
@@ -42,7 +43,7 @@ const BookingDetails = ({ params }: BookingDetailsProps) => {
         if (result.status && result.data) {
           setPackageData(result.data);
         }
-      } catch (error) {
+      } catch {
       } finally {
         setLoading(false);
       }
@@ -157,7 +158,14 @@ const BookingDetails = ({ params }: BookingDetailsProps) => {
                   <TravellerDetails
                     ref={travellerDetailsRef}
                     bookingData={bookingData}
-                    packageData={packageData}
+                    packageData={
+                      packageData && packageData.packagePrice
+                        ? {
+                            packagePrice: packageData.packagePrice,
+                            packageDuration: packageData.packageDuration,
+                          }
+                        : undefined
+                    }
                   />
                 )}
               </div>

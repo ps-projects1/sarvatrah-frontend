@@ -5,70 +5,16 @@ import {
   Check,
   X,
   MapPin,
-  Plane,
   Car,
   Building2,
   Utensils,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-
-interface Transport {
-  type: string;
-  details: string;
-}
-
-interface Activity {
-  type: string;
-  title: string;
-  description: string;
-  duration: string;
-}
-
-interface ItineraryDay {
-  dayNo: number;
-  title: string;
-  subtitle: string;
-  description: string;
-  stay: boolean;
-  hotel_id?: string;
-  state?: string;
-  city?: string;
-  mealsIncluded: string[];
-  transport: Transport;
-  placesToVisit: string[];
-  activities: Activity[];
-  notes?: string;
-}
+import { HolidayPackage } from "@/types/holiday";
 
 interface SummaryProps {
-  packageData: {
-    packageName: string;
-    packageDuration: {
-      days: number;
-      nights: number;
-    };
-    destinationCity: string[];
-    startCity: string;
-    packageType: string;
-    selectType: string;
-    highlights: string;
-    include: string;
-    exclude: string;
-    roomLimit: number;
-    partialPayment: boolean;
-    partialPaymentPercentage: number;
-    partialPaymentDueDays: number;
-    cancellationPolicyType: string;
-    refundablePercentage: number;
-    refundableDays: number;
-    vehiclePrices: Array<{
-      vehicle_id: string;
-      vehicleType: string;
-      price: number;
-    }>;
-    itinerary: ItineraryDay[];
-  };
+  packageData: HolidayPackage;
 }
 
 const Summary = ({ packageData }: SummaryProps) => {
@@ -97,41 +43,6 @@ const Summary = ({ packageData }: SummaryProps) => {
     });
   };
 
-  const hotelStays = packageData.itinerary.reduce((acc, day) => {
-    if (day.city && day.stay) {
-      if (!acc[day.city]) {
-        acc[day.city] = [];
-      }
-      acc[day.city].push(day);
-    }
-    return acc;
-  }, {} as Record<string, typeof packageData.itinerary>);
-
-  const formatDayDate = (dayNo: number) => {
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    const mockDate = new Date();
-    mockDate.setDate(mockDate.getDate() + dayNo - 1);
-
-    return `${months[mockDate.getMonth()]} ${mockDate.getDate()}, ${
-      days[mockDate.getDay()]
-    }`;
-  };
-
   return (
     <div className="w-full space-y-6 pb-4">
       {/* Day-wise Itinerary Breakdown */}
@@ -143,7 +54,7 @@ const Summary = ({ packageData }: SummaryProps) => {
         </div>
 
         <div className="p-4 sm:p-6 space-y-4">
-          {packageData.itinerary.map((day, index) => {
+          {packageData.itinerary.map((day) => {
             const isExpanded = expandedSections.has(`day-${day.dayNo}`);
 
             return (
@@ -401,7 +312,7 @@ const Summary = ({ packageData }: SummaryProps) => {
           <div className="bg-green-50 px-4 py-3 border-b border-green-200">
             <h3 className="text-base font-semibold text-green-800 flex items-center gap-2">
               <Check className="w-5 h-5" />
-              What's Included
+              What&apos;s Included
             </h3>
           </div>
           <div className="p-4">
@@ -424,7 +335,7 @@ const Summary = ({ packageData }: SummaryProps) => {
           <div className="bg-red-50 px-4 py-3 border-b border-red-200">
             <h3 className="text-base font-semibold text-red-800 flex items-center gap-2">
               <X className="w-5 h-5" />
-              What's Not Included
+              What&apos;s Not Included
             </h3>
           </div>
           <div className="p-4">

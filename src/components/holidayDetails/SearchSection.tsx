@@ -27,7 +27,6 @@ const SearchSection = () => {
   const [isGuestsOpen, setIsGuestsOpen] = useState(false);
 
   const getTotalGuests = () => {
-    const total = numAdults + numChildren;
     const parts = [];
     if (numAdults > 0)
       parts.push(`${numAdults} ${numAdults === 1 ? "Adult" : "Adults"}`);

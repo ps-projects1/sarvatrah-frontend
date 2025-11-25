@@ -14,7 +14,7 @@ function PilgrimageContent() {
       <h1 className="text-4xl font-bold text-gray-800 mb-4">Pilgrimage Packages</h1>
       {searchQuery && (
         <p className="text-gray-600 text-lg mb-8">
-          Search results for: <strong>"{searchQuery}"</strong>
+          Search results for: <strong>&quot;{searchQuery}&quot;</strong>
         </p>
       )}
       <p className="text-gray-500">Coming soon - Pilgrimage packages listing page</p>

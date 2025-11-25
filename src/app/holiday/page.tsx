@@ -19,6 +19,7 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import RequestCallBackSection from "@/components/home/RequestCallBackSection";
 import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface PackageDuration {
   days: number;
@@ -99,7 +100,7 @@ interface HolidayPackage {
   }>;
   itinerary: ItineraryDay[];
   vehiclePrices: VehiclePrice[];
-  availableVehicle: any[];
+  availableVehicle: unknown[];
 }
 
 interface HolidayPackagesResponse {
@@ -731,10 +732,11 @@ function HolidayContent() {
                           {/* Image Section */}
                           <div className="relative h-[200px] sm:h-60 lg:h-[280px] bg-[#F1F7FF] overflow-hidden">
                             {pkg.themeImg ? (
-                              <img
+                              <Image
                                 src={pkg.themeImg.path}
                                 alt={pkg.packageName}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-300"
                                 loading="lazy"
                                 onError={(e) => {
                                   e.currentTarget.style.display = "none";

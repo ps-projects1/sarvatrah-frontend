@@ -4,9 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Calendar, Users, Clock, Tag, Phone } from "lucide-react";
 import { format } from "date-fns";
 import Image from "next/image";
+import { Activity, ActivityPricing } from "@/types/activity";
 
 interface BookingSummaryCardProps {
-  activity: any;
+  activity: Activity;
   date: string | null;
   numAdults: number;
   numSeniors: number;
@@ -50,8 +51,8 @@ export default function BookingSummaryCard({
 
   const calculateSubtotal = () => {
     const lowestPrice =
-      activity?.pricing?.length > 0
-        ? Math.min(...activity.pricing.map((p: any) => p.price))
+      activity?.pricing && activity.pricing.length > 0
+        ? Math.min(...activity.pricing.map((p: ActivityPricing) => p.price))
         : 0;
     const totalTravelers = numAdults + numSeniors + numChildren;
     return lowestPrice * totalTravelers;

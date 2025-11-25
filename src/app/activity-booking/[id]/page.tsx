@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { use, useEffect, useState, Suspense } from "react";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import RequestCallBackSection from "@/components/home/RequestCallBackSection";
@@ -61,12 +62,12 @@ function ActivityBookingContent({ id }: Readonly<{ id: string }>) {
       <div className="w-full min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-600 text-xl mb-4">Activity not found</p>
-          <a
+          <Link
             href="/activities"
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition inline-block"
           >
             Browse Activities
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -79,15 +80,15 @@ function ActivityBookingContent({ id }: Readonly<{ id: string }>) {
         <nav className="mb-6" aria-label="Breadcrumb">
           <ol className="flex items-center gap-2 text-sm text-gray-600">
             <li>
-              <a href="/" className="hover:text-blue-600 transition">
+              <Link href="/" className="hover:text-blue-600 transition">
                 Home
-              </a>
+              </Link>
             </li>
             <li className="flex items-center gap-2">
               <span>/</span>
-              <a href="/activities" className="hover:text-blue-600 transition">
+              <Link href="/activities" className="hover:text-blue-600 transition">
                 Activities
-              </a>
+              </Link>
             </li>
             <li className="flex items-center gap-2">
               <span>/</span>

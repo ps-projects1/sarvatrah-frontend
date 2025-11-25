@@ -1,11 +1,9 @@
 import React from "react";
 import {
-  Plane,
   Car,
   Building2,
   Utensils,
   MapPin,
-  Mountain,
   AlertCircle,
   Activity,
 } from "lucide-react";

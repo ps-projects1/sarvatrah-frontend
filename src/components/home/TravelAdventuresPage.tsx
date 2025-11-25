@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 
 export default function TravelAdventuresPage() {
   return (
@@ -35,7 +34,7 @@ export default function TravelAdventuresPage() {
             </div>
 
             <p className="text-gray-700 text-sm leading-relaxed">
-              Fuel your wanderlust with Travel Adventures' thrilling journeys,
+              Fuel your wanderlust with Travel Adventures&apos; thrilling journeys,
               where every stop leads to extraordinary landscapes and cultural
               encounters that will leave you inspired and awestruck.
             </p>
@@ -60,7 +59,7 @@ export default function TravelAdventuresPage() {
             </div>
 
             <p className="text-gray-700 text-sm leading-relaxed">
-              Fuel your wanderlust with Travel Adventures' thrilling journeys,
+              Fuel your wanderlust with Travel Adventures&apos; thrilling journeys,
               where every stop leads to extraordinary landscapes and cultural
               encounters that will leave you inspired and awestruck.
             </p>

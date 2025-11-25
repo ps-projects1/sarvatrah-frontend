@@ -3,6 +3,7 @@
 import React from "react";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface PilgrimagePackage {
   id: number;
@@ -96,33 +97,36 @@ const PilgrimageSection: React.FC<PilgrimageSectionProps> = ({
             <div className="relative w-full h-full flex items-center justify-center">
               {/* Top Card - Center */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20">
-                <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-3xl overflow-hidden">
-                  <img
+                <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-3xl overflow-hidden">
+                  <Image
                     src="/images/home/Group1.png"
                     alt="Pilgrimage site 1"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 </div>
               </div>
 
               {/* Bottom Left Card */}
               <div className="absolute bottom-8 sm:bottom-12 left-4 sm:left-8 z-10">
-                <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-3xl overflow-hidden">
-                  <img
+                <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-3xl overflow-hidden">
+                  <Image
                     src="/images/home/Group2.png"
                     alt="Pilgrimage site 2"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 </div>
               </div>
 
               {/* Bottom Right Card */}
               <div className="absolute bottom-8 sm:bottom-12 right-4 sm:right-8 z-20">
-                <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-3xl overflow-hidden">
-                  <img
+                <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-3xl overflow-hidden">
+                  <Image
                     src="/images/home/Group3.png"
                     alt="Pilgrimage site 3"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 </div>
               </div>

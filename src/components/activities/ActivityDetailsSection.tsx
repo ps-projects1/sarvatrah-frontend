@@ -2,14 +2,20 @@
 import React from "react";
 import ImageCarousel from "./ImageCarousel";
 import TourInfoSection from "./TourInfoSection";
+import { Activity, ActivityImage } from "@/types/activity";
 
 interface ActivityDetailsSectionProps {
   id: string;
 }
 
+interface ImageDisplay {
+  src: string;
+  alt: string;
+}
+
 const ActivityDetailsSection = async ({ id }: ActivityDetailsSectionProps) => {
   let response;
-  let activity;
+  let activity: Activity;
 
   try {
     response = await fetch(
@@ -46,7 +52,7 @@ const ActivityDetailsSection = async ({ id }: ActivityDetailsSectionProps) => {
     throw error;
   }
 
-  let images = [];
+  let images: ImageDisplay[] = [];
 
   if (activity?.img && typeof activity.img === "object") {
     const path = activity.img.path;
@@ -66,7 +72,7 @@ const ActivityDetailsSection = async ({ id }: ActivityDetailsSectionProps) => {
       images = [{ src: "/logo.svg", alt: activity?.title || "Activity image" }];
     }
   } else if (activity?.img_link && Array.isArray(activity.img_link)) {
-    images = activity.img_link.map((img: any) => {
+    images = activity.img_link.map((img: ActivityImage) => {
       const path = img?.path;
 
       if (path?.startsWith("data:image")) {

@@ -137,7 +137,7 @@ export default function ContactDetailsSection() {
 
         <CollapsibleContent>
           <p className="text-sm text-gray-600 mb-6">
-            We'll use this information to send you confirmation and updates
+            We&apos;ll use this information to send you confirmation and updates
             about your booking
           </p>
 
@@ -265,7 +265,7 @@ export default function ContactDetailsSection() {
                 </p>
               ) : (
                 <p className="text-xs text-gray-500 mt-1">
-                  We'll send booking confirmation emails here
+                  We&apos;ll send booking confirmation emails here
                 </p>
               )}
             </div>

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface Destination {
   id: number;
@@ -79,7 +80,7 @@ const DestinationGallerySection: React.FC<DestinationGallerySectionProps> = ({
             <h2 className="text-4xl sm:text-5xl lg:text-5xl font-light text-gray-900 mb-6 leading-tight tracking-tight">
               Discover{" "}
               <span className="font-bold">
-                the World's Best Unforgettable Holiday Escapes!
+                the World&apos;s Best Unforgettable Holiday Escapes!
               </span>
             </h2>
 
@@ -114,10 +115,11 @@ const DestinationGallerySection: React.FC<DestinationGallerySectionProps> = ({
                   key={destination.id}
                   className="relative shrink-0 w-80 h-96 group"
                 >
-                  <img
+                  <Image
                     src={destination.image}
                     alt={destination.name}
-                    className="w-full h-full object-cover rounded-2xl shadow-lg"
+                    fill
+                    className="object-cover rounded-2xl shadow-lg"
                   />
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/70 rounded-2xl" />

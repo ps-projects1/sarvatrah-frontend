@@ -7,58 +7,9 @@ import Itinerary from "./Itinerary";
 import Policies from "./Policies";
 import Summary from "./Summary";
 import BookingSidebar from "./itinerary/BookingSidebar";
+import { HolidayPackage } from "@/types/holiday";
 
-interface PackageDuration {
-  days: number;
-  nights: number;
-}
-
-interface ThemeImg {
-  filename: string;
-  path: string;
-  mimetype: string;
-}
-
-interface PackageDetails {
-  _id: string;
-  packageDuration: PackageDuration;
-  packageName: string;
-  themeImg: ThemeImg;
-  selectType: string;
-  packageType: string;
-  destinationCity: string[];
-  highlights: string;
-  include: string;
-  exclude: string;
-  startCity: string;
-  images: Array<{
-    filename: string;
-    path: string;
-    mimetype: string;
-  }>;
-  itinerary: any[];
-  vehiclePrices: Array<{
-    vehicle_id: string;
-    vehicleType: string;
-    price: number;
-  }>;
-  packagePrice: number;
-  partialPayment: boolean;
-  partialPaymentPercentage: number;
-  partialPaymentDueDays: number;
-  inflatedPercentage: number;
-  priceMarkup: number;
-  roomLimit: number;
-  active: boolean;
-  cancellationPolicyType: string;
-  refundablePercentage: number;
-  refundableDays: number;
-  displayHomepage: boolean;
-  recommendedPackage: boolean;
-  createPilgrimage: boolean;
-  uniqueId: string;
-  objectType: string;
-}
+type PackageDetails = HolidayPackage;
 
 interface ApiResponse {
   status: boolean;

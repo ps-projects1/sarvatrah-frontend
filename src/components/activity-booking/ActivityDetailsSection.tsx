@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown, MapPin, Calendar, Users, Clock } from "lucide-react";
+import { ChevronDown, MapPin, Calendar, Users } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -10,9 +10,10 @@ import {
 import TravelerForm from "./Travelerform";
 import { format } from "date-fns";
 import Image from "next/image";
+import { Activity } from "@/types/activity";
 
 interface ActivityDetailsSectionProps {
-  activity: any;
+  activity: Activity;
   date: string | null;
   numAdults: number;
   numSeniors: number;

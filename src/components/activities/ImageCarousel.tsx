@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 interface ImageCarouselProps {
   images: Array<{
@@ -40,10 +41,11 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
         {/* Main Carousel */}
         <div className="relative h-96 md:h-[500px] rounded-xl overflow-hidden">
           {/* Current Image */}
-          <img
+          <Image
             src={images[currentIndex].src}
             alt={images[currentIndex].alt}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
           />
 
           {/* Navigation Arrows */}
@@ -94,10 +96,11 @@ const ImageCarousel = ({ images }: ImageCarouselProps) => {
                     : "border-gray-200 hover:border-gray-400"
                 }`}
               >
-                <img
+                <Image
                   src={image.src}
                   alt={`Thumbnail ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
               </button>
             ))}

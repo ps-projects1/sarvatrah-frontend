@@ -15,7 +15,7 @@ import Link from "next/link";
 interface PackageData {
   _id: string;
   packageName: string;
-  packagePrice: number;
+  packagePrice?: number;
   packageDuration: {
     days: number;
     nights: number;
@@ -42,7 +42,7 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
     `/booking/${packageData._id}?` +
     new URLSearchParams({
       name: packageData.packageName,
-      price: packageData.packagePrice.toString(),
+      price: (packageData.packagePrice || 0).toString(),
       days: packageData.packageDuration.days.toString(),
       nights: packageData.packageDuration.nights.toString(),
       startCity: packageData.startCity,
@@ -64,10 +64,6 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
     }
   };
 
-  const handleRemoveCoupon = (coupon: string) => {
-    setAppliedCoupons(appliedCoupons.filter((c) => c !== coupon));
-  };
-
   return (
     <div className="space-y-4">
       {/* Price Card */}
@@ -84,7 +80,7 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
               {/* Discounted Price */}
               <div className="flex items-baseline gap-2">
                 <h2 className="text-3xl font-bold text-red-600 font-roboto">
-                  ₹{packageData.packagePrice.toLocaleString("en-IN")}
+                  ₹{(packageData.packagePrice || 0).toLocaleString("en-IN")}
                 </h2>
                 <span className="text-sm text-clr font-roboto">
                   per person*

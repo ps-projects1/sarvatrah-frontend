@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 
 const testimonials = [
   {
@@ -122,11 +123,14 @@ export default function TestimonialSection() {
               </div>
 
               <div className="flex items-center gap-3 mb-3">
-                <img
-                  src={testimonial.image}
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
+                <div className="relative w-12 h-12 rounded-full overflow-hidden">
+                  <Image
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
                 <div>
                   <h4 className="font-semibold text-gray-900 text-sm">
                     {testimonial.name}

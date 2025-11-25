@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+
+# Disallow admin or private pages
+Disallow: /api/
+Disallow: /booking/
+Disallow: /activity-booking/
+
+# Sitemap location
+Sitemap: https://your-domain.com/sitemap.xml

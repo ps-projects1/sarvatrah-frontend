@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { MapPin, Search, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -12,12 +12,6 @@ interface ActivityFirstSectionProps {
 const ActivityFirstSection: React.FC<ActivityFirstSectionProps> = ({ initialSearch = "" }) => {
   const [location, setLocation] = useState(initialSearch);
   const router = useRouter();
-
-  useEffect(() => {
-    if (initialSearch) {
-      setLocation(initialSearch);
-    }
-  }, [initialSearch]);
 
   const handleSearch = () => {
     if (location.trim()) {

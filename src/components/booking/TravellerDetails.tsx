@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { X, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 interface TravellerDetailsProps {
   bookingData: {
@@ -51,7 +51,7 @@ export interface TravellerDetailsRef {
 }
 
 const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
-  ({ bookingData, packageData }, ref) => {
+  ({ bookingData }, ref) => {
     const [dataOption, setDataOption] = useState<"lead" | "all">("all");
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);

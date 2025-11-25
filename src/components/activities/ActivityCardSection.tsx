@@ -1,6 +1,7 @@
 import React from "react";
 import { MapPin, Clock, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface ActivityCardSectionProps {
   id: string;
@@ -32,10 +33,11 @@ const ActivityCardSection = ({
       <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 h-[600px] flex flex-col">
         {/* Fixed height image section */}
         <div className="relative h-64 w-full overflow-hidden shrink-0">
-          <img
+          <Image
             src={image}
             alt={title}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
             onError={(e) => {
               e.currentTarget.src = "/logo.svg";
             }}

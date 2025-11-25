@@ -3,10 +3,10 @@
 import { MapPin, Clock, Users, Bus, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import PricingCard from "./PricingCard";
-import DOMPurify from "dompurify";
+import { Activity } from "@/types/activity";
 
 interface TourInfoSectionProps {
-  activity: any;
+  activity: Activity;
 }
 
 const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
@@ -232,7 +232,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                     {/* What's included */}
                     <div className="border-b border-[#EBEBEB] pb-8">
                       <h3 className="text-clr font-roboto text-xl font-semibold mb-3">
-                        What's included
+                        What&apos;s included
                       </h3>
                       <div className="grid grid-cols-2 gap-4">
                         {/* Inclusions */}
@@ -308,7 +308,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                      (activity.location?.location && activity.location.location.includes("iframe")) ? (
                       <div className="pt-6">
                         <h3 className="text-clr font-roboto text-xl font-semibold mb-4">
-                          Activity's Location
+                          Activity&apos;s Location
                         </h3>
 
                         <div className="w-full h-[300px] rounded-lg overflow-hidden">
@@ -329,7 +329,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                               referrerPolicy="no-referrer-when-downgrade"
                               className="w-full h-full rounded-lg"
                             />
-                          ) : (
+                          ) : activity.location?.location ? (
                             /* Old API - use iframe from location.location */
                             <iframe
                               src={activity.location.location.match(/src="([^"]+)"/)?.[1] || ""}
@@ -346,7 +346,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                               referrerPolicy="no-referrer-when-downgrade"
                               className="w-full h-full rounded-lg"
                             />
-                          )}
+                          ) : null}
                         </div>
                       </div>
                     ) : null}
