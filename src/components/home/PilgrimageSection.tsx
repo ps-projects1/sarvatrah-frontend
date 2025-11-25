@@ -28,8 +28,8 @@ const PilgrimageSection: React.FC<PilgrimageSectionProps> = ({
   onViewPilgrimages,
 }) => {
   return (
-    <section className="w-full relative pt-5 sm:pt-28 lg:pt-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-linear-to-r from-[#CED4DB] to-[#E9EDF2]">
-      <div className="max-w-7xl mx-auto relative z-10">
+    <section className="w-full relative overflow-hidden bg-linear-to-r from-[#CED4DB] to-[#E9EDF2] py-16 sm:py-20 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 items-center">
           {/* Left Content Section */}
           <div className="flex flex-col justify-start">

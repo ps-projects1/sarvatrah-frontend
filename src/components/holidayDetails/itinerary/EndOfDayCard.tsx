@@ -1,5 +1,4 @@
 import React from "react";
-import { Plus } from "lucide-react";
 
 const EndOfDayCard = () => {
   return (
@@ -10,13 +9,9 @@ const EndOfDayCard = () => {
             End Of Day -
           </h4>
           <p className="text-sm font-roboto text-clr">
-            Spend time at Leisure or add an activity to your day
+            Spend time at Leisure
           </p>
         </div>
-        <button className="flex items-center gap-2 bg-white text-[#2789FF] px-4 py-2.5 rounded-3xl font-roboto font-semibold hover:bg-blue-50 transition shadow-sm">
-          <Plus size={18} />
-          Add Activity To Day
-        </button>
       </div>
     </div>
   );

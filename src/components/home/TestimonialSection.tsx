@@ -72,7 +72,8 @@ export default function TestimonialSection() {
   );
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-16 bg-white">
+    <div className="w-full bg-white py-16 sm:py-20 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex items-start justify-between mb-12">
         <div>
           <h2 className="text-4xl font-bold text-gray-900">
@@ -148,6 +149,7 @@ export default function TestimonialSection() {
             </CardContent>
           </Card>
         ))}
+      </div>
       </div>
     </div>
   );

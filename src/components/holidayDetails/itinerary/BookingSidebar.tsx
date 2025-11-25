@@ -219,12 +219,6 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
                     -₹9,041
                   </p>
                 </div>
-                <button
-                  onClick={() => handleRemoveCoupon("SAVEONFLIGHTS")}
-                  className="text-[#2789FF] text-xs font-semibold hover:underline shrink-0 font-roboto ml-2"
-                >
-                  REMOVE
-                </button>
               </div>
             </div>
           </div>

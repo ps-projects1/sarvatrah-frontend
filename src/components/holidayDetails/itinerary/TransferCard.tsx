@@ -3,14 +3,13 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Cross, CrossIcon, X } from "lucide-react";
+import { X } from "lucide-react";
 
 interface TransferCardProps {
   from: string;
   to: string;
   vehicleType: string;
   facilities: string;
-  showRemove?: boolean;
   image: string;
 }
 
@@ -19,7 +18,6 @@ const TransferCard = ({
   to,
   vehicleType,
   facilities,
-  showRemove = true,
   image,
 }: TransferCardProps) => {
   const [showUpgrade, setShowUpgrade] = useState(false);
@@ -35,11 +33,6 @@ const TransferCard = ({
             <strong className="text-clr font-roboto">{to}</strong>
           </p>
           <div className="flex gap-4">
-            {showRemove && (
-              <button className="text-[#2789FF] text-sm font-roboto font-semibold hover:underline">
-                REMOVE
-              </button>
-            )}
             <button
               onClick={() => setShowUpgrade(!showUpgrade)}
               className="text-[#2789FF] font-roboto text-sm font-semibold hover:underline"

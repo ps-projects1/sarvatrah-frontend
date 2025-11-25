@@ -135,6 +135,10 @@ function HolidayContent() {
   const [priceRange, setPriceRange] = useState<[number, number]>([500, 50000]);
   const [selectedPackageTypes] = useState<string[]>([]);
   const [selectedSelectTypes] = useState<string[]>([]);
+  const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
+  const [selectedDestinations, setSelectedDestinations] = useState<string[]>([]);
+  const [priceSort, setPriceSort] = useState<"" | "low-high" | "high-low">("");
   const [minMaxPrice, setMinMaxPrice] = useState<{ min: number; max: number }>({
     min: 500,
     max: 50000,
@@ -224,6 +228,40 @@ function HolidayContent() {
     fetchPackages();
   }, []);
 
+  // Get unique destinations with counts
+  const getDestinationCounts = () => {
+    const destinationMap = new Map<string, number>();
+    packages.forEach(pkg => {
+      pkg.destinationCity.forEach(city => {
+        destinationMap.set(city, (destinationMap.get(city) || 0) + 1);
+      });
+    });
+    return Array.from(destinationMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
+  };
+
+  // Get duration category counts
+  const getDurationCounts = () => {
+    const counts = {
+      "less-than-6": 0,
+      "7-9": 0,
+      "more-than-10": 0,
+    };
+
+    packages.forEach(pkg => {
+      const nights = pkg.packageDuration.nights;
+      if (nights < 6) counts["less-than-6"]++;
+      else if (nights >= 7 && nights <= 9) counts["7-9"]++;
+      else if (nights > 10) counts["more-than-10"]++;
+    });
+
+    return counts;
+  };
+
+  const durationCounts = getDurationCounts();
+  const destinationCounts = getDestinationCounts();
+
   // Filter packages based on all criteria
   useEffect(() => {
     let filtered = packages;
@@ -249,17 +287,62 @@ function HolidayContent() {
       );
     }
 
-    // Filter by price range
-    filtered = filtered.filter((pkg) => {
-      const pkgPrice = getPackagePrice(pkg);
-      return pkgPrice >= priceRange[0] && pkgPrice <= priceRange[1];
-    });
+    // Filter by price range - only if user has changed the range from initial values
+    const hasUserChangedPriceRange = priceRange[0] !== minMaxPrice.min || priceRange[1] !== minMaxPrice.max;
+    if (hasUserChangedPriceRange) {
+      filtered = filtered.filter((pkg) => {
+        const pkgPrice = getPackagePrice(pkg);
+        // Include packages with no price (0) or packages within the selected range
+        if (pkgPrice === 0) return true;
+        return pkgPrice >= priceRange[0] && pkgPrice <= priceRange[1];
+      });
+    }
 
     // Filter by select type (domestic/international)
     if (selectedSelectTypes.length > 0) {
       filtered = filtered.filter((pkg) =>
         selectedSelectTypes.includes(pkg.selectType)
       );
+    }
+
+    // Filter by duration
+    if (selectedDurations.length > 0) {
+      filtered = filtered.filter((pkg) => {
+        const nights = pkg.packageDuration.nights;
+        return selectedDurations.some(duration => {
+          if (duration === "less-than-6") return nights < 6;
+          if (duration === "7-9") return nights >= 7 && nights <= 9;
+          if (duration === "more-than-10") return nights > 10;
+          return false;
+        });
+      });
+    }
+
+    // Filter by theme
+    if (selectedThemes.length > 0) {
+      filtered = filtered.filter((pkg) =>
+        selectedThemes.some(theme =>
+          pkg.packageType.toLowerCase().includes(theme.toLowerCase())
+        )
+      );
+    }
+
+    // Filter by destinations
+    if (selectedDestinations.length > 0) {
+      filtered = filtered.filter((pkg) =>
+        selectedDestinations.some(dest =>
+          pkg.destinationCity.some(city =>
+            city.toLowerCase() === dest.toLowerCase()
+          )
+        )
+      );
+    }
+
+    // Sort by price if selected
+    if (priceSort === "low-high") {
+      filtered = [...filtered].sort((a, b) => getPackagePrice(a) - getPackagePrice(b));
+    } else if (priceSort === "high-low") {
+      filtered = [...filtered].sort((a, b) => getPackagePrice(b) - getPackagePrice(a));
     }
 
     setFilteredPackages(filtered);
@@ -269,12 +352,39 @@ function HolidayContent() {
     selectedPackageTypes,
     priceRange,
     selectedSelectTypes,
+    selectedDurations,
+    selectedThemes,
+    selectedDestinations,
+    priceSort,
     packages,
+    minMaxPrice,
   ]);
 
   // Handle price range change
   const handlePriceChange = (values: number[]) => {
     setPriceRange([values[0], values[1]]);
+  };
+
+  const handlePriceSortChange = (sort: "low-high" | "high-low") => {
+    setPriceSort(priceSort === sort ? "" : sort);
+  };
+
+  const handleDurationChange = (duration: string, checked: boolean) => {
+    setSelectedDurations(prev =>
+      checked ? [...prev, duration] : prev.filter(d => d !== duration)
+    );
+  };
+
+  const handleThemeChange = (theme: string, checked: boolean) => {
+    setSelectedThemes(prev =>
+      checked ? [...prev, theme] : prev.filter(t => t !== theme)
+    );
+  };
+
+  const handleDestinationChange = (destination: string, checked: boolean) => {
+    setSelectedDestinations(prev =>
+      checked ? [...prev, destination] : prev.filter(d => d !== destination)
+    );
   };
 
   const getPackagePrice = (pkg: HolidayPackage): number => {
@@ -422,10 +532,13 @@ function HolidayContent() {
                 <h3 className="text-[18px] sm:text-[20px] font-semibold text-clr mb-4">
                   Price Range
                 </h3>
+                <p className="text-[12px] text-[#999FA8] mb-3">Price Per Person</p>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <Checkbox
                       id="low-high"
+                      checked={priceSort === "low-high"}
+                      onCheckedChange={() => handlePriceSortChange("low-high")}
                       className="w-4 sm:w-[18px] h-4 sm:h-[18px] border-2 border-[#CDD4DD]"
                     />
                     <Label
@@ -438,6 +551,8 @@ function HolidayContent() {
                   <div className="flex items-center gap-3">
                     <Checkbox
                       id="high-low"
+                      checked={priceSort === "high-low"}
+                      onCheckedChange={() => handlePriceSortChange("high-low")}
                       className="w-4 sm:w-[18px] h-4 sm:h-[18px] border-2 border-[#CDD4DD]"
                     />
                     <Label
@@ -445,6 +560,26 @@ function HolidayContent() {
                       className="flex-1 text-[14px] sm:text-[16px] text-clr cursor-pointer font-normal"
                     >
                       High - Low
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Checkbox
+                      id="0-1000"
+                      checked={priceRange[0] === 0 && priceRange[1] === 1000}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setPriceRange([0, 1000]);
+                        } else {
+                          setPriceRange([minMaxPrice.min, minMaxPrice.max]);
+                        }
+                      }}
+                      className="w-4 sm:w-[18px] h-4 sm:h-[18px] border-2 border-[#CDD4DD]"
+                    />
+                    <Label
+                      htmlFor="0-1000"
+                      className="flex-1 text-[14px] sm:text-[16px] text-clr cursor-pointer font-normal"
+                    >
+                      0-1000 (INR)
                     </Label>
                   </div>
                 </div>
@@ -457,26 +592,28 @@ function HolidayContent() {
                 </h3>
                 <div className="space-y-3">
                   {[
-                    { label: "Less than 06 Nights", count: 56 },
-                    { label: "07 - 09 Nights", count: 101 },
-                    { label: "More than 10 Nights", count: 34 },
+                    { label: "Less than 06 Nights", value: "less-than-6", count: durationCounts["less-than-6"] },
+                    { label: "07 - 09 Nights", value: "7-9", count: durationCounts["7-9"] },
+                    { label: "More than 10 Nights", value: "more-than-10", count: durationCounts["more-than-10"] },
                   ].map((duration) => (
                     <div
-                      key={duration.label}
+                      key={duration.value}
                       className="flex items-center gap-3"
                     >
                       <Checkbox
-                        id={duration.label}
+                        id={duration.value}
+                        checked={selectedDurations.includes(duration.value)}
+                        onCheckedChange={(checked) => handleDurationChange(duration.value, checked as boolean)}
                         className="w-4 sm:w-[18px] h-4 sm:h-[18px] border-2 border-[#CDD4DD]"
                       />
                       <Label
-                        htmlFor={duration.label}
+                        htmlFor={duration.value}
                         className="flex-1 text-[14px] sm:text-[16px] text-clr cursor-pointer font-normal"
                       >
                         {duration.label}
                       </Label>
                       <span className="text-[12px] sm:text-[14px] text-[#A3ABB6] font-semibold">
-                        {duration.count}
+                        ({duration.count})
                       </span>
                     </div>
                   ))}
@@ -499,6 +636,8 @@ function HolidayContent() {
                     <div key={theme} className="flex items-center gap-3">
                       <Checkbox
                         id={theme}
+                        checked={selectedThemes.includes(theme)}
+                        onCheckedChange={(checked) => handleThemeChange(theme, checked as boolean)}
                         className="w-4 sm:w-[18px] h-4 sm:h-[18px] border-2 border-[#CDD4DD]"
                       />
                       <Label
@@ -511,6 +650,36 @@ function HolidayContent() {
                   ))}
                 </div>
               </div>
+
+              {/* Destinations Filter */}
+              {destinationCounts.length > 0 && (
+                <div className="mt-6 bg-white p-4 sm:p-6 rounded-lg border border-[#E6E6E6]">
+                  <h3 className="text-[18px] sm:text-[20px] font-semibold text-clr mb-4">
+                    Destinations
+                  </h3>
+                  <div className="space-y-3 max-h-[300px] overflow-y-auto">
+                    {destinationCounts.map(([destination, count]) => (
+                      <div key={destination} className="flex items-center gap-3">
+                        <Checkbox
+                          id={`destination-${destination}`}
+                          checked={selectedDestinations.includes(destination)}
+                          onCheckedChange={(checked) => handleDestinationChange(destination, checked as boolean)}
+                          className="w-4 sm:w-[18px] h-4 sm:h-[18px] border-2 border-[#CDD4DD]"
+                        />
+                        <Label
+                          htmlFor={`destination-${destination}`}
+                          className="flex-1 text-[14px] sm:text-[16px] text-clr cursor-pointer font-normal"
+                        >
+                          {destination}
+                        </Label>
+                        <span className="text-[12px] sm:text-[14px] text-[#A3ABB6] font-semibold">
+                          ({count})
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </aside>
 
             {/* Results Grid */}

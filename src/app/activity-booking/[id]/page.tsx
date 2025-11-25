@@ -73,9 +73,67 @@ function ActivityBookingContent({ id }: Readonly<{ id: string }>) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto pb-6">
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 pt-10">
-        <div className="lg:col-span-2 space-y-6">
+    <div className="w-full bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Breadcrumbs */}
+        <nav className="mb-6" aria-label="Breadcrumb">
+          <ol className="flex items-center gap-2 text-sm text-gray-600">
+            <li>
+              <a href="/" className="hover:text-blue-600 transition">
+                Home
+              </a>
+            </li>
+            <li className="flex items-center gap-2">
+              <span>/</span>
+              <a href="/activities" className="hover:text-blue-600 transition">
+                Activities
+              </a>
+            </li>
+            <li className="flex items-center gap-2">
+              <span>/</span>
+              <span className="text-gray-900 font-medium">Booking</span>
+            </li>
+          </ol>
+        </nav>
+
+        {/* Progress Indicator */}
+        <div className="mb-8 bg-white rounded-lg border border-gray-200 p-6">
+          <div className="flex items-center justify-between max-w-2xl mx-auto">
+            <div className="flex flex-col items-center flex-1">
+              <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold mb-2">
+                1
+              </div>
+              <span className="text-xs sm:text-sm font-medium text-gray-900">
+                Contact Details
+              </span>
+            </div>
+            <div className="flex-1 h-1 bg-gray-200 mx-2">
+              <div className="h-full bg-blue-600 w-0 transition-all duration-300"></div>
+            </div>
+            <div className="flex flex-col items-center flex-1">
+              <div className="w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-semibold mb-2">
+                2
+              </div>
+              <span className="text-xs sm:text-sm font-medium text-gray-600">
+                Activity Details
+              </span>
+            </div>
+            <div className="flex-1 h-1 bg-gray-200 mx-2">
+              <div className="h-full bg-blue-600 w-0 transition-all duration-300"></div>
+            </div>
+            <div className="flex flex-col items-center flex-1">
+              <div className="w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-semibold mb-2">
+                3
+              </div>
+              <span className="text-xs sm:text-sm font-medium text-gray-600">
+                Payment
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
           <ContactDetailsSection />
           <ActivityDetailsSection
             activity={activity}
@@ -87,15 +145,16 @@ function ActivityBookingContent({ id }: Readonly<{ id: string }>) {
           <PaymentSection activity={activity} tourLanguage="English - Guide" />
         </div>
 
-        <div className="lg:col-span-1">
-          <div className="lg:sticky lg:top-8">
-            <BookingSummaryCard
-              activity={activity}
-              date={date}
-              numAdults={numAdults}
-              numSeniors={numSeniors}
-              numChildren={numChildren}
-            />
+          <div className="lg:col-span-1">
+            <div className="lg:sticky lg:top-8">
+              <BookingSummaryCard
+                activity={activity}
+                date={date}
+                numAdults={numAdults}
+                numSeniors={numSeniors}
+                numChildren={numChildren}
+              />
+            </div>
           </div>
         </div>
       </div>

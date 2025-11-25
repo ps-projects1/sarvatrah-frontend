@@ -72,8 +72,8 @@ const InvertedDestinationSection: React.FC<DestinationGallerySectionProps> = ({
   };
 
   return (
-    <section className="w-full bg-white py-16 sm:py-20 lg:py-24 pr-4 sm:pr-6 lg:pr-8">
-      <div className="max-w-7xl mr-auto">
+    <section className="w-full bg-white py-16 sm:py-20 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row-reverse gap-12 lg:gap-16 items-start lg:items-center">
           <div className="w-full lg:w-1/3 flex flex-col justify-start">
             <h2 className="text-4xl sm:text-5xl lg:text-5xl font-light text-gray-900 mb-6 leading-tight tracking-tight">
@@ -112,7 +112,7 @@ const InvertedDestinationSection: React.FC<DestinationGallerySectionProps> = ({
               {destinationList.map((destination) => (
                 <div
                   key={destination.id}
-                  className="relative shrink-0 w-80 h-96 transition-all duration-1000 ease-in-out hover:w-[40vw] group"
+                  className="relative shrink-0 w-80 h-96 group"
                 >
                   <img
                     src={destination.image}
