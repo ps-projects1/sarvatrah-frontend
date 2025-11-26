@@ -34,7 +34,9 @@ interface ActivitySecondSectionProps {
   searchQuery?: string;
 }
 
-const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQuery = "" }) => {
+const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
+  searchQuery = "",
+}) => {
   const [activities, setActivities] = useState<ActivityData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,15 +50,15 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
   const [priceSort, setPriceSort] = useState<"" | "low-high" | "high-low">("");
   const [selectedDurations, setSelectedDurations] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedDestinations, setSelectedDestinations] = useState<string[]>([]);
+  const [selectedDestinations, setSelectedDestinations] = useState<string[]>(
+    []
+  );
 
   // Calculate min/max price from activities
   const calculatePriceRange = (activityList: ActivityData[]) => {
     if (activityList.length === 0) return { min: 0, max: 10000 };
 
-    const prices = activityList.flatMap((a) =>
-      a.pricing.map((p) => p.price)
-    );
+    const prices = activityList.flatMap((a) => a.pricing.map((p) => p.price));
 
     if (prices.length === 0) return { min: 0, max: 10000 };
 
@@ -95,10 +97,10 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
   // Get unique destinations from activities
   const allDestinations = useMemo(() => {
     const destinations = new Set<string>();
-    activities.forEach(activity => {
+    activities.forEach((activity) => {
       if (activity.location?.city) destinations.add(activity.location.city);
       if (activity.location?.state) destinations.add(activity.location.state);
-      activity.meeting_point?.forEach(mp => {
+      activity.meeting_point?.forEach((mp) => {
         if (mp.city) destinations.add(mp.city);
       });
     });
@@ -116,7 +118,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
     const parts = duration.split(":");
     const hours = parseInt(parts[0]) || 0;
     const minutes = parseInt(parts[1]) || 0;
-    return hours + (minutes / 60);
+    return hours + minutes / 60;
   };
 
   // Filter and sort activities
@@ -131,9 +133,10 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
           activity.title?.toLowerCase().includes(query) ||
           activity.location?.city?.toLowerCase().includes(query) ||
           activity.location?.state?.toLowerCase().includes(query) ||
-          activity.meeting_point?.some(mp =>
-            mp.city?.toLowerCase().includes(query) ||
-            mp.address?.toLowerCase().includes(query)
+          activity.meeting_point?.some(
+            (mp) =>
+              mp.city?.toLowerCase().includes(query) ||
+              mp.address?.toLowerCase().includes(query)
           )
         );
       });
@@ -149,7 +152,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
     if (selectedDurations.length > 0) {
       filtered = filtered.filter((activity) => {
         const hours = getDurationInHours(activity.duration);
-        return selectedDurations.some(duration => {
+        return selectedDurations.some((duration) => {
           if (duration === "0-2") return hours >= 0 && hours <= 2;
           if (duration === "half-day") return hours > 2 && hours <= 6;
           if (duration === "full-day") return hours > 6;
@@ -162,7 +165,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
     if (selectedCategories.length > 0) {
       filtered = filtered.filter((activity) => {
         if (!activity.category) return false;
-        return selectedCategories.some(cat =>
+        return selectedCategories.some((cat) =>
           activity.category?.toLowerCase().includes(cat.toLowerCase())
         );
       });
@@ -171,25 +174,38 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
     // Filter by destinations
     if (selectedDestinations.length > 0) {
       filtered = filtered.filter((activity) => {
-        return selectedDestinations.some(dest =>
-          activity.location?.city?.toLowerCase() === dest.toLowerCase() ||
-          activity.location?.state?.toLowerCase() === dest.toLowerCase() ||
-          activity.meeting_point?.some(mp =>
-            mp.city?.toLowerCase() === dest.toLowerCase()
-          )
+        return selectedDestinations.some(
+          (dest) =>
+            activity.location?.city?.toLowerCase() === dest.toLowerCase() ||
+            activity.location?.state?.toLowerCase() === dest.toLowerCase() ||
+            activity.meeting_point?.some(
+              (mp) => mp.city?.toLowerCase() === dest.toLowerCase()
+            )
         );
       });
     }
 
     // Sort by price if selected
     if (priceSort === "low-high") {
-      filtered = [...filtered].sort((a, b) => getActivityPrice(a) - getActivityPrice(b));
+      filtered = [...filtered].sort(
+        (a, b) => getActivityPrice(a) - getActivityPrice(b)
+      );
     } else if (priceSort === "high-low") {
-      filtered = [...filtered].sort((a, b) => getActivityPrice(b) - getActivityPrice(a));
+      filtered = [...filtered].sort(
+        (a, b) => getActivityPrice(b) - getActivityPrice(a)
+      );
     }
 
     return filtered;
-  }, [activities, searchQuery, priceRange, selectedDurations, selectedCategories, selectedDestinations, priceSort]);
+  }, [
+    activities,
+    searchQuery,
+    priceRange,
+    selectedDurations,
+    selectedCategories,
+    selectedDestinations,
+    priceSort,
+  ]);
 
   const getFirstImage = (activity: ActivityData) => {
     try {
@@ -264,20 +280,20 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
   };
 
   const handleDurationChange = (duration: string, checked: boolean) => {
-    setSelectedDurations(prev =>
-      checked ? [...prev, duration] : prev.filter(d => d !== duration)
+    setSelectedDurations((prev) =>
+      checked ? [...prev, duration] : prev.filter((d) => d !== duration)
     );
   };
 
   const handleCategoryChange = (category: string, checked: boolean) => {
-    setSelectedCategories(prev =>
-      checked ? [...prev, category] : prev.filter(c => c !== category)
+    setSelectedCategories((prev) =>
+      checked ? [...prev, category] : prev.filter((c) => c !== category)
     );
   };
 
   const handleDestinationChange = (destination: string, checked: boolean) => {
-    setSelectedDestinations(prev =>
-      checked ? [...prev, destination] : prev.filter(d => d !== destination)
+    setSelectedDestinations((prev) =>
+      checked ? [...prev, destination] : prev.filter((d) => d !== destination)
     );
   };
 
@@ -320,7 +336,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
                 step={100}
                 value={[priceRange[0], priceRange[1]]}
                 onValueChange={handlePriceChange}
-                className="w-full [&_[role=slider]]:bg-[#2789FF] [&_[role=slider]]:border-[#2789FF] [&>span>span]:bg-[#2789FF]"
+                className="w-full **:[[role=slider]]:bg-[#2789FF] **:[[role=slider]]:border-[#2789FF] [&>span>span]:bg-[#2789FF]"
               />
               <div className="flex justify-between mt-4 text-[12px] text-[#999FA8]">
                 <span>{formatPrice(minMaxPrice.min)}</span>
@@ -395,7 +411,9 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
                   <Checkbox
                     id="duration-0-2"
                     checked={selectedDurations.includes("0-2")}
-                    onCheckedChange={(checked) => handleDurationChange("0-2", checked as boolean)}
+                    onCheckedChange={(checked) =>
+                      handleDurationChange("0-2", checked as boolean)
+                    }
                     className="w-4 sm:w-[18px] h-4 sm:h-[18px] border-2 border-[#CDD4DD]"
                   />
                   <Label
@@ -409,7 +427,9 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
                   <Checkbox
                     id="duration-half-day"
                     checked={selectedDurations.includes("half-day")}
-                    onCheckedChange={(checked) => handleDurationChange("half-day", checked as boolean)}
+                    onCheckedChange={(checked) =>
+                      handleDurationChange("half-day", checked as boolean)
+                    }
                     className="w-4 sm:w-[18px] h-4 sm:h-[18px] border-2 border-[#CDD4DD]"
                   />
                   <Label
@@ -423,7 +443,9 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
                   <Checkbox
                     id="duration-full-day"
                     checked={selectedDurations.includes("full-day")}
-                    onCheckedChange={(checked) => handleDurationChange("full-day", checked as boolean)}
+                    onCheckedChange={(checked) =>
+                      handleDurationChange("full-day", checked as boolean)
+                    }
                     className="w-4 sm:w-[18px] h-4 sm:h-[18px] border-2 border-[#CDD4DD]"
                   />
                   <Label
@@ -449,13 +471,15 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
                   "Adventure",
                   "Hot Deals",
                   "Top destinations",
-                  "Activities near you"
+                  "Activities near you",
                 ].map((category) => (
                   <div key={category} className="flex items-center gap-3">
                     <Checkbox
                       id={`category-${category}`}
                       checked={selectedCategories.includes(category)}
-                      onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
+                      onCheckedChange={(checked) =>
+                        handleCategoryChange(category, checked as boolean)
+                      }
                       className="w-4 sm:w-[18px] h-4 sm:h-[18px] border-2 border-[#CDD4DD]"
                     />
                     <Label
@@ -481,7 +505,12 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
                       <Checkbox
                         id={`destination-${destination}`}
                         checked={selectedDestinations.includes(destination)}
-                        onCheckedChange={(checked) => handleDestinationChange(destination, checked as boolean)}
+                        onCheckedChange={(checked) =>
+                          handleDestinationChange(
+                            destination,
+                            checked as boolean
+                          )
+                        }
                         className="w-4 sm:w-[18px] h-4 sm:h-[18px] border-2 border-[#CDD4DD]"
                       />
                       <Label
@@ -507,7 +536,9 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
                     <span className="font-semibold">
                       {filteredActivities.length}
                     </span>{" "}
-                    {searchQuery ? `Activities Found for "${searchQuery}"` : "Activities Found"}
+                    {searchQuery
+                      ? `Activities Found for "${searchQuery}"`
+                      : "Activities Found"}
                   </>
                 ) : (
                   "No Activities Found"
@@ -531,7 +562,9 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({ searchQue
                     d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"
                   />
                 </svg>
-                <p className="text-gray-500 text-lg">No activities found matching your criteria.</p>
+                <p className="text-gray-500 text-lg">
+                  No activities found matching your criteria.
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">

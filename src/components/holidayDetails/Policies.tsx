@@ -21,11 +21,11 @@ const Policies = () => {
         className="bg-white rounded-lg border border-[#E6E6E6] overflow-hidden"
       >
         <CollapsibleTrigger className="w-full flex items-center justify-between p-4 sm:p-6 hover:bg-gray-50 transition-colors">
-          <h2 className="text-[18px] sm:text-[20px] font-semibold text-[#1E2125]">
+          <h2 className="text-[18px] sm:text-[20px] font-semibold text-clr">
             Cancellation & Date Change
           </h2>
           <ChevronDown
-            className={`w-5 h-5 text-[#1E2125] transition-transform duration-200 ${
+            className={`w-5 h-5 text-clr transition-transform duration-200 ${
               openCancellation ? "rotate-180" : ""
             }`}
           />
@@ -34,7 +34,7 @@ const Policies = () => {
         <CollapsibleContent className="px-4 sm:px-6 pb-6 space-y-6">
           {/* Package Cancellation Policy */}
           <div>
-            <h3 className="text-[16px] sm:text-[18px] font-semibold text-[#1E2125] mb-3">
+            <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
               Package Cancellation Policy
             </h3>
             <p className="text-[14px] sm:text-[16px] text-[#666666]">
@@ -44,7 +44,7 @@ const Policies = () => {
 
           {/* Package Date Change Policy */}
           <div>
-            <h3 className="text-[16px] sm:text-[18px] font-semibold text-[#1E2125] mb-3">
+            <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
               Package Date Change Policy
             </h3>
             <p className="text-[14px] sm:text-[16px] text-[#666666]">
@@ -61,11 +61,11 @@ const Policies = () => {
         className="bg-white rounded-lg border border-[#E6E6E6] overflow-hidden"
       >
         <CollapsibleTrigger className="w-full flex items-center justify-between p-4 sm:p-6 hover:bg-gray-50 transition-colors">
-          <h2 className="text-[18px] sm:text-[20px] font-semibold text-[#1E2125]">
+          <h2 className="text-[18px] sm:text-[20px] font-semibold text-clr">
             Terms and Conditions
           </h2>
           <ChevronDown
-            className={`w-5 h-5 text-[#1E2125] transition-transform duration-200 ${
+            className={`w-5 h-5 text-clr transition-transform duration-200 ${
               openTerms ? "rotate-180" : ""
             }`}
           />
@@ -74,7 +74,7 @@ const Policies = () => {
         <CollapsibleContent className="px-4 sm:px-6 pb-6 space-y-6">
           {/* Exclusions */}
           <div>
-            <h3 className="text-[16px] sm:text-[18px] font-semibold text-[#1E2125] mb-3">
+            <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
               Exclusions
             </h3>
             <ul className="space-y-2 text-[14px] sm:text-[16px] text-[#666666]">
@@ -102,7 +102,7 @@ const Policies = () => {
 
           {/* Terms and Conditions */}
           <div>
-            <h3 className="text-[16px] sm:text-[18px] font-semibold text-[#1E2125] mb-3">
+            <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
               Terms and Conditions
             </h3>
             <ul className="space-y-3 text-[14px] sm:text-[16px] text-[#666666]">
@@ -300,7 +300,7 @@ export default Policies;
 <div className="px-4 sm:px-6 pb-6 space-y-6">
   {/* Exclusions */}
   <div>
-    <h3 className="text-[16px] sm:text-[18px] font-semibold text-[#1E2125] mb-3">
+    <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
       Exclusions
     </h3>
     <ul className="space-y-2 text-[14px] sm:text-[16px] text-[#666666]">
@@ -328,7 +328,7 @@ export default Policies;
 
   {/* Terms and Conditions */}
   <div>
-    <h3 className="text-[16px] sm:text-[18px] font-semibold text-[#1E2125] mb-3">
+    <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
       Terms and Conditions
     </h3>
     <ul className="space-y-3 text-[14px] sm:text-[16px] text-[#666666]">

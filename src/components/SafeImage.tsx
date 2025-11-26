@@ -4,7 +4,11 @@ interface SafeImageProps extends Omit<ImageProps, "src"> {
   src: string;
 }
 
-export default function SafeImage({ src, alt, ...props }: SafeImageProps) {
+export default function SafeImage({
+  src,
+  alt,
+  ...props
+}: Readonly<SafeImageProps>) {
   const isLocalhost =
     src.includes("localhost") ||
     src.includes("127.0.0.1") ||
