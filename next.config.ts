@@ -76,11 +76,13 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://maps.googleapis.com",
+              // SECURITY: Removed 'unsafe-eval' - only allow inline scripts for Next.js hydration
+              // If Google Maps issues occur, add specific nonces instead
+              "script-src 'self' 'unsafe-inline' https://www.google.com https://maps.googleapis.com https://maps.gstatic.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: blob: https: http://localhost:3232 http://127.0.0.1:3232 https://sarvatrah-backend.onrender.com https://images.unsplash.com",
               "font-src 'self' data: https://fonts.gstatic.com",
-              "connect-src 'self' http://localhost:3232 http://127.0.0.1:3232 https://sarvatrah-backend.onrender.com",
+              "connect-src 'self' http://localhost:3232 http://127.0.0.1:3232 https://sarvatrah-backend.onrender.com https://maps.googleapis.com",
               "frame-src 'self' https://www.google.com https://maps.google.com",
               "object-src 'none'",
               "base-uri 'self'",

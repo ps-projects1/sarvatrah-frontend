@@ -110,7 +110,7 @@ export default function ContactDetailsSection() {
     e.preventDefault();
     if (validateForm()) {
       // Form is valid, proceed to next section
-      console.log("Form valid:", formData);
+      // Data will be handled by parent component
     }
   };
 

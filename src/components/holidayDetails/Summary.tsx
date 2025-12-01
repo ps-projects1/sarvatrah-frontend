@@ -22,6 +22,14 @@ const Summary = ({ packageData }: SummaryProps) => {
     new Set()
   );
 
+  // Helper function to safely get city name
+  const getCityName = (city: any): string => {
+    if (!city) return '';
+    if (typeof city === 'string') return city;
+    if (typeof city === 'object' && city.name) return city.name;
+    return '';
+  };
+
   const inclusions = packageData.include
     .split(",")
     .map((item) => item.trim())
@@ -85,7 +93,7 @@ const Summary = ({ packageData }: SummaryProps) => {
                         {day.city && (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-gray-300 rounded-full text-xs font-medium text-gray-700">
                             <MapPin className="w-3 h-3" />
-                            {day.city}
+                            {getCityName(day.city)}
                           </span>
                         )}
                         {day.mealsIncluded && day.mealsIncluded.length > 0 && (
@@ -219,7 +227,7 @@ const Summary = ({ packageData }: SummaryProps) => {
                             <div className="flex-1 min-w-0">
                               <h4 className="text-sm font-semibold text-green-900 mb-1">Accommodation</h4>
                               <p className="text-sm text-green-800">
-                                Overnight stay at hotel in <span className="font-semibold">{day.city}</span>
+                                Overnight stay at hotel in <span className="font-semibold">{getCityName(day.city)}</span>
                               </p>
                             </div>
                           </div>
@@ -276,7 +284,7 @@ const Summary = ({ packageData }: SummaryProps) => {
               <div>
                 <p className="text-xs text-gray-600 mb-1">Destinations</p>
                 <p className="text-sm font-semibold text-gray-900">
-                  {packageData.destinationCity.join(", ")}
+                  {packageData.destinationCity.map(city => typeof city === 'string' ? city : city.name).join(", ")}
                 </p>
               </div>
             </div>

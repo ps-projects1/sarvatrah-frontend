@@ -20,6 +20,7 @@ import { Search } from "lucide-react";
 import RequestCallBackSection from "@/components/home/RequestCallBackSection";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
+import { DestinationCity } from "@/types/holiday";
 
 interface PackageDuration {
   days: number;
@@ -75,7 +76,7 @@ interface HolidayPackage {
   selectType: string;
   uniqueId: string;
   packageType: string;
-  destinationCity: string[];
+  destinationCity: (string | DestinationCity)[];
   highlights: string;
   createPilgrimage: boolean;
   displayHomepage: boolean;
@@ -234,7 +235,8 @@ function HolidayContent() {
     const destinationMap = new Map<string, number>();
     packages.forEach(pkg => {
       pkg.destinationCity.forEach(city => {
-        destinationMap.set(city, (destinationMap.get(city) || 0) + 1);
+        const cityName = typeof city === 'string' ? city : city.name;
+        destinationMap.set(cityName, (destinationMap.get(cityName) || 0) + 1);
       });
     });
     return Array.from(destinationMap.entries())
@@ -272,9 +274,10 @@ function HolidayContent() {
       filtered = filtered.filter(
         (pkg) =>
           pkg.packageName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          pkg.destinationCity.some((city) =>
-            city.toLowerCase().includes(searchQuery.toLowerCase())
-          ) ||
+          pkg.destinationCity.some((city) => {
+            const cityName = typeof city === 'string' ? city : city.name;
+            return cityName.toLowerCase().includes(searchQuery.toLowerCase());
+          }) ||
           pkg.startCity.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
@@ -332,9 +335,10 @@ function HolidayContent() {
     if (selectedDestinations.length > 0) {
       filtered = filtered.filter((pkg) =>
         selectedDestinations.some(dest =>
-          pkg.destinationCity.some(city =>
-            city.toLowerCase() === dest.toLowerCase()
-          )
+          pkg.destinationCity.some(city => {
+            const cityName = typeof city === 'string' ? city : city.name;
+            return cityName.toLowerCase() === dest.toLowerCase();
+          })
         )
       );
     }
@@ -798,7 +802,7 @@ function HolidayContent() {
                                 />
                               </svg>
                               <span className="line-clamp-1">
-                                {pkg.destinationCity.join(", ")}
+                                {pkg.destinationCity.map(city => typeof city === 'string' ? city : city.name).join(", ")}
                               </span>
                             </div>
 

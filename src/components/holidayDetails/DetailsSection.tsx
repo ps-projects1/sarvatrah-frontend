@@ -115,7 +115,7 @@ const DetailsSection = ({ params }: { params: { id: string } }) => {
               {packageData.packageDuration.nights}N
             </span>
             <span className="text-blue-600 font-semibold">
-              📍 {packageData.destinationCity.join(", ")}
+              📍 {packageData.destinationCity.map(city => typeof city === 'string' ? city : city.name).join(", ")}
             </span>
           </p>
         </div>

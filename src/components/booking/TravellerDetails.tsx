@@ -155,7 +155,8 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
       }, 3000);
     };
 
-    const basePrice = parseFloat(bookingData.price || "0");
+    // SECURITY: Always use backend-validated price, never trust URL params
+    const basePrice = packageData?.packagePrice || 0;
     const gstAmount = basePrice * 0.18;
     const totalPrice = basePrice + gstAmount;
 
@@ -178,7 +179,7 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
             </div>
             <div>
               <p className="text-sm text-gray-500 mb-1">Total Amount</p>
-              <p className="font-semibold text-clr">₹ {bookingData.price}</p>
+              <p className="font-semibold text-clr">₹ {basePrice.toLocaleString("en-IN")}</p>
             </div>
           </div>
         </div>
@@ -430,8 +431,14 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
                 className="w-5 h-5 text-blue-600 rounded"
               />
               <label htmlFor="terms" className="text-gray-700">
-                I agree to Lorem Ipsum is simply dummy text of the printing and
-                typesett
+                I agree to the{" "}
+                <a href="/terms" target="_blank" className="text-blue-600 hover:underline">
+                  Terms and Conditions
+                </a>{" "}
+                and{" "}
+                <a href="/privacy" target="_blank" className="text-blue-600 hover:underline">
+                  Privacy Policy
+                </a>
               </label>
             </div>
 

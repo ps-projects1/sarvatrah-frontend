@@ -11,6 +11,7 @@ import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { DestinationCity } from "@/types/holiday";
 
 interface PackageData {
   _id: string;
@@ -21,7 +22,7 @@ interface PackageData {
     nights: number;
   };
   startCity: string;
-  destinationCity: string[];
+  destinationCity: (string | DestinationCity)[];
   packageType: string;
   selectType: string;
   highlights: string;
@@ -46,7 +47,7 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
       days: packageData.packageDuration.days.toString(),
       nights: packageData.packageDuration.nights.toString(),
       startCity: packageData.startCity,
-      destinations: packageData.destinationCity.join(","),
+      destinations: packageData.destinationCity.map(city => typeof city === 'string' ? city : city.name).join(","),
       packageType: packageData.packageType,
       selectType: packageData.selectType,
       highlights: packageData.highlights,

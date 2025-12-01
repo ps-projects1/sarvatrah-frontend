@@ -210,7 +210,7 @@ const BookingDetails = ({ params }: BookingDetailsProps) => {
                             {packageData.packageDuration?.nights} Nights
                           </p>
                           <p className="text-xs text-gray-500 font-roboto">
-                            {packageData.destinationCity?.join(", ")}
+                            {packageData.destinationCity?.map(city => typeof city === 'string' ? city : city.name).join(", ")}
                           </p>
                         </div>
                       </div>

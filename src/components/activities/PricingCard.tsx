@@ -45,8 +45,6 @@ const ImprovedPricingCard = ({ activity }: PricingCardProps) => {
     activity._id
   }?date=${selectedDate?.toISOString()}&adults=${numAdults}&seniors=${numSeniors}&children=${numChildren}`;
 
-  console.log("sending activity booking id as ", activity._id);
-
   const isBookingDisabled = !selectedDate;
   return (
     <>

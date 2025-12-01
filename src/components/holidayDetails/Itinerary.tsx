@@ -33,6 +33,14 @@ interface ItineraryProps {
 }
 
 const Itinerary = ({ itineraryData }: ItineraryProps) => {
+  // Helper function to safely get city name
+  const getCityName = (city: any): string => {
+    if (!city) return 'Unknown';
+    if (typeof city === 'string') return city;
+    if (typeof city === 'object' && city.name) return city.name;
+    return 'Unknown';
+  };
+
   return (
     <div className=" w-full">
       <div className="mx-auto ">
@@ -43,7 +51,7 @@ const Itinerary = ({ itineraryData }: ItineraryProps) => {
             <div key={day.dayNo} className="mb-6">
               <DayHeader
                 day={day.dayNo}
-                location={day.city || "Unknown"}
+                location={getCityName(day.city)}
                 hotels={day.stay ? 1 : 0}
                 activities={day.activities.length}
                 transfers={day.transport && day.dayNo === 1 ? 1 : 0}
@@ -53,7 +61,7 @@ const Itinerary = ({ itineraryData }: ItineraryProps) => {
                 {day.transport && day.dayNo === 1 && (
                   <TransferCard
                     from="Start Point"
-                    to={day.city || "Destination"}
+                    to={getCityName(day.city) || "Destination"}
                     vehicleType={day.transport.type}
                     facilities={day.transport.details}
                     image="/images/holiday/holiday_list.png"
@@ -62,9 +70,9 @@ const Itinerary = ({ itineraryData }: ItineraryProps) => {
 
                 {day.activities.map((activity, index) => (
                   <ActivityCard
-                    key={index}
+                    key={`${day.dayNo}-activity-${index}-${activity.title}`}
                     title={activity.title}
-                    location={`${day.city}, India`}
+                    location={`${getCityName(day.city)}, India`}
                     places={day.placesToVisit}
                     duration={activity.duration}
                     placesCount={day.placesToVisit.length}
@@ -74,11 +82,11 @@ const Itinerary = ({ itineraryData }: ItineraryProps) => {
 
                 {day.stay && (
                   <HotelCard
-                    location={day.city || "Unknown"}
+                    location={getCityName(day.city)}
                     checkInTime="12 PM"
-                    hotelName={`Hotel in ${day.city}`}
+                    hotelName={`Hotel in ${getCityName(day.city)}`}
                     rating={3}
-                    city={day.city || "Unknown"}
+                    city={getCityName(day.city)}
                     checkIn="TBD"
                     checkOut="TBD"
                     roomType="Standard"

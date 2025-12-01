@@ -39,9 +39,6 @@ const ActivityCard = ({
               </h4>
               <p className="text-clr font-roboto text-sm mb-2">{location}</p>
             </div>
-            <button className="text-[#2789FF] font-roboto text-sm font-semibold hover:underline">
-              CHANGE
-            </button>
           </div>
 
           <div className="mb-3">

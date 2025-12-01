@@ -29,7 +29,7 @@ const ActivityDetailsSection = async ({ id }: ActivityDetailsSectionProps) => {
       const result = await response.json();
       activity = result.success ? result.data : result;
     } else if (response.status === 404) {
-      console.log("New endpoint returned 404, trying old endpoint...");
+      // Try fallback endpoint
       response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/experience/${id}`,
         {

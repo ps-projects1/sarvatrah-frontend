@@ -13,6 +13,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { DestinationCity } from "@/types/holiday";
 
 interface Activity {
   type: string;
@@ -48,7 +49,7 @@ interface PackageData {
     days: number;
     nights: number;
   };
-  destinationCity: string[];
+  destinationCity: (string | DestinationCity)[];
   startCity: string;
   packageType: string;
   selectType: string;
@@ -109,7 +110,7 @@ const BookingSummary = ({ packageData }: BookingSummaryProps) => {
                           Accommodation
                         </p>
                         <p className="text-sm text-gray-600">
-                          Check-in at hotel in {day.city}
+                          Check-in at hotel in {typeof day.city === 'string' ? day.city : day.city?.name}
                         </p>
                       </div>
                     </div>

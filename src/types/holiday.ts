@@ -4,6 +4,13 @@ export interface PackageDuration {
   nights: number;
 }
 
+export interface DestinationCity {
+  _id: string;
+  name: string;
+  state: string;
+  country: string;
+}
+
 export interface ThemeImg {
   filename: string;
   path: string;
@@ -54,7 +61,7 @@ export interface HolidayPackage {
   selectType: string;
   uniqueId?: string;
   packageType: string;
-  destinationCity: string[];
+  destinationCity: (string | DestinationCity)[];
   highlights: string;
   createPilgrimage?: boolean;
   displayHomepage?: boolean;
