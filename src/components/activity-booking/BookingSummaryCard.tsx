@@ -245,7 +245,7 @@ export default function BookingSummaryCard({
               Our award-winning customer service team is here to help
             </p>
             <a
-              href="tel:+17024443858"
+              href="tel:+91XXXXXXXXXX"
               className="flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700"
             >
               <Phone className="w-3 h-3" />
