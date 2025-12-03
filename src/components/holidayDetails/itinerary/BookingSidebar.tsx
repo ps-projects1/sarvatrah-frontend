@@ -67,18 +67,18 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
 
   return (
     <div className="space-y-4">
-      {/* Price Card */}
+      
       <Card className="pt-0 pb-4 rounded-none">
         <CardHeader className="pb-4 bg-[#F1F7FF] py-2">
           <div className="flex items-start justify-between">
-            {/* Price Section */}
+            
             <div>
-              {/* Original Price (strikethrough) */}
+              
               <p className="text-clr font-roboto line-through text-lg font-normal">
                 ₹25,397
               </p>
 
-              {/* Discounted Price */}
+              
               <div className="flex items-baseline gap-2">
                 <h2 className="text-3xl font-bold text-red-600 font-roboto">
                   ₹{(packageData.packagePrice || 0).toLocaleString("en-IN")}
@@ -88,13 +88,13 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
                 </span>
               </div>
 
-              {/* Tax Disclaimer */}
+              
               <p className="text-xs text-clr font-roboto mt-1">
                 *Excluding applicable taxes
               </p>
             </div>
 
-            {/* Discount Badge */}
+            
             <span className="bg-red-600 text-white text-xs font-semibold font-roboto px-3 py-1 rounded whitespace-nowrap">
               40% OFF
             </span>
@@ -102,7 +102,7 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* Date Selection */}
+          
           <div className="border-b pb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -123,7 +123,7 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-3">
-          {/* Book Button */}
+          
           <Link href={bookingUrl} className="block w-full">
             <Button className="w-full bg-[#2789FF] font-roboto rounded-3xl text-white py-6 text-base font-semibold hover:bg-[#1a73e8] transition-colors">
               Proceed to Book Online
@@ -132,7 +132,7 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
         </CardFooter>
       </Card>
 
-      {/* Coupons & Offers Card */}
+      
       <Card className="rounded-none py-0">
         <CardHeader className="pb-4 pt-4 bg-[#F1F7FF]">
           <h2 className="font-semibold text-2xl font-roboto text-clr">
@@ -141,7 +141,7 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
         </CardHeader>
 
         <CardContent className="">
-          {/* EMI Option */}
+          
           <div className="pb-4">
             <div className="flex flex-col items-start gap-3">
               <span className="bg-linear-to-r from-[#2789FF] to-[#EE0405] rounded-full text-white text-xs font-bold px-2 py-1 font-roboto">
@@ -160,7 +160,7 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
         </CardContent>
       </Card>
 
-      {/* Coupon Input Card */}
+      
       <Card className="rounded-none bg-[#F0F0F0]">
         <div className="px-2">
           <div className="bg-[#FFFFFF] rounded-lg">
@@ -185,7 +185,7 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
         </div>
       </Card>
 
-      {/* Offers Section */}
+      
       <div className="bg-white">
         <div className="flex items-center gap-4 py-4">
           <div className="flex-1 h-px bg-gray-300"></div>
@@ -193,9 +193,9 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
           <div className="flex-1 h-px bg-gray-300"></div>
         </div>
 
-        {/* Offers List */}
+        
         <div className="space-y-3">
-          {/* Offer 1 - SAVEONFLIGHTS */}
+          
           <div className="flex items-start justify-between gap-2 pb-3 border-b px-4">
             <div className="bg-[#D1F8E6] py-4 px-2 rounded-xl w-full">
               <div className="flex justify-between items-start">
@@ -220,7 +220,7 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
             </div>
           </div>
 
-          {/* Offer 2 - NOKIDDING */}
+          
           <div className="flex items-start justify-between gap-2 pb-3 border-b px-4 w-full">
             <div className="bg-[#DBDBDB] w-full py-2 px-4 rounded-xl">
               <div className="flex justify-between items-start">
@@ -243,7 +243,7 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
           </div>
         </div>
 
-        {/* View More Button */}
+        
         <button
           onClick={() => setShowAllOffers(!showAllOffers)}
           className="w-full text-center text-[#2789FF] text-sm font-semibold mt-4 hover:underline font-roboto pb-4"

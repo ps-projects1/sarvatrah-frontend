@@ -105,7 +105,7 @@ const SearchSection = () => {
 
               <PopoverContent className="w-72 p-4" align="start">
                 <div className="space-y-4">
-                  {/* Adults */}
+                  
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
@@ -134,7 +134,7 @@ const SearchSection = () => {
                     </div>
                   </div>
 
-                  {/* Children */}
+                  
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-sm font-medium text-gray-900">

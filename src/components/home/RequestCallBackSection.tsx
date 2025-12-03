@@ -5,7 +5,7 @@ import React from "react";
 const RequestCallBackSection = () => {
   return (
     <div className="relative w-full h-[400px] sm:h-[450px] md:h-[500px]">
-      {/* Background Image */}
+      
       <Image
         src="/images/home/reqcallbackbg.png"
         fill
@@ -14,7 +14,7 @@ const RequestCallBackSection = () => {
       />
 
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 sm:px-6 md:px-8 max-w-7xl mx-auto w-full">
-        {/* Heading */}
+        
         <h2 className="text-clr font-roboto font-bold mb-4">
           <span className="text-2xl sm:text-3xl lg:text-4xl font-normal block sm:inline">
             Contact{" "}
@@ -24,13 +24,13 @@ const RequestCallBackSection = () => {
           </span>
         </h2>
 
-        {/* Description */}
+        
         <p className="text-left text-sm sm:text-base md:text-lg mb-6 max-w-2xl">
           Need assistance? Request a call back or inquire via email for prompt
           support tailored to your requirements.
         </p>
 
-        {/* Input Section */}
+        
         <div className="bg-white rounded-full w-full sm:w-[80%] md:w-[60%] lg:w-[40%] flex items-center px-4 py-2 shadow-lg">
           <input
             type="text"

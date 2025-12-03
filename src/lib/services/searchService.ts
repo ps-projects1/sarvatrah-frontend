@@ -1,7 +1,5 @@
 import { SearchParams, SearchResponse } from '@/types/activity';
 
-// Types are now imported from the shared types file
-
 export const searchService = {
   async globalSearch(params: SearchParams): Promise<SearchResponse> {
     const { query, type = 'all', page = 1, limit = 20, sort } = params;

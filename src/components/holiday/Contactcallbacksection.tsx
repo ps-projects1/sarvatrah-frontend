@@ -8,7 +8,7 @@ const ContactCallBackSection = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Add your API call here
+
     setTimeout(() => {
       setLoading(false);
       setEmail("");
@@ -17,19 +17,19 @@ const ContactCallBackSection = () => {
 
   return (
     <section className="relative  md:py-24 overflow-hidden">
-      {/* Background Image */}
+      
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: "url('/images/holiday/contactImage.png')",
         }}
       />
-      {/* Overlay */}
+      
       <div className="absolute inset-0 -z-10 bg-white/85" />
 
       <div className="max-w-[1400px] mx-auto px-6">
         <div className="max-w-[700px] mx-auto text-center">
-          {/* Heading */}
+          
           <h2 className="text-[30px] md:text-[40px] font-light text-[#1E2125] mb-3">
             Contact{" "}
             <span className="font-semibold">
@@ -37,13 +37,13 @@ const ContactCallBackSection = () => {
             </span>
           </h2>
 
-          {/* Description */}
+          
           <p className="text-[16px] text-[#666666] mb-8 leading-relaxed">
             Need assistance? Request a call back or inquire via email for prompt
             support tailored to your requirements.
           </p>
 
-          {/* Email Input Form */}
+          
           <form
             onSubmit={handleSubmit}
             className="flex gap-3 max-w-[500px] mx-auto"

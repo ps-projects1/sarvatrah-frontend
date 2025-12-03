@@ -34,7 +34,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      // Route to the appropriate page based on selected category
+
       const category = categories.find(c => c.id === selectedCategory);
       if (category) {
         router.push(`${category.route}?search=${encodeURIComponent(searchQuery.trim())}`);
@@ -61,43 +61,43 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <section className="relative w-full h-screen overflow-hidden flex flex-col">
-      {/* Background Image with Enhanced Overlay */}
+      
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center scale-105 transition-transform duration-8000 ease-out hover:scale-100"
         style={{
           backgroundImage: "url('/images/home/heroImage.png')",
         }}
       >
-        {/* Gradient Overlay for Better Contrast */}
+        
         <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/30 to-black/50" />
       </div>
 
       <div className="flex items-center justify-center flex-col flex-1 w-full px-4 sm:px-6 lg:px-8">
-        {/* Content Container - Center */}
+        
         <div className="relative flex flex-col items-center justify-center max-w-5xl mx-auto mb-12 sm:mb-16">
-          {/* Main Heading with Animation */}
+          
           <h1 className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-bold text-white text-center mb-4 sm:mb-6 tracking-tight animate-fade-in">
             <span className="inline-block bg-linear-to-r from-white via-white to-white/90 bg-clip-text text-transparent drop-shadow-2xl">
               SARVATRAH
             </span>
           </h1>
 
-          {/* Subheading with Subtle Animation */}
+          
           <h2 className="text-xl sm:text-3xl lg:text-5xl xl:text-6xl font-light text-white text-center mb-4 sm:mb-6 animate-fade-in-delay">
             <span className="inline-block text-white/95 drop-shadow-lg">
               Explore The Wanderer Within
             </span>
           </h2>
 
-          {/* Description with Animation */}
+          
           <p className="text-sm sm:text-base lg:text-xl text-white/90 text-center mb-8 sm:mb-12 max-w-3xl leading-relaxed animate-fade-in-delay-2">
             Discover amazing places at exclusive deals. Your journey to unforgettable experiences starts here.
           </p>
         </div>
 
-        {/* Category Tabs & Search Bar - Enhanced Design */}
+        
         <div className="relative flex flex-col items-center justify-center w-full max-w-4xl mx-auto gap-5 sm:gap-6 mb-8 sm:mb-12 animate-slide-up">
-          {/* Category Tabs with Enhanced Styling */}
+          
           <div className="flex items-center gap-2 sm:gap-3 bg-white/95 backdrop-blur-md rounded-full px-2 py-2 shadow-2xl border border-white/20">
             {categories.map((category) => (
               <button
@@ -117,14 +117,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             ))}
           </div>
 
-          {/* Search Bar with Enhanced Styling */}
+          
           <div className="flex items-center w-full max-w-3xl bg-white/95 backdrop-blur-md rounded-full shadow-2xl border border-white/20 overflow-hidden transition-all duration-300 hover:shadow-blue-500/20 hover:shadow-3xl">
-            {/* Search Icon */}
+            
             <div className="pl-5 sm:pl-6">
               <Search className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
             </div>
 
-            {/* Search Input */}
+            
             <input
               type="text"
               placeholder={`Search ${selectedCategory}...`}
@@ -134,7 +134,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               className="flex-1 px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base placeholder:text-gray-400 border-0 focus:outline-none focus:ring-0 bg-transparent text-gray-900 font-medium"
             />
 
-            {/* Search Button */}
+            
             <button
               onClick={handleSearch}
               className="m-1 px-5 sm:px-8 py-2.5 sm:py-3.5 bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold flex items-center justify-center gap-2 transition-all duration-300 rounded-full whitespace-nowrap shadow-lg hover:shadow-xl hover:scale-105"
@@ -147,7 +147,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
       </div>
 
-      {/* CSS Animations */}
+      
       <style jsx>{`
         @keyframes fade-in {
           from {

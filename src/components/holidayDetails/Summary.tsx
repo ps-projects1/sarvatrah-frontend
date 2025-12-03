@@ -22,7 +22,7 @@ const Summary = ({ packageData }: SummaryProps) => {
     new Set()
   );
 
-  // Helper function to safely get city name
+
   const getCityName = (city: any): string => {
     if (!city) return '';
     if (typeof city === 'string') return city;
@@ -53,9 +53,9 @@ const Summary = ({ packageData }: SummaryProps) => {
 
   return (
     <div className="w-full space-y-6 pb-4">
-      {/* Day-wise Itinerary Breakdown */}
+      
       <div className="bg-white rounded-lg border border-gray-300 overflow-hidden">
-        {/* Header */}
+        
         <div className="bg-linear-to-r from-blue-600 to-blue-700 px-4 sm:px-6 py-4">
           <h2 className="text-lg sm:text-xl font-bold text-white">Day Wise Itinerary</h2>
           <p className="text-sm text-blue-100 mt-1">Complete breakdown of your {packageData.packageDuration.days} days journey</p>
@@ -67,7 +67,7 @@ const Summary = ({ packageData }: SummaryProps) => {
 
             return (
               <div key={day.dayNo} className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
-                {/* Day Header - Always Visible */}
+                
                 <div
                   className="bg-linear-to-r from-gray-50 to-gray-100 px-4 sm:px-6 py-4 cursor-pointer hover:from-gray-100 hover:to-gray-200 transition-colors"
                   onClick={() => toggleSection(`day-${day.dayNo}`)}
@@ -88,7 +88,7 @@ const Summary = ({ packageData }: SummaryProps) => {
                         </div>
                       </div>
 
-                      {/* Quick Info Tags */}
+                      
                       <div className="flex flex-wrap gap-2 ml-11">
                         {day.city && (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-gray-300 rounded-full text-xs font-medium text-gray-700">
@@ -127,18 +127,18 @@ const Summary = ({ packageData }: SummaryProps) => {
                   </div>
                 </div>
 
-                {/* Day Details - Expandable */}
+                
                 {isExpanded && (
                   <div className="px-4 sm:px-6 py-5 bg-white border-t border-gray-200">
                     <div className="space-y-5">
-                      {/* Day Description */}
+                      
                       {day.description && (
                         <div className="prose prose-sm max-w-none">
                           <p className="text-sm text-gray-700 leading-relaxed">{day.description}</p>
                         </div>
                       )}
 
-                      {/* Transport Details */}
+                      
                       {day.transport && (day.transport.type || day.transport.details) && (
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                           <div className="flex items-start gap-3">
@@ -157,7 +157,7 @@ const Summary = ({ packageData }: SummaryProps) => {
                         </div>
                       )}
 
-                      {/* Places to Visit */}
+                      
                       {day.placesToVisit && day.placesToVisit.length > 0 && (
                         <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                           <div className="flex items-start gap-3">
@@ -181,7 +181,7 @@ const Summary = ({ packageData }: SummaryProps) => {
                         </div>
                       )}
 
-                      {/* Activities */}
+                      
                       {day.activities && day.activities.length > 0 && (
                         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
                           <div className="flex items-start gap-3">
@@ -217,7 +217,7 @@ const Summary = ({ packageData }: SummaryProps) => {
                         </div>
                       )}
 
-                      {/* Hotel Stay Info */}
+                      
                       {day.stay && day.city && (
                         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                           <div className="flex items-start gap-3">
@@ -234,7 +234,7 @@ const Summary = ({ packageData }: SummaryProps) => {
                         </div>
                       )}
 
-                      {/* Additional Notes */}
+                      
                       {day.notes && (
                         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                           <div className="flex items-start gap-3">
@@ -259,7 +259,7 @@ const Summary = ({ packageData }: SummaryProps) => {
         </div>
       </div>
 
-      {/* Package Overview */}
+      
       <div className="bg-white rounded-lg border border-gray-300 overflow-hidden">
         <div className="bg-gray-100 px-4 py-3 border-b border-gray-300">
           <h2 className="text-lg font-bold text-gray-900">Package Overview</h2>
@@ -313,9 +313,9 @@ const Summary = ({ packageData }: SummaryProps) => {
         </div>
       </div>
 
-      {/* Inclusions & Exclusions */}
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Inclusions */}
+        
         <div className="bg-white rounded-lg border border-gray-300 overflow-hidden">
           <div className="bg-green-50 px-4 py-3 border-b border-green-200">
             <h3 className="text-base font-semibold text-green-800 flex items-center gap-2">
@@ -338,7 +338,7 @@ const Summary = ({ packageData }: SummaryProps) => {
           </div>
         </div>
 
-        {/* Exclusions */}
+        
         <div className="bg-white rounded-lg border border-gray-300 overflow-hidden">
           <div className="bg-red-50 px-4 py-3 border-b border-red-200">
             <h3 className="text-base font-semibold text-red-800 flex items-center gap-2">
@@ -362,7 +362,7 @@ const Summary = ({ packageData }: SummaryProps) => {
         </div>
       </div>
 
-      {/* Vehicle Options */}
+      
       {packageData.vehiclePrices.length > 0 && (
         <div className="bg-white rounded-lg border border-gray-300 overflow-hidden">
           <div className="bg-gray-100 px-4 py-3 border-b border-gray-300">
@@ -390,7 +390,7 @@ const Summary = ({ packageData }: SummaryProps) => {
         </div>
       )}
 
-      {/* Payment & Cancellation Policy */}
+      
       <div className="bg-white rounded-lg border border-gray-300 overflow-hidden">
         <div className="bg-gray-100 px-4 py-3 border-b border-gray-300">
           <h2 className="text-lg font-bold text-gray-900">

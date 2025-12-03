@@ -119,7 +119,7 @@ const DetailsSection = ({ params }: { params: { id: string } }) => {
             </span>
           </p>
         </div>
-        {/* image sections */}
+        
         <div className="flex flex-col lg:flex-row w-full gap-2 mb-4 sm:mb-6">
           <div className="w-full lg:w-full relative">
             <Image
@@ -181,7 +181,7 @@ const DetailsSection = ({ params }: { params: { id: string } }) => {
           </div>
         </div>
 
-        {/* tabs section */}
+        
         <div className="flex gap-4 sm:gap-8 overflow-x-auto no-scrollbar border-b">
           {tabs.map((tab) => (
             <button
@@ -198,11 +198,11 @@ const DetailsSection = ({ params }: { params: { id: string } }) => {
           ))}
         </div>
       </section>
-      {/* Content Section with Sidebar */}
+      
       <div className="bg-[#F1F4F8] w-full pt-4">
         <div className="max-w-7xl mx-auto sm:px-6">
           <div className="flex flex-col gap-4 lg:flex-row">
-            {/* Left side - Main Content */}
+            
             <div className="flex-1 min-w-0">
               {activeTab === "1" && (
                 <Itinerary itineraryData={packageData.itinerary} />

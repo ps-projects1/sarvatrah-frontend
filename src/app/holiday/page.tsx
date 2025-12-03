@@ -146,11 +146,11 @@ function HolidayContent() {
     max: 50000,
   });
 
-  // Pagination states
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  // Calculate min/max price from packages
+
   const calculatePriceRange = (packageList: HolidayPackage[]) => {
     if (packageList.length === 0) return { min: 500, max: 50000 };
 
@@ -166,13 +166,13 @@ function HolidayContent() {
     return { min, max };
   };
 
-  // Sync search query from URL params
+
   useEffect(() => {
     setSearchQuery(urlSearchQuery);
     setSearchInput(urlSearchQuery);
   }, [urlSearchQuery]);
 
-  // Handle search button click
+
   const handleSearch = () => {
     if (searchInput.trim()) {
       router.push(`/holiday?search=${encodeURIComponent(searchInput.trim())}`);
@@ -181,14 +181,14 @@ function HolidayContent() {
     }
   };
 
-  // Handle Enter key press in search input
+
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearch();
     }
   };
 
-  // Fetch packages from API
+
   useEffect(() => {
     const fetchPackages = async () => {
       try {
@@ -206,7 +206,7 @@ function HolidayContent() {
         if (result.status && result.data) {
           const dataArray = result.data.holidayPackages || [];
 
-          // Filter only active packages
+
           const activePackages = dataArray.filter((p) => p.active !== false);
           setPackages(activePackages);
           setFilteredPackages(activePackages);
@@ -230,7 +230,7 @@ function HolidayContent() {
     fetchPackages();
   }, []);
 
-  // Get unique destinations with counts
+
   const getDestinationCounts = () => {
     const destinationMap = new Map<string, number>();
     packages.forEach(pkg => {
@@ -244,7 +244,7 @@ function HolidayContent() {
       .slice(0, 10);
   };
 
-  // Get duration category counts
+
   const getDurationCounts = () => {
     const counts = {
       "less-than-6": 0,
@@ -265,11 +265,11 @@ function HolidayContent() {
   const durationCounts = getDurationCounts();
   const destinationCounts = getDestinationCounts();
 
-  // Filter packages based on all criteria
+
   useEffect(() => {
     let filtered = packages;
 
-    // Filter by search query
+
     if (searchQuery.trim()) {
       filtered = filtered.filter(
         (pkg) =>
@@ -282,7 +282,7 @@ function HolidayContent() {
       );
     }
 
-    // Filter by package type
+
     if (selectedPackageTypes.length > 0) {
       filtered = filtered.filter((pkg) =>
         selectedPackageTypes.some(
@@ -291,25 +291,25 @@ function HolidayContent() {
       );
     }
 
-    // Filter by price range - only if user has changed the range from initial values
+
     const hasUserChangedPriceRange = priceRange[0] !== minMaxPrice.min || priceRange[1] !== minMaxPrice.max;
     if (hasUserChangedPriceRange) {
       filtered = filtered.filter((pkg) => {
         const pkgPrice = getPackagePrice(pkg);
-        // Include packages with no price (0) or packages within the selected range
+
         if (pkgPrice === 0) return true;
         return pkgPrice >= priceRange[0] && pkgPrice <= priceRange[1];
       });
     }
 
-    // Filter by select type (domestic/international)
+
     if (selectedSelectTypes.length > 0) {
       filtered = filtered.filter((pkg) =>
         selectedSelectTypes.includes(pkg.selectType)
       );
     }
 
-    // Filter by duration
+
     if (selectedDurations.length > 0) {
       filtered = filtered.filter((pkg) => {
         const nights = pkg.packageDuration.nights;
@@ -322,7 +322,7 @@ function HolidayContent() {
       });
     }
 
-    // Filter by theme
+
     if (selectedThemes.length > 0) {
       filtered = filtered.filter((pkg) =>
         selectedThemes.some(theme =>
@@ -331,7 +331,7 @@ function HolidayContent() {
       );
     }
 
-    // Filter by destinations
+
     if (selectedDestinations.length > 0) {
       filtered = filtered.filter((pkg) =>
         selectedDestinations.some(dest =>
@@ -343,7 +343,7 @@ function HolidayContent() {
       );
     }
 
-    // Sort by price if selected
+
     if (priceSort === "low-high") {
       filtered = [...filtered].sort((a, b) => getPackagePrice(a) - getPackagePrice(b));
     } else if (priceSort === "high-low") {
@@ -365,7 +365,7 @@ function HolidayContent() {
     minMaxPrice,
   ]);
 
-  // Handle price range change
+
   const handlePriceChange = (values: number[]) => {
     setPriceRange([values[0], values[1]]);
   };
@@ -404,7 +404,7 @@ function HolidayContent() {
     }).format(price);
   };
 
-  // Pagination functions
+
   const getTotalPages = (): number => {
     return Math.ceil(filteredPackages.length / itemsPerPage);
   };
@@ -431,7 +431,7 @@ function HolidayContent() {
   return (
     <div className="flex flex-col min-h-screen ">
       <main className="grow">
-        {/* Hero Section */}
+        
         <section className="relative overflow-hidden">
           <div className="absolute inset-0 -z-10">
             <div
@@ -444,7 +444,7 @@ function HolidayContent() {
           </div>
 
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8 md:pb-10">
-            {/* Hero Title */}
+            
             <h1 className="text-center font-roboto text-[24px] sm:text-[32px] md:text-[48px] lg:text-[56px] xl:text-[64px] leading-tight md:leading-tight font-light text-white mb-6 sm:mb-8 md:mb-10">
               <span className="text-[38px] font-roboto">
                 Unwrap Your Dream Getaway
@@ -453,7 +453,7 @@ function HolidayContent() {
               Holiday Packages Await!
             </h1>
 
-            {/* Search Bar */}
+            
             <div className="mx-auto px-4 sm:px-0 max-w-[858px]">
               <div className="h-14 sm:h-16 backdrop-blur-xl bg-white/90 border border-[#E6E6E6] rounded-full shadow-sm flex items-center gap-2 sm:gap-3 px-4 sm:px-5">
                 <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
@@ -501,13 +501,13 @@ function HolidayContent() {
           </div>
         </section>
 
-        {/* Content Section */}
+        
         <section className="max-w-[1400px] mx-auto px-4 sm:px-6 mt-8 sm:mt-12 md:mt-16 mb-12 sm:mb-16">
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] xl:grid-cols-[337px_1fr] gap-6 sm:gap-8 lg:gap-10">
-            {/* Filters Sidebar */}
-            {/* Filters Sidebar */}
+            
+            
             <aside className="order-2 lg:order-1">
-              {/* Budget Slider */}
+              
               <div className="bg-white p-4 sm:p-6 rounded-lg border border-[#E6E6E6]">
                 <h3 className="text-[18px] sm:text-[20px] font-semibold text-clr mb-4">
                   Budget
@@ -532,7 +532,7 @@ function HolidayContent() {
                 </div>
               </div>
 
-              {/* Price Range Sort */}
+              
               <div className="mt-6 bg-white p-4 sm:p-6 rounded-lg border border-[#E6E6E6]">
                 <h3 className="text-[18px] sm:text-[20px] font-semibold text-clr mb-4">
                   Price Range
@@ -590,7 +590,7 @@ function HolidayContent() {
                 </div>
               </div>
 
-              {/* Tour Duration Filter */}
+              
               <div className="mt-6 bg-white p-4 sm:p-6 rounded-lg border border-[#E6E6E6]">
                 <h3 className="text-[18px] sm:text-[20px] font-semibold text-clr mb-4">
                   Tour Duration
@@ -625,7 +625,7 @@ function HolidayContent() {
                 </div>
               </div>
 
-              {/* Theme Filter */}
+              
               <div className="mt-6 bg-white p-4 sm:p-6 rounded-lg border border-[#E6E6E6]">
                 <h3 className="text-[18px] sm:text-[20px] font-semibold text-clr mb-4">
                   Theme
@@ -656,7 +656,7 @@ function HolidayContent() {
                 </div>
               </div>
 
-              {/* Destinations Filter */}
+              
               {destinationCounts.length > 0 && (
                 <div className="mt-6 bg-white p-4 sm:p-6 rounded-lg border border-[#E6E6E6]">
                   <h3 className="text-[18px] sm:text-[20px] font-semibold text-clr mb-4">
@@ -687,9 +687,9 @@ function HolidayContent() {
               )}
             </aside>
 
-            {/* Results Grid */}
+            
             <div className="order-1 lg:order-2">
-              {/* Results Header */}
+              
               <div className="mb-6 sm:mb-8">
                 <p className="text-clr text-[18px] sm:text-[22px] lg:text-[24px] font-light">
                   {filteredPackages.length > 0 ? (
@@ -705,7 +705,7 @@ function HolidayContent() {
                 </p>
               </div>
 
-              {/* Loading State */}
+              
               {loading && (
                 <div className="col-span-full flex items-center justify-center py-12">
                   <div className="text-center">
@@ -715,14 +715,14 @@ function HolidayContent() {
                 </div>
               )}
 
-              {/* Error State */}
+              
               {error && !loading && (
                 <div className="col-span-full bg-red-50 border border-red-200 rounded-lg p-4">
                   <p className="text-red-600">{error}</p>
                 </div>
               )}
 
-              {/* Packages Grid with Pagination */}
+              
               {!loading && filteredPackages.length > 0 && (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
@@ -733,7 +733,7 @@ function HolidayContent() {
                         className="block"
                       >
                         <div className="bg-white rounded-xl shadow-[0_2px_16px_rgba(0,0,0,0.08)] overflow-hidden hover:shadow-[0_4px_24px_rgba(0,0,0,0.12)] transition-shadow duration-300 cursor-pointer group">
-                          {/* Image Section */}
+                          
                           <div className="relative h-[200px] sm:h-60 lg:h-[280px] bg-[#F1F7FF] overflow-hidden">
                             {pkg.themeImg ? (
                               <Image
@@ -764,20 +764,20 @@ function HolidayContent() {
                               </div>
                             )}
 
-                            {/* Badge */}
+                            
                             <div className="absolute top-3 sm:top-4 right-3 sm:right-4 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-clr text-white text-[12px] sm:text-[14px] font-semibold capitalize">
                               {pkg.packageType}
                             </div>
                           </div>
 
-                          {/* Content Section */}
+                          
                           <div className="p-4 sm:p-5">
-                            {/* Package Name */}
+                            
                             <h4 className="text-[15px] sm:text-[16px] lg:text-[18px] font-semibold text-clr line-clamp-2 mb-2">
                               {pkg.packageName}
                             </h4>
 
-                            {/* Location */}
+                            
                             <div className="flex items-center gap-2 text-[12px] sm:text-[14px] text-clr mb-3">
                               <svg
                                 width="12"
@@ -806,13 +806,13 @@ function HolidayContent() {
                               </span>
                             </div>
 
-                            {/* Duration */}
+                            
                             <div className="text-[12px] sm:text-[14px] text-[#666] mb-3">
                               {pkg.packageDuration.days} Days /{" "}
                               {pkg.packageDuration.nights} Nights
                             </div>
 
-                            {/* Price */}
+                            
                             <div className="mb-4">
                               <div className="text-[#EE0405] text-[18px] sm:text-[20px] lg:text-[22px] font-bold leading-none">
                                 {formatPrice(getPackagePrice(pkg))}
@@ -822,7 +822,7 @@ function HolidayContent() {
                               </div>
                             </div>
 
-                            {/* Details Grid */}
+                            
                             <div className="grid grid-cols-2 gap-2 sm:gap-3 text-[11px] sm:text-[12px] lg:text-[13px] text-clr border-t border-[#E6E6E6] pt-3">
                               <div className="text-center">
                                 <div className="font-semibold text-clr capitalize">
@@ -846,7 +846,7 @@ function HolidayContent() {
                               </div>
                             </div>
 
-                            {/* CTA Button */}
+                            
                             <button className="w-full mt-4 py-2 sm:py-2.5 bg-[#2789FF] text-white rounded-lg font-medium text-[12px] sm:text-[14px] hover:bg-[#1a73e8] transition-colors">
                               View Details
                             </button>
@@ -856,12 +856,12 @@ function HolidayContent() {
                     ))}
                   </div>
 
-                  {/* Pagination Controls */}
+                  
                   {getTotalPages() > 1 && (
                     <div className="flex flex-col items-center gap-6 mt-12 mb-8">
                       <Pagination>
                         <PaginationContent>
-                          {/* Previous Button */}
+                          
                           <PaginationItem>
                             <PaginationPrevious
                               onClick={() =>
@@ -875,7 +875,7 @@ function HolidayContent() {
                             />
                           </PaginationItem>
 
-                          {/* Page Numbers */}
+                          
                           {Array.from({ length: getTotalPages() }).map(
                             (_, index) => {
                               const pageNumber = index + 1;
@@ -920,7 +920,7 @@ function HolidayContent() {
                             }
                           )}
 
-                          {/* Next Button */}
+                          
                           <PaginationItem>
                             <PaginationNext
                               onClick={() =>
@@ -938,7 +938,7 @@ function HolidayContent() {
                         </PaginationContent>
                       </Pagination>
 
-                      {/* Results Info Text */}
+                      
                       <p className="text-[#999FA8] text-[13px] sm:text-[14px]">
                         {getResultsText()}
                       </p>
@@ -947,7 +947,7 @@ function HolidayContent() {
                 </>
               )}
 
-              {/* Empty State */}
+              
               {!loading && filteredPackages.length === 0 && !error && (
                 <div className="col-span-full flex flex-col items-center justify-center py-12 text-center">
                   <svg
@@ -972,7 +972,7 @@ function HolidayContent() {
           </div>
         </section>
 
-        {/* Contact Call Back Section */}
+        
         <RequestCallBackSection />
       </main>
     </div>

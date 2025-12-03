@@ -1,4 +1,4 @@
-// TransferCard.tsx
+
 "use client";
 
 import React, { useState } from "react";
@@ -25,7 +25,7 @@ const TransferCard = ({
   return (
     <div className="bg-white border-b border-[#EBEBEB]">
       <div className="p-6 mb-3">
-        {/* Header */}
+        
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-clr font-roboto">
             Transfer from{" "}
@@ -42,9 +42,9 @@ const TransferCard = ({
           </div>
         </div>
 
-        {/* Content */}
+        
         <div className="flex items-start gap-6">
-          {/* Car Icon */}
+          
           <div className="w-44 h-28 rounded-lg overflow-hidden shrink-0">
             <Image
               src={image}
@@ -55,7 +55,7 @@ const TransferCard = ({
             />
           </div>
 
-          {/* Details */}
+          
           <div className="flex-1">
             <h4 className="font-semibold font-roboto text-base mb-1">
               Private Transfer
@@ -72,12 +72,12 @@ const TransferCard = ({
         </div>
       </div>
 
-      {/* Upgrade Vehicle Section - Expands Below */}
+      
       {showUpgrade && (
         <div className="px-6 pb-6 border-t border-gray-200 pt-6">
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="flex-1">
-              {/* Current Vehicle - Sedan */}
+              
               <div className="mb-6">
                 <h4 className="text-base sm:text-lg font-roboto font-semibold mb-4">
                   Sedan
@@ -108,7 +108,7 @@ const TransferCard = ({
               </div>
             </div>
             <div className="flex-1">
-              {/* Upgrade Options */}
+              
               <div className="flex justify-between items-center mb-4">
                 <h4 className="text-base sm:text-lg font-roboto font-semibold">
                   Upgrade Vehicle
@@ -121,7 +121,7 @@ const TransferCard = ({
                 </button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Hatchback */}
+                
                 <div className="cursor-pointer ">
                   <div className="w-full h-32 sm:h-40 rounded-lg overflow-hidden mb-3">
                     <Image
@@ -142,7 +142,7 @@ const TransferCard = ({
                   </div>
                 </div>
 
-                {/* MUV */}
+                
                 <div className=" cursor-pointer  ">
                   <div className="w-full h-40 rounded-lg overflow-hidden mb-3">
                     <Image

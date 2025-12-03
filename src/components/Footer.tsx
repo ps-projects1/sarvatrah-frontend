@@ -13,9 +13,9 @@ const Footer = () => {
       <footer className="bg-[#E8E8E8] pt-16">
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_0.9fr_0.7fr_1.2fr] gap-8 lg:gap-4 mb-8">
-            {/* First Column - Brand & Address */}
+            
             <div className="space-y-6">
-              {/* Logo & Brand Name */}
+              
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12">
                   <Image
@@ -30,7 +30,7 @@ const Footer = () => {
                 </span>
               </div>
 
-              {/* Address Section */}
+              
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
                   <svg
@@ -53,7 +53,7 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Second Column - Call Us & Email Us */}
+            
             <div className="space-y-8">
               <div className="space-y-3">
                 <div className="flex items-center gap-2 mb-2">
@@ -161,7 +161,7 @@ const Footer = () => {
                 </h3>
 
                 <form className="space-y-3.5">
-                  {/* Name & Email Row */}
+                  
                   <div className="grid grid-cols-2 gap-3">
                     <input
                       type="text"
@@ -179,7 +179,7 @@ const Footer = () => {
                     />
                   </div>
 
-                  {/* Subject */}
+                  
                   <input
                     type="text"
                     id="subject"
@@ -188,7 +188,7 @@ const Footer = () => {
                     className="w-full px-3.5 py-2.5 bg-[#F8F9FA] border border-[#E6E6E6] rounded-lg text-[13px] placeholder:text-[#999FA8] focus:outline-none focus:ring-2 focus:ring-[#2789FF] focus:border-transparent"
                   />
 
-                  {/* Message */}
+                  
                   <textarea
                     placeholder="Message"
                     id="message"
@@ -196,7 +196,7 @@ const Footer = () => {
                     rows={3}
                     className="w-full px-3.5 py-2.5 bg-[#F8F9FA] border border-[#E6E6E6] rounded-lg text-[13px] placeholder:text-[#999FA8] focus:outline-none focus:ring-2 focus:ring-[#2789FF] focus:border-transparent resize-none"
                   />
-                  {/* Submit Button */}
+                  
                   <button
                     type="submit"
                     className="w-full py-2.5 bg-white border-2 border-clr text-clr rounded-full font-semibold text-[13px] hover:bg-clr hover:text-white transition-all duration-200"

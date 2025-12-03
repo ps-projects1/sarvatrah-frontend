@@ -7,9 +7,9 @@ export default function TravelAdventuresPage() {
   return (
     <section className="w-full bg-white py-16 sm:py-20 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* First Section - Image on Left */}
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center mb-16 lg:mb-24">
-          {/* Left: Gallery Images */}
+          
           <div className="lg:col-span-2">
             <div className="relative h-[400px] sm:h-[500px] w-full rounded-2xl overflow-hidden">
               <Image
@@ -22,7 +22,7 @@ export default function TravelAdventuresPage() {
             </div>
           </div>
 
-          {/* Right: CTA Section */}
+          
           <div className="lg:col-span-1 flex flex-col justify-start gap-6">
             <div>
               <h1 className="text-4xl lg:text-3xl font-black leading-tight mb-4">
@@ -45,9 +45,9 @@ export default function TravelAdventuresPage() {
           </div>
         </div>
 
-        {/* Second Section - Image on Right */}
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-          {/* Left: CTA Section */}
+          
           <div className="lg:col-span-1 flex flex-col justify-start gap-6">
             <div>
               <h1 className="text-4xl lg:text-3xl font-black leading-tight mb-4">
@@ -69,7 +69,7 @@ export default function TravelAdventuresPage() {
             </Button>
           </div>
 
-          {/* Right: Gallery Images */}
+          
           <div className="lg:col-span-2">
             <div className="relative h-[400px] sm:h-[500px] w-full rounded-2xl overflow-hidden">
               <Image

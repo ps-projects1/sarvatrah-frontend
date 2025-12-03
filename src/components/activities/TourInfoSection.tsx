@@ -10,14 +10,14 @@ interface TourInfoSectionProps {
 }
 
 const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
-  // Helper function to format duration - handles both number and string formats
+
   const formatDuration = (duration?: number | string) => {
     if (!duration) return "TBD";
 
-    // If it's already a string (old API), return as is
+
     if (typeof duration === 'string') return duration;
 
-    // If it's a number (new API), format it
+
     if (typeof duration === 'number') {
       if (duration < 24) {
         return `${duration} hour${duration !== 1 ? 's' : ''}`;
@@ -35,7 +35,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
   return (
     <div className="min-h-screen bg-[#F1F4F8] pt-5">
       <div className="max-w-7xl mx-auto pt-4 px-4">
-        {/* Title and Map Link */}
+        
         <div className="flex flex-col pb-6">
           <h2 className="font-roboto text-clr text-bold text-4xl">
             {activity.title}
@@ -69,11 +69,11 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
             ))}
           </div>
 
-          {/* Two Column Layout */}
+          
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="lg:col-span-3">
               <div className="filter-[drop-shadow(0_4px_30px_rgba(0,0,0,0.08))] pt-4">
-                {/* first section */}
+                
                 <div className="bg-[#F1F7FF] w-full pt-6 pb-6 px-6">
                   <div className="mb-6">
                     <h2 className="text-clr font-roboto text-2xl font-semibold">
@@ -82,7 +82,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                   </div>
 
                   <div className="grid grid-cols-4 gap-6">
-                    {/* Duration */}
+                    
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-2 text-gray-500">
                         <Clock className="w-5 h-5" />
@@ -93,7 +93,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                       </div>
                     </div>
 
-                    {/* Group size */}
+                    
                     <div className="flex flex-col gap-2 pl-6">
                       <div className="flex items-center gap-2 text-gray-500">
                         <Users className="w-5 h-5" />
@@ -104,7 +104,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                       </div>
                     </div>
 
-                    {/* Travel Facility */}
+                    
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-2 text-gray-500">
                         <Bus className="w-5 h-5" />
@@ -121,7 +121,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                       </div>
                     </div>
 
-                    {/* Cancellation */}
+                    
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-2 text-gray-500">
                         <CheckCircle className="w-5 h-5" />
@@ -138,14 +138,14 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                 </div>
 
                 <div className="pb-2">
-                  {/* second section */}
+                  
                   <div className="bg-white p-6">
-                    {/* Overview */}
+                    
                     <div className="mb-6">
                       <h3 className="text-clr font-roboto text-xl font-semibold mb-3">
                         Overview
                       </h3>
-                      {/* New API - plain strings */}
+                      
                       {activity?.overview && typeof activity.overview === 'string' && (
                         <p className="text-gray-700 text-sm leading-relaxed mb-2">
                           {activity.overview}
@@ -156,7 +156,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                           {activity.description}
                         </p>
                       )}
-                      {/* Old API - object with short_des and detail_dec */}
+                      
                       {activity?.description && typeof activity.description === 'object' && (
                         <>
                           {activity.description.short_des && (
@@ -173,9 +173,9 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                       )}
                     </div>
 
-                    {/* Two columns section */}
+                    
                     <div className="grid grid-cols-2 gap-8 mb-6">
-                      {/* Available languages */}
+                      
                       <div>
                         <h3 className="text-clr font-roboto text-base font-semibold mb-3">
                           Available languages
@@ -187,7 +187,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                         </p>
                       </div>
 
-                      {/* Cancellation policy */}
+                      
                       <div>
                         <h3 className="text-clr font-roboto text-base font-semibold mb-3">
                           Cancellation policy
@@ -212,7 +212,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                       </div>
                     </div>
 
-                    {/* Highlights */}
+                    
                     {activity?.targetPlaces && activity.targetPlaces.length > 0 && (
                       <div className="mb-6 border-b border-[#EBEBEB] pb-8">
                         <h3 className="text-clr font-roboto text-xl font-semibold mb-3">
@@ -229,15 +229,15 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                       </div>
                     )}
 
-                    {/* What's included */}
+                    
                     <div className="border-b border-[#EBEBEB] pb-8">
                       <h3 className="text-clr font-roboto text-xl font-semibold mb-3">
                         What&apos;s included
                       </h3>
                       <div className="grid grid-cols-2 gap-4">
-                        {/* Inclusions */}
+                        
                         <div className="space-y-2">
-                          {/* New API - array of strings */}
+                          
                           {activity?.included && Array.isArray(activity.included) && activity.included.length > 0 ? (
                             activity.included.map((item: string, index: number) => (
                               <div key={`inc-${index}`} className="flex items-start text-sm">
@@ -246,7 +246,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                               </div>
                             ))
                           ) : activity?.inclusions ? (
-                            /* Old API - object with short_des and detail_dec */
+                            
                             <>
                               <div className="flex items-start text-sm">
                                 <span className="text-green-600 mr-2 mt-0.5">✓</span>
@@ -268,9 +268,9 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                           )}
                         </div>
 
-                        {/* Exclusions */}
+                        
                         <div className="space-y-2">
-                          {/* New API - array of strings */}
+                          
                           {activity?.excluded && Array.isArray(activity.excluded) && activity.excluded.length > 0 ? (
                             activity.excluded.map((item: string, index: number) => (
                               <div key={`exc-${index}`} className="flex items-start text-sm">
@@ -279,7 +279,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                               </div>
                             ))
                           ) : activity?.exclusions ? (
-                            /* Old API - object with short_des and detail_dec */
+                            
                             <>
                               <div className="flex items-start text-sm">
                                 <span className="text-red-600 mr-2 mt-0.5">✕</span>
@@ -303,7 +303,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                       </div>
                     </div>
 
-                    {/* map */}
+                    
                     {(activity.location?.latitude && activity.location?.longitude) ||
                      (activity.location?.location && activity.location.location.includes("iframe")) ? (
                       <div className="pt-6">
@@ -313,7 +313,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
 
                         <div className="w-full h-[300px] rounded-lg overflow-hidden">
                           {activity.location?.latitude && activity.location?.longitude ? (
-                            /* New API - use coordinates */
+                            
                             <iframe
                               src={`https://www.google.com/maps?q=${activity.location.latitude},${activity.location.longitude}&output=embed`}
                               width="100%"
@@ -330,7 +330,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                               className="w-full h-full rounded-lg"
                             />
                           ) : activity.location?.location ? (
-                            /* Old API - use iframe from location.location */
+                            
                             <iframe
                               src={activity.location.location.match(/src="([^"]+)"/)?.[1] || ""}
                               width="100%"
@@ -355,7 +355,7 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
               </div>
             </div>
 
-            {/* Right Column - Pricing Box (Takes 1/3 width) */}
+            
             <div className="lg:col-span-1">
               <div className=" top-4 pt-4">
                 <PricingCard activity={activity} />

@@ -41,7 +41,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Filter states
+
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
   const [minMaxPrice, setMinMaxPrice] = useState<{ min: number; max: number }>({
     min: 0,
@@ -54,7 +54,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
     []
   );
 
-  // Calculate min/max price from activities
+
   const calculatePriceRange = (activityList: ActivityData[]) => {
     if (activityList.length === 0) return { min: 0, max: 10000 };
 
@@ -94,7 +94,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
     fetchActivities();
   }, []);
 
-  // Get unique destinations from activities
+
   const allDestinations = useMemo(() => {
     const destinations = new Set<string>();
     activities.forEach((activity) => {
@@ -107,12 +107,12 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
     return Array.from(destinations).sort();
   }, [activities]);
 
-  // Helper function to get activity price
+
   const getActivityPrice = (activity: ActivityData): number => {
     return activity.pricing?.[0]?.price || 0;
   };
 
-  // Helper function to get duration in hours
+
   const getDurationInHours = (duration?: string): number => {
     if (!duration) return 0;
     const parts = duration.split(":");
@@ -121,11 +121,11 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
     return hours + minutes / 60;
   };
 
-  // Filter and sort activities
+
   const filteredActivities = useMemo(() => {
     let filtered = activities;
 
-    // Filter by search query
+
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter((activity) => {
@@ -142,13 +142,13 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
       });
     }
 
-    // Filter by price range
+
     filtered = filtered.filter((activity) => {
       const price = getActivityPrice(activity);
       return price >= priceRange[0] && price <= priceRange[1];
     });
 
-    // Filter by duration
+
     if (selectedDurations.length > 0) {
       filtered = filtered.filter((activity) => {
         const hours = getDurationInHours(activity.duration);
@@ -161,7 +161,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
       });
     }
 
-    // Filter by category
+
     if (selectedCategories.length > 0) {
       filtered = filtered.filter((activity) => {
         if (!activity.category) return false;
@@ -171,7 +171,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
       });
     }
 
-    // Filter by destinations
+
     if (selectedDestinations.length > 0) {
       filtered = filtered.filter((activity) => {
         return selectedDestinations.some(
@@ -185,7 +185,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
       });
     }
 
-    // Sort by price if selected
+
     if (priceSort === "low-high") {
       filtered = [...filtered].sort(
         (a, b) => getActivityPrice(a) - getActivityPrice(b)
@@ -261,7 +261,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
     return `${days}D - ${nights}N`;
   };
 
-  // Format price
+
   const formatPrice = (price: number): string => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
@@ -270,7 +270,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
     }).format(price);
   };
 
-  // Handler functions for filters
+
   const handlePriceChange = (values: number[]) => {
     setPriceRange([values[0], values[1]]);
   };
@@ -317,9 +317,9 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
     <section className="w-full min-h-screen bg-gray-50 py-8 sm:py-12">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] xl:grid-cols-[337px_1fr] gap-6 sm:gap-8 lg:gap-10">
-          {/* Filters Sidebar */}
+          
           <aside className="order-2 lg:order-1">
-            {/* Price Range Slider */}
+            
             <div className="bg-white p-4 sm:p-6 rounded-lg border border-[#E6E6E6]">
               <h3 className="text-[18px] sm:text-[20px] font-semibold text-clr mb-4">
                 Budget
@@ -344,7 +344,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
               </div>
             </div>
 
-            {/* Price Range Sort */}
+            
             <div className="mt-6 bg-white p-4 sm:p-6 rounded-lg border border-[#E6E6E6]">
               <h3 className="text-[18px] sm:text-[20px] font-semibold text-clr mb-4">
                 Price Range
@@ -401,7 +401,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
               </div>
             </div>
 
-            {/* Duration Filter */}
+            
             <div className="mt-6 bg-white p-4 sm:p-6 rounded-lg border border-[#E6E6E6]">
               <h3 className="text-[18px] sm:text-[20px] font-semibold text-clr mb-4">
                 Duration
@@ -458,7 +458,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
               </div>
             </div>
 
-            {/* Category Filter */}
+            
             <div className="mt-6 bg-white p-4 sm:p-6 rounded-lg border border-[#E6E6E6]">
               <h3 className="text-[18px] sm:text-[20px] font-semibold text-clr mb-4">
                 Category
@@ -493,7 +493,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
               </div>
             </div>
 
-            {/* Destinations Filter */}
+            
             {allDestinations.length > 0 && (
               <div className="mt-6 bg-white p-4 sm:p-6 rounded-lg border border-[#E6E6E6]">
                 <h3 className="text-[18px] sm:text-[20px] font-semibold text-clr mb-4">
@@ -526,9 +526,9 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
             )}
           </aside>
 
-          {/* Results Grid */}
+          
           <div className="order-1 lg:order-2">
-            {/* Results Header */}
+            
             <div className="mb-6 sm:mb-8">
               <h2 className="text-clr text-[18px] sm:text-[22px] lg:text-[24px] font-light">
                 {filteredActivities.length > 0 ? (
@@ -546,7 +546,7 @@ const ActivitySecondSection: React.FC<ActivitySecondSectionProps> = ({
               </h2>
             </div>
 
-            {/* Activities Grid */}
+            
             {filteredActivities.length === 0 ? (
               <div className="text-center py-12">
                 <svg

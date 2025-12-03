@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import Image from "next/image";
-import TravellerDetails, { TravellerDetailsRef } from "./TravellerDetails";
-import BookingSummary from "./BookingSummary";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Calendar } from "lucide-react";
+import Link from "next/link";
 import { HolidayPackage } from "@/types/holiday";
+import ContactDetailsSection from "./ContactDetailsSection";
+import HolidayDetailsSection from "./HolidayDetailsSection";
+import PaymentSection from "./PaymentSection";
+import BookingSummaryCard from "./BookingSummaryCard";
 
 interface BookingDetailsProps {
   params: {
@@ -17,12 +17,32 @@ interface BookingDetailsProps {
 
 const BookingDetails = ({ params }: BookingDetailsProps) => {
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<"summary" | "traveller">(
-    "summary"
-  );
   const [packageData, setPackageData] = useState<HolidayPackage | null>(null);
   const [loading, setLoading] = useState(true);
-  const travellerDetailsRef = useRef<TravellerDetailsRef>(null);
+  const [showMobileCTA, setShowMobileCTA] = useState(false);
+
+
+  const [currentStep, setCurrentStep] = useState(1);
+  const [openSections, setOpenSections] = useState({
+    contact: true,
+    holiday: false,
+    payment: false,
+  });
+
+  const travelDate = searchParams.get("date");
+  const numAdults = Number(searchParams.get("adults") || "1");
+  const numChildren = Number(searchParams.get("children") || "0");
+
+  const handleNextStep = (step: number) => {
+    if (step === 1) {
+      setOpenSections({ contact: false, holiday: true, payment: false });
+      setCurrentStep(2);
+    } else if (step === 2) {
+      setOpenSections({ contact: false, holiday: false, payment: true });
+      setCurrentStep(3);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     const fetchPackageData = async () => {
@@ -43,7 +63,8 @@ const BookingDetails = ({ params }: BookingDetailsProps) => {
         if (result.status && result.data) {
           setPackageData(result.data);
         }
-      } catch {
+      } catch (error) {
+        console.error("Error fetching package data:", error);
       } finally {
         setLoading(false);
       }
@@ -52,212 +73,237 @@ const BookingDetails = ({ params }: BookingDetailsProps) => {
     fetchPackageData();
   }, [params.id]);
 
-  const bookingData = {
-    id: params.id,
-    name: searchParams.get("name"),
-    price: searchParams.get("price"),
-    days: searchParams.get("days"),
-    nights: searchParams.get("nights"),
-    startCity: searchParams.get("startCity"),
-    destinations: searchParams.get("destinations"),
-    packageType: searchParams.get("packageType"),
-    selectType: searchParams.get("selectType"),
-    highlights: searchParams.get("highlights"),
-    include: searchParams.get("include"),
-    exclude: searchParams.get("exclude"),
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowMobileCTA(window.scrollY > 400);
+    };
 
-  const handleSidebarBookNow = () => {
-    if (activeTab !== "traveller") {
-      setActiveTab("traveller");
-      setTimeout(() => {
-        window.scrollTo({ top: 300, behavior: "smooth" });
-      }, 100);
-    } else {
-      travellerDetailsRef.current?.triggerBooking();
-    }
-  };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  return (
-    <>
-      <div className="w-full relative h-[250px] md:h-[300px] lg:h-[400px]">
-        <Image
-          src="/images/booking/adv_back.jpg"
-          fill
-          alt="background image"
-          className="object-cover opacity-80"
-        />
-
-        <div className="absolute inset-0 bg-black/40"></div>
-
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white z-10">
-          <p className="mb-2 text-2xl md:text-3xl lg:text-4xl font-normal font-roboto">
-            Booking Confirmed
-          </p>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold font-roboto">
-            Your Adventure Awaits!
-          </h1>
+  if (loading) {
+    return (
+      <div className="w-full min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
+          <output className="mt-4 text-gray-600 text-lg" aria-live="polite">
+            Loading package details...
+          </output>
         </div>
       </div>
+    );
+  }
 
-      <div className="max-w-7xl mx-auto px-4 pt-8 pb-12">
-        <h2 className="text-3xl font-roboto text-clr font-bold mb-6">
-          Confirm Booking Details
-        </h2>
+  if (!packageData) {
+    return (
+      <div className="w-full min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600 text-xl mb-4">Package not found</p>
+          <Link
+            href="/holidays"
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition inline-block"
+          >
+            Browse Packages
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
-        {/* Tabs */}
-        <div className="border-b border-gray-200 mb-6">
-          <div className="flex gap-8">
-            <button
-              onClick={() => setActiveTab("summary")}
-              className={`pb-4 px-1 font-roboto text-lg font-medium transition-colors relative ${
-                activeTab === "summary"
-                  ? "text-clr"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Booking Summary
-              {activeTab === "summary" && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-clr"></span>
-              )}
-            </button>
+  const bookingSummaryData = {
+    id: params.id,
+    name: packageData.packageName || searchParams.get("name"),
+    price: packageData.packagePrice?.toString() || searchParams.get("price"),
+    days: packageData.packageDuration?.days?.toString() || searchParams.get("days"),
+    nights: packageData.packageDuration?.nights?.toString() || searchParams.get("nights"),
+    destination: packageData.destinationCity?.map(city => typeof city === 'string' ? city : city.name).join(", ") || null,
+  };
 
-            <button
-              onClick={() => setActiveTab("traveller")}
-              className={`pb-4 px-1 font-roboto text-lg font-medium transition-colors relative ${
-                activeTab === "traveller"
-                  ? "text-clr"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Traveller Details
-              {activeTab === "traveller" && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-clr"></span>
-              )}
-            </button>
+  const totalPrice = (packageData.packagePrice || 0) * (numAdults + numChildren);
+
+  return (
+    <div className="w-full bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 lg:pb-8">
+        
+        <nav className="mb-6" aria-label="Breadcrumb">
+          <ol className="flex items-center gap-2 text-sm text-gray-600">
+            <li>
+              <Link href="/" className="hover:text-blue-600 transition">
+                Home
+              </Link>
+            </li>
+            <li className="flex items-center gap-2">
+              <span>/</span>
+              <Link href="/holidays" className="hover:text-blue-600 transition">
+                Holidays
+              </Link>
+            </li>
+            <li className="flex items-center gap-2">
+              <span>/</span>
+              <span className="text-gray-900 font-medium">Booking</span>
+            </li>
+          </ol>
+        </nav>
+
+        
+        <div className="mb-8 bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+          <div className="flex items-center justify-between max-w-3xl mx-auto">
+            
+            <div className="flex flex-col items-center flex-1 relative">
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold mb-2 shadow-md relative z-10 border-4 border-white ${
+                currentStep > 1 ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-600 ring-2 ring-blue-600'
+              }`}>
+                {currentStep > 1 ? (
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M5 13l4 4L19 7"></path>
+                  </svg>
+                ) : '1'}
+              </div>
+              <span className={`text-xs sm:text-sm font-semibold text-center ${
+                currentStep >= 1 ? 'text-blue-600' : 'text-gray-600'
+              }`}>
+                Contact Details
+              </span>
+              <span className="text-[10px] sm:text-xs text-gray-500 text-center hidden sm:block">
+                {currentStep > 1 ? 'Completed' : 'In Progress'}
+              </span>
+            </div>
+
+            
+            <div className="flex-1 h-1 bg-gray-200 mx-2 relative -mt-6">
+              <div className={`h-full bg-blue-600 transition-all duration-500 ${
+                currentStep >= 2 ? 'w-full' : 'w-0'
+              }`}></div>
+            </div>
+
+            
+            <div className="flex flex-col items-center flex-1 relative">
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold mb-2 shadow-sm relative z-10 border-4 border-white ${
+                currentStep > 2 ? 'bg-blue-600 text-white' :
+                currentStep === 2 ? 'bg-blue-100 text-blue-600 ring-2 ring-blue-600' :
+                'bg-gray-200 text-gray-500'
+              }`}>
+                {currentStep > 2 ? (
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M5 13l4 4L19 7"></path>
+                  </svg>
+                ) : '2'}
+              </div>
+              <span className={`text-xs sm:text-sm font-semibold text-center ${
+                currentStep >= 2 ? 'text-blue-600' : 'text-gray-600'
+              }`}>
+                Holiday Details
+              </span>
+              <span className="text-[10px] sm:text-xs text-center hidden sm:block">
+                {currentStep > 2 ? 'Completed' : currentStep === 2 ? 'In Progress' : 'Pending'}
+              </span>
+            </div>
+
+            
+            <div className="flex-1 h-1 bg-gray-200 mx-2 relative -mt-6">
+              <div className={`h-full bg-blue-600 transition-all duration-500 ${
+                currentStep >= 3 ? 'w-full' : 'w-0'
+              }`}></div>
+            </div>
+
+            
+            <div className="flex flex-col items-center flex-1 relative">
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold mb-2 shadow-sm relative z-10 border-4 border-white ${
+                currentStep === 3 ? 'bg-blue-100 text-blue-600 ring-2 ring-blue-600' :
+                'bg-gray-200 text-gray-500'
+              }`}>
+                3
+              </div>
+              <span className={`text-xs sm:text-sm font-medium text-center ${
+                currentStep >= 3 ? 'text-blue-600' : 'text-gray-600'
+              }`}>
+                Payment
+              </span>
+              <span className={`text-[10px] sm:text-xs text-center hidden sm:block ${
+                currentStep === 3 ? 'text-blue-600' : 'text-gray-400'
+              }`}>
+                {currentStep === 3 ? 'In Progress' : 'Pending'}
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Tab Content with Sidebar */}
-        <div className="mt-6">
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="text-center">
-                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-                <p className="mt-4 text-gray-600">Loading package details...</p>
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            <ContactDetailsSection
+              isOpen={openSections.contact}
+              onToggle={() => setOpenSections(prev => ({ ...prev, contact: !prev.contact }))}
+              onNext={() => handleNextStep(1)}
+            />
+            <HolidayDetailsSection
+              packageData={bookingSummaryData}
+              isOpen={openSections.holiday}
+              onToggle={() => setOpenSections(prev => ({ ...prev, holiday: !prev.holiday }))}
+              onNext={() => handleNextStep(2)}
+            />
+            <PaymentSection
+              isOpen={openSections.payment}
+              onToggle={() => setOpenSections(prev => ({ ...prev, payment: !prev.payment }))}
+            />
+          </div>
+
+          <div className="lg:col-span-1">
+            <div className="lg:sticky lg:top-8">
+              <BookingSummaryCard
+                packageData={bookingSummaryData}
+                travelDate={travelDate}
+                numAdults={numAdults}
+                numChildren={numChildren}
+              />
             </div>
-          ) : packageData ? (
-            <div className="flex flex-col lg:flex-row gap-6">
-              {/* Main Content */}
-              <div className="flex-1">
-                {activeTab === "summary" && (
-                  <BookingSummary packageData={packageData} />
-                )}
-                {activeTab === "traveller" && (
-                  <TravellerDetails
-                    ref={travellerDetailsRef}
-                    bookingData={bookingData}
-                    packageData={
-                      packageData && packageData.packagePrice
-                        ? {
-                            packagePrice: packageData.packagePrice,
-                            packageDuration: packageData.packageDuration,
-                          }
-                        : undefined
-                    }
-                  />
-                )}
-              </div>
-
-              {/* Sidebar - Price Card */}
-              <div className="lg:w-[350px] shrink-0">
-                <Card className="sticky top-4 pt-0">
-                  <CardHeader className="pb-4 bg-[#F1F7FF] py-4">
-                    <h3 className="text-lg font-semibold text-gray-700 font-roboto">
-                      Total Package Price
-                    </h3>
-                    <p className="text-sm text-gray-500 font-roboto">
-                      per person
-                    </p>
-                  </CardHeader>
-
-                  <CardContent className="pt-6 space-y-6">
-                    {/* Price Section */}
-                    <div>
-                      <div className="flex items-baseline gap-2 mb-2">
-                        <span className="text-4xl font-bold text-blue-600 font-roboto">
-                          ₹
-                          {packageData.packagePrice?.toLocaleString("en-IN") ||
-                            "N/A"}
-                        </span>
-                        <span className="text-sm text-gray-600 font-roboto">
-                          per person*
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-500 font-roboto">
-                        *Excluding applicable taxes
-                      </p>
-                    </div>
-
-                    {/* Duration */}
-                    <div className="border-t pt-4">
-                      <div className="flex items-center gap-3">
-                        <Calendar className="w-5 h-5 text-gray-400" />
-                        <div>
-                          <p className="text-sm font-medium text-gray-700 font-roboto">
-                            {packageData.packageDuration?.days} Days /{" "}
-                            {packageData.packageDuration?.nights} Nights
-                          </p>
-                          <p className="text-xs text-gray-500 font-roboto">
-                            {packageData.destinationCity?.map(city => typeof city === 'string' ? city : city.name).join(", ")}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Package Details */}
-                    <div className="border-t pt-4 space-y-3">
-                      <div>
-                        <p className="text-xs font-semibold text-gray-700 font-roboto mb-1">
-                          Starting City
-                        </p>
-                        <p className="text-sm text-gray-600 font-roboto">
-                          {packageData.startCity}
-                        </p>
-                      </div>
-
-                      <div>
-                        <p className="text-xs font-semibold text-gray-700 font-roboto mb-1">
-                          Package Type
-                        </p>
-                        <p className="text-sm text-gray-600 font-roboto capitalize">
-                          {packageData.packageType}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Proceed Button */}
-                    <button
-                      onClick={handleSidebarBookNow}
-                      className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold font-roboto hover:bg-blue-700 transition-colors"
-                    >
-                      {activeTab === "traveller"
-                        ? "Book Now"
-                        : "Proceed to Book"}
-                    </button>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center py-12 text-red-600">
-              Failed to load package details
-            </div>
-          )}
+          </div>
         </div>
       </div>
-    </>
+
+      
+      <div
+        className={`lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg transition-transform duration-300 z-50 ${
+          showMobileCTA ? "translate-y-0" : "translate-y-full"
+        }`}
+      >
+        <div className="px-4 py-3 flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-xs text-gray-600">Total Price</span>
+            <span className="text-xl font-bold text-gray-900">
+              ₹{Math.round(totalPrice).toLocaleString()}
+            </span>
+          </div>
+          <button
+            onClick={() => {
+              const paymentSection = document.querySelector('[aria-label="payment-section"]');
+              if (paymentSection) {
+                paymentSection.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+          >
+            Continue to Payment
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

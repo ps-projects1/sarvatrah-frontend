@@ -86,7 +86,7 @@ const BookingSummary = ({ packageData }: BookingSummaryProps) => {
               </AccordionTrigger>
               <AccordionContent>
                 <div className="ml-14 space-y-4 pt-2">
-                  {/* Transportation */}
+                  
                   {day.transport && (
                     <div className="flex gap-3">
                       <Car className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
@@ -101,7 +101,7 @@ const BookingSummary = ({ packageData }: BookingSummaryProps) => {
                     </div>
                   )}
 
-                  {/* Check-in */}
+                  
                   {day.stay && (
                     <div className="flex gap-3">
                       <Building2 className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
@@ -116,7 +116,7 @@ const BookingSummary = ({ packageData }: BookingSummaryProps) => {
                     </div>
                   )}
 
-                  {/* Places to Visit */}
+                  
                   {day.placesToVisit && day.placesToVisit.length > 0 && (
                     <div className="flex gap-3">
                       <MapPin className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
@@ -133,7 +133,7 @@ const BookingSummary = ({ packageData }: BookingSummaryProps) => {
                     </div>
                   )}
 
-                  {/* Activities */}
+                  
                   {day.activities && day.activities.length > 0 && (
                     <div className="flex gap-3">
                       <Activity className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
@@ -154,7 +154,7 @@ const BookingSummary = ({ packageData }: BookingSummaryProps) => {
                     </div>
                   )}
 
-                  {/* Meals */}
+                  
                   {day.mealsIncluded && day.mealsIncluded.length > 0 && (
                     <div className="flex gap-3">
                       <Utensils className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
@@ -169,7 +169,7 @@ const BookingSummary = ({ packageData }: BookingSummaryProps) => {
                     </div>
                   )}
 
-                  {/* Notes */}
+                  
                   {day.notes && (
                     <div className="flex gap-3">
                       <AlertCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />

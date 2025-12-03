@@ -33,7 +33,7 @@ interface ItineraryProps {
 }
 
 const Itinerary = ({ itineraryData }: ItineraryProps) => {
-  // Helper function to safely get city name
+
   const getCityName = (city: any): string => {
     if (!city) return 'Unknown';
     if (typeof city === 'string') return city;

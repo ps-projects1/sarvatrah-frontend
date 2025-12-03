@@ -54,7 +54,8 @@ export default function ContactDetailsSection({
 
       case "email":
         if (!value.trim()) return "Email is required";
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Invalid email format";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+          return "Invalid email format";
         return undefined;
 
       case "confirmEmail":
@@ -64,7 +65,8 @@ export default function ContactDetailsSection({
 
       case "phoneNumber":
         if (!value.trim()) return "Phone number is required";
-        if (!/^\d{10}$/.test(value.replace(/\s/g, ""))) return "Must be 10 digits";
+        if (!/^\d{10}$/.test(value.replace(/\s/g, "")))
+          return "Must be 10 digits";
         return undefined;
 
       default:
@@ -81,7 +83,6 @@ export default function ContactDetailsSection({
       [name]: value,
     }));
 
-
     if (touched[name]) {
       const error = validateField(name, value);
       setErrors((prev) => ({
@@ -93,7 +94,10 @@ export default function ContactDetailsSection({
 
   const handleBlur = (name: string) => {
     setTouched((prev) => ({ ...prev, [name]: true }));
-    const error = validateField(name, formData[name as keyof typeof formData]);
+    const error = validateField(
+      name,
+      formData[name as keyof typeof formData]
+    );
     setErrors((prev) => ({
       ...prev,
       [name]: error,
@@ -104,7 +108,10 @@ export default function ContactDetailsSection({
     const newErrors: FormErrors = {};
     Object.keys(formData).forEach((key) => {
       if (key !== "countryCode") {
-        const error = validateField(key, formData[key as keyof typeof formData]);
+        const error = validateField(
+          key,
+          formData[key as keyof typeof formData]
+        );
         if (error) newErrors[key as keyof FormErrors] = error;
       }
     });
@@ -122,7 +129,6 @@ export default function ContactDetailsSection({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-
       if (onNext) {
         onNext();
       }
@@ -250,8 +256,6 @@ export default function ContactDetailsSection({
                     value={formData.firstName}
                     onChange={handleInputChange}
                     onBlur={() => handleBlur("firstName")}
-                    aria-invalid={errors.firstName ? "true" : "false"}
-                    aria-describedby={errors.firstName ? "firstName-error" : undefined}
                     className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 ${
                       errors.firstName
                         ? "border-red-500 focus:ring-red-500"
@@ -266,7 +270,7 @@ export default function ContactDetailsSection({
                   )}
                 </div>
                 {errors.firstName && (
-                  <p id="firstName-error" className="mt-1 text-sm text-red-600 flex items-center gap-1" role="alert">
+                  <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
                     <AlertCircle className="w-4 h-4" />
                     {errors.firstName}
                   </p>
@@ -288,8 +292,6 @@ export default function ContactDetailsSection({
                     value={formData.lastName}
                     onChange={handleInputChange}
                     onBlur={() => handleBlur("lastName")}
-                    aria-invalid={errors.lastName ? "true" : "false"}
-                    aria-describedby={errors.lastName ? "lastName-error" : undefined}
                     className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 ${
                       errors.lastName
                         ? "border-red-500 focus:ring-red-500"
@@ -304,7 +306,7 @@ export default function ContactDetailsSection({
                   )}
                 </div>
                 {errors.lastName && (
-                  <p id="lastName-error" className="mt-1 text-sm text-red-600 flex items-center gap-1" role="alert">
+                  <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
                     <AlertCircle className="w-4 h-4" />
                     {errors.lastName}
                   </p>
@@ -327,8 +329,6 @@ export default function ContactDetailsSection({
                   value={formData.email}
                   onChange={handleInputChange}
                   onBlur={() => handleBlur("email")}
-                  aria-invalid={errors.email ? "true" : "false"}
-                  aria-describedby={errors.email ? "email-error" : undefined}
                   className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 ${
                     errors.email
                       ? "border-red-500 focus:ring-red-500"
@@ -343,7 +343,7 @@ export default function ContactDetailsSection({
                 )}
               </div>
               {errors.email ? (
-                <p id="email-error" className="mt-1 text-sm text-red-600 flex items-center gap-1" role="alert">
+                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
                   <AlertCircle className="w-4 h-4" />
                   {errors.email}
                 </p>
@@ -369,8 +369,6 @@ export default function ContactDetailsSection({
                   value={formData.confirmEmail}
                   onChange={handleInputChange}
                   onBlur={() => handleBlur("confirmEmail")}
-                  aria-invalid={errors.confirmEmail ? "true" : "false"}
-                  aria-describedby={errors.confirmEmail ? "confirmEmail-error" : undefined}
                   className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 ${
                     errors.confirmEmail
                       ? "border-red-500 focus:ring-red-500"
@@ -385,7 +383,7 @@ export default function ContactDetailsSection({
                 )}
               </div>
               {errors.confirmEmail ? (
-                <p id="confirmEmail-error" className="mt-1 text-sm text-red-600 flex items-center gap-1" role="alert">
+                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
                   <AlertCircle className="w-4 h-4" />
                   {errors.confirmEmail}
                 </p>
@@ -425,8 +423,6 @@ export default function ContactDetailsSection({
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
                     onBlur={() => handleBlur("phoneNumber")}
-                    aria-invalid={errors.phoneNumber ? "true" : "false"}
-                    aria-describedby={errors.phoneNumber ? "phoneNumber-error" : undefined}
                     className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 ${
                       errors.phoneNumber
                         ? "border-red-500 focus:ring-red-500"
@@ -442,7 +438,7 @@ export default function ContactDetailsSection({
                 </div>
               </div>
               {errors.phoneNumber && (
-                <p id="phoneNumber-error" className="mt-1 text-sm text-red-600 flex items-center gap-1" role="alert">
+                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
                   <AlertCircle className="w-4 h-4" />
                   {errors.phoneNumber}
                 </p>

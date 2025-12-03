@@ -121,9 +121,9 @@ const DestinationGallerySection: React.FC<DestinationGallerySectionProps> = ({
                     fill
                     className="object-cover rounded-2xl shadow-lg"
                   />
-                  {/* Gradient Overlay */}
+                  
                   <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/70 rounded-2xl" />
-                  {/* Destination Info */}
+                  
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                     <h3 className="text-3xl font-bold mb-2">
                       {destination.name}
@@ -136,7 +136,7 @@ const DestinationGallerySection: React.FC<DestinationGallerySectionProps> = ({
               ))}
             </div>
 
-            {/* Left Arrow */}
+            
             <button
               onClick={handlePrev}
               className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 shadow-sm z-30"
@@ -149,7 +149,7 @@ const DestinationGallerySection: React.FC<DestinationGallerySectionProps> = ({
               />
             </button>
 
-            {/* Right Arrow */}
+            
             <button
               onClick={handleNext}
               className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 shadow-sm z-30"

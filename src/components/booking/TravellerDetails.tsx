@@ -51,7 +51,7 @@ export interface TravellerDetailsRef {
 }
 
 const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
-  ({ bookingData }, ref) => {
+  ({ bookingData, packageData }, ref) => {
     const [dataOption, setDataOption] = useState<"lead" | "all">("all");
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
@@ -87,7 +87,7 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
     };
 
     const validateForm = () => {
-      // Check if all required fields are filled
+
       if (!formData.leadFirstName || !formData.leadLastName) {
         alert("Please fill in lead traveller's first and last name");
         return false;
@@ -155,14 +155,13 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
       }, 3000);
     };
 
-    // SECURITY: Always use backend-validated price, never trust URL params
     const basePrice = packageData?.packagePrice || 0;
     const gstAmount = basePrice * 0.18;
     const totalPrice = basePrice + gstAmount;
 
     return (
       <div className="w-full space-y-6 pb-8">
-        {/* Top Info Bar */}
+        
         <div className="bg-white rounded-lg border border-[#E6E6E6] p-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center md:text-left">
             <div>
@@ -179,18 +178,20 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
             </div>
             <div>
               <p className="text-sm text-gray-500 mb-1">Total Amount</p>
-              <p className="font-semibold text-clr">₹ {basePrice.toLocaleString("en-IN")}</p>
+              <p className="font-semibold text-clr">
+                ₹ {basePrice.toLocaleString("en-IN")}
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Main Form */}
+        
         <div className="bg-white rounded-lg border border-[#E6E6E6] p-6">
           <h2 className="text-2xl font-bold text-clr mb-6">
             Travellers Details
           </h2>
 
-          {/* Radio Options */}
+          
           <div className="flex gap-8 mb-6">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -217,7 +218,7 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Lead Travellers Details */}
+            
             <div>
               <h3 className="text-lg font-semibold text-clr mb-4">
                 Lead travellers details:
@@ -300,7 +301,7 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
               </p>
             </div>
 
-            {/* Billing Details */}
+            
             <div>
               <h3 className="text-lg font-semibold text-clr mb-4">
                 Billing Details:
@@ -421,7 +422,7 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
               </div>
             </div>
 
-            {/* Terms Checkbox */}
+            
             <div className="flex items-center gap-3">
               <input
                 type="checkbox"
@@ -432,17 +433,25 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
               />
               <label htmlFor="terms" className="text-gray-700">
                 I agree to the{" "}
-                <a href="/terms" target="_blank" className="text-blue-600 hover:underline">
+                <a
+                  href="/terms"
+                  target="_blank"
+                  className="text-blue-600 hover:underline"
+                >
                   Terms and Conditions
                 </a>{" "}
                 and{" "}
-                <a href="/privacy" target="_blank" className="text-blue-600 hover:underline">
+                <a
+                  href="/privacy"
+                  target="_blank"
+                  className="text-blue-600 hover:underline"
+                >
                   Privacy Policy
                 </a>
               </label>
             </div>
 
-            {/* Action Buttons */}
+            
             <div className="flex gap-4 pt-4">
               <button
                 type="submit"
@@ -461,7 +470,7 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
           </form>
         </div>
 
-        {/* Confirmation Modal */}
+        
         <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
           <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
             <DialogHeader>
@@ -471,7 +480,7 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
             </DialogHeader>
 
             <div className="space-y-6 py-4">
-              {/* Package Details */}
+              
               <div className="border-b pb-4">
                 <h3 className="font-semibold text-lg text-clr mb-3">
                   Package Information
@@ -490,7 +499,7 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
                 </div>
               </div>
 
-              {/* Price Breakdown */}
+              
               <div className="border-b pb-4">
                 <h3 className="font-semibold text-lg text-clr mb-3">
                   Price Breakdown
@@ -525,7 +534,7 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
                 </div>
               </div>
 
-              {/* Lead Traveller Details */}
+              
               <div className="border-b pb-4">
                 <h3 className="font-semibold text-lg text-clr mb-3">
                   Lead Traveller
@@ -556,7 +565,7 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
                 </div>
               </div>
 
-              {/* Billing Details */}
+              
               <div>
                 <h3 className="font-semibold text-lg text-clr mb-3">
                   Billing Information
@@ -611,7 +620,7 @@ const TravellerDetails = forwardRef<TravellerDetailsRef, TravellerDetailsProps>(
           </DialogContent>
         </Dialog>
 
-        {/* Success Modal */}
+        
         <Dialog open={showSuccess} onOpenChange={setShowSuccess}>
           <DialogContent className="max-w-md">
             <div className="text-center py-6">

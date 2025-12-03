@@ -32,21 +32,21 @@ const PilgrimageSection: React.FC<PilgrimageSectionProps> = ({
     <section className="w-full relative overflow-hidden bg-linear-to-r from-[#CED4DB] to-[#E9EDF2] py-16 sm:py-20 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 items-center">
-          {/* Left Content Section */}
+          
           <div className="flex flex-col justify-start">
-            {/* Heading */}
+            
             <h2 className="text-5xl sm:text-6xl lg:text-6xl font-semibold font-roboto text-gray-900 mb-6 leading-tight">
               Pilgrimage
             </h2>
 
-            {/* Description */}
+            
             <p className="text-sm sm:text-base text-gray-700 mb-8 leading-relaxed max-w-md font-light">
               Pilgrimage is a journey undertaken by individuals, often for
               religious or spiritual reasons, to visit a sacred place or site
               that holds special significance to their faith.
             </p>
 
-            {/* View Pilgrimages Button */}
+            
             <div className="mb-12">
               <Button
                 onClick={onViewPilgrimages}
@@ -57,19 +57,19 @@ const PilgrimageSection: React.FC<PilgrimageSectionProps> = ({
               </Button>
             </div>
 
-            {/* Package Card */}
+            
             <div className="w-full max-w-sm bg-white rounded-3xl p-6 shadow-lg">
-              {/* Title */}
+              
               <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">
                 {packages[0].title}
               </h3>
 
-              {/* Duration */}
+              
               <p className="text-sm text-gray-600 mb-4 font-light">
                 {packages[0].duration}
               </p>
 
-              {/* Price and Arrow */}
+              
               <div className="flex items-center justify-between">
                 <span className="text-2xl sm:text-3xl font-bold text-red-500">
                   {packages[0].price}
@@ -81,9 +81,9 @@ const PilgrimageSection: React.FC<PilgrimageSectionProps> = ({
             </div>
           </div>
 
-          {/* Right Image Section - Pilgrimage Images with Background */}
+          
           <div className="relative h-96 sm:h-[450px] lg:h-[500px] flex items-center justify-center">
-            {/* Background Image (behind cards) */}
+            
             <div
               className="absolute inset-0 flex items-center justify-center z-0  "
               style={{
@@ -93,9 +93,9 @@ const PilgrimageSection: React.FC<PilgrimageSectionProps> = ({
               }}
             />
 
-            {/* Cards Container */}
+            
             <div className="relative w-full h-full flex items-center justify-center">
-              {/* Top Card - Center */}
+              
               <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20">
                 <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-3xl overflow-hidden">
                   <Image
@@ -107,7 +107,7 @@ const PilgrimageSection: React.FC<PilgrimageSectionProps> = ({
                 </div>
               </div>
 
-              {/* Bottom Left Card */}
+              
               <div className="absolute bottom-8 sm:bottom-12 left-4 sm:left-8 z-10">
                 <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-3xl overflow-hidden">
                   <Image
@@ -119,7 +119,7 @@ const PilgrimageSection: React.FC<PilgrimageSectionProps> = ({
                 </div>
               </div>
 
-              {/* Bottom Right Card */}
+              
               <div className="absolute bottom-8 sm:bottom-12 right-4 sm:right-8 z-20">
                 <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-3xl overflow-hidden">
                   <Image

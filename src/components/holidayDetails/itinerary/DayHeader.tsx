@@ -1,4 +1,4 @@
-// DayHeader.tsx
+
 import React from "react";
 import { Hotel, Navigation, Bus } from "lucide-react";
 

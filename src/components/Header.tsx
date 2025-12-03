@@ -21,7 +21,7 @@ const Header = () => {
   return (
     <header className="bg-white sticky top-0 z-50 border-b border-[#E6E6E6]">
       <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo & Brand */}
+        
         <Link href="/" className="flex items-center gap-2 cursor-pointer">
           <div className="w-10 h-10">
             <Image
@@ -35,7 +35,7 @@ const Header = () => {
           <span className="text-[18px] font-semibold text-clr">Sarvatrah</span>
         </Link>
 
-        {/* Desktop Navigation */}
+        
         <nav className="hidden md:flex items-center gap-8">
           {navItems.map((item) => {
             const isActive =
@@ -62,12 +62,12 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-4">
-          {/* Register / Sign In Button */}
+          
           <button className="px-6 py-2.5 border border-clr text-clr rounded-full text-[14px] font-medium hover:bg-clr hover:text-white transition-colors cursor-pointer">
             Register / Sign In
           </button>
 
-          {/* Hamburger Menu Button - Mobile Only */}
+          
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="md:hidden flex flex-col gap-1.5 cursor-pointer"
@@ -92,10 +92,10 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu Drawer */}
+      
       {isMobileMenuOpen && (
         <>
-          {/* Backdrop - Use button for proper accessibility */}
+          
           <button
             onClick={closeMobileMenu}
             className="fixed inset-0 bg-black/50 md:hidden z-40"
@@ -103,7 +103,7 @@ const Header = () => {
             type="button"
           />
 
-          {/* Mobile Menu */}
+          
           <nav className="md:hidden absolute top-full flex left-0 right-0 bg-white border-b border-[#E6E6E6] shadow-lg z-40 animate-in slide-in-from-top-2 duration-300">
             <div className="max-w-[1400px] mx-auto px-6 items-center py-4 flex flex-col gap-3">
               {navItems.map((item) => {

@@ -14,7 +14,7 @@ const Policies = () => {
 
   return (
     <div className="w-full space-y-4 pb-4">
-      {/* Cancellation & Date Change Section */}
+      
       <Collapsible
         open={openCancellation}
         onOpenChange={setOpenCancellation}
@@ -32,7 +32,7 @@ const Policies = () => {
         </CollapsibleTrigger>
 
         <CollapsibleContent className="px-4 sm:px-6 pb-6 space-y-6">
-          {/* Package Cancellation Policy */}
+          
           <div>
             <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
               Package Cancellation Policy
@@ -42,7 +42,7 @@ const Policies = () => {
             </p>
           </div>
 
-          {/* Package Date Change Policy */}
+          
           <div>
             <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
               Package Date Change Policy
@@ -54,7 +54,7 @@ const Policies = () => {
         </CollapsibleContent>
       </Collapsible>
 
-      {/* Terms and Conditions Section */}
+      
       <Collapsible
         open={openTerms}
         onOpenChange={setOpenTerms}
@@ -72,7 +72,7 @@ const Policies = () => {
         </CollapsibleTrigger>
 
         <CollapsibleContent className="px-4 sm:px-6 pb-6 space-y-6">
-          {/* Exclusions */}
+          
           <div>
             <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
               Exclusions
@@ -100,7 +100,7 @@ const Policies = () => {
             </ul>
           </div>
 
-          {/* Terms and Conditions */}
+          
           <div>
             <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
               Terms and Conditions
@@ -298,7 +298,7 @@ const Policies = () => {
 
 export default Policies;
 <div className="px-4 sm:px-6 pb-6 space-y-6">
-  {/* Exclusions */}
+  
   <div>
     <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
       Exclusions
@@ -326,7 +326,7 @@ export default Policies;
     </ul>
   </div>
 
-  {/* Terms and Conditions */}
+  
   <div>
     <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
       Terms and Conditions

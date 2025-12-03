@@ -18,6 +18,9 @@ interface ActivityDetailsSectionProps {
   numAdults: number;
   numSeniors: number;
   numChildren: number;
+  isOpen?: boolean;
+  onToggle?: () => void;
+  onNext?: () => void;
 }
 
 interface TravelerData {
@@ -37,12 +40,16 @@ export default function ActivityDetailsSection({
   numAdults,
   numSeniors,
   numChildren,
+  isOpen: externalIsOpen,
+  onToggle,
+  onNext,
 }: ActivityDetailsSectionProps) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [internalIsOpen, setInternalIsOpen] = useState(true);
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
   const [tourLanguage, setTourLanguage] = useState("English - Guide");
   const [specialRequirements, setSpecialRequirements] = useState("");
 
-  // Initialize traveler data
+
   const [travelers, setTravelers] = useState<{
     adults: TravelerData[];
     seniors: TravelerData[];
@@ -105,8 +112,22 @@ export default function ActivityDetailsSection({
     return parts.join(", ");
   };
 
+  const handleToggle = () => {
+    if (onToggle) {
+      onToggle();
+    } else {
+      setInternalIsOpen(!internalIsOpen);
+    }
+  };
+
+  const handleNext = () => {
+    if (onNext) {
+      onNext();
+    }
+  };
+
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+    <Collapsible open={isOpen} onOpenChange={handleToggle}>
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <CollapsibleTrigger asChild>
           <div className="flex items-center justify-between cursor-pointer mb-4">
@@ -287,7 +308,11 @@ export default function ActivityDetailsSection({
           </div>
 
           <div className="pt-6">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors">
+            <button
+              type="button"
+              onClick={handleNext}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+            >
               Next
             </button>
           </div>

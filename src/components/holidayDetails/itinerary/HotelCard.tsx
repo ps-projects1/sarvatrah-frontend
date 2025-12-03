@@ -1,4 +1,4 @@
-// HotelCard.tsx
+
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -56,7 +56,7 @@ const HotelCard = ({
   });
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -73,7 +73,7 @@ const HotelCard = ({
     };
   }, [showDropdown]);
 
-  // Search hotels from API
+
   const searchHotels = async (query: string) => {
     if (!query || query.length < 2) {
       setHotels([]);
@@ -104,7 +104,7 @@ const HotelCard = ({
     }
   };
 
-  // Debounce search
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (showDropdown && searchQuery) {
@@ -126,7 +126,7 @@ const HotelCard = ({
 
   return (
     <div className="bg-white mb-3 border-b border-[#EBEBEB]">
-      {/* Header */}
+      
       <div className="flex items-center justify-between px-6 py-3 ">
         <p className="text-sm text-clr font-roboto">
           Check-in to{" "}
@@ -142,10 +142,10 @@ const HotelCard = ({
             <ChevronDown className={`w-4 h-4 transition-transform ${showDropdown ? "rotate-180" : ""}`} />
           </button>
 
-          {/* Dropdown */}
+          
           {showDropdown && (
             <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
-              {/* Search Input */}
+              
               <div className="p-3 border-b border-gray-200">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -168,7 +168,7 @@ const HotelCard = ({
                 </div>
               </div>
 
-              {/* Hotel List */}
+              
               <div className="max-h-64 overflow-y-auto">
                 {loading ? (
                   <div className="p-4 text-center text-sm text-gray-500">
@@ -237,10 +237,10 @@ const HotelCard = ({
         </div>
       </div>
 
-      {/* Content */}
+      
       <div className="p-6">
         <div className="flex items-start gap-6">
-          {/* Image */}
+          
           <div className="w-44 h-28 rounded-lg overflow-hidden shrink-0">
             <Image
               src={selectedHotel.image || image}
@@ -251,7 +251,7 @@ const HotelCard = ({
             />
           </div>
 
-          {/* Details */}
+          
           <div className="flex-1">
             <div className="flex items-start gap-2 mb-2">
               <span className="bg-red-500 text-white font-roboto text-xs px-2 py-1 rounded font-medium">
@@ -279,7 +279,7 @@ const HotelCard = ({
               </div>
             </div>
 
-            {/* Check-in dates */}
+            
             <div className="flex items-center gap-2 text-sm text-clr font-roboto mb-4">
               <Calendar size={16} />
               <span>
@@ -289,7 +289,7 @@ const HotelCard = ({
           </div>
         </div>
 
-        {/* Room details */}
+        
         <div className="bg-[#F1F4F8] rounded-lg p-4">
           <div className="flex items-center justify-between mb-2">
             <h5 className="font-semibold text-clr font-roboto">{roomType}</h5>

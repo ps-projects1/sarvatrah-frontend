@@ -21,8 +21,11 @@ export default function BookingSummaryCard({
   numSeniors,
   numChildren,
 }: BookingSummaryCardProps) {
-  // Countdown Timer (15 minutes = 900 seconds)
+
   const [timeLeft, setTimeLeft] = useState(900);
+  const [cancellationTimeLeft, setCancellationTimeLeft] = useState<
+    number | null
+  >(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -32,10 +35,48 @@ export default function BookingSummaryCard({
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+
+    if (date && activity?.cancellationPolicy?.cancellationWindowHours) {
+      const bookingDate = new Date(date);
+      const hoursBeforeTrip =
+        activity.cancellationPolicy.cancellationWindowHours;
+      const cancellationDeadline = new Date(
+        bookingDate.getTime() - hoursBeforeTrip * 60 * 60 * 1000
+      );
+
+      const updateCancellationTimer = () => {
+        const now = new Date();
+        const timeUntilDeadline = Math.floor(
+          (cancellationDeadline.getTime() - now.getTime()) / 1000
+        );
+        setCancellationTimeLeft(timeUntilDeadline > 0 ? timeUntilDeadline : 0);
+      };
+
+      updateCancellationTimer();
+      const interval = setInterval(updateCancellationTimer, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [date, activity]);
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const formatCancellationTime = (seconds: number) => {
+    const days = Math.floor(seconds / (24 * 60 * 60));
+    const hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60));
+    const mins = Math.floor((seconds % (60 * 60)) / 60);
+
+    if (days > 0) {
+      return `${days}d ${hours}h`;
+    } else if (hours > 0) {
+      return `${hours}h ${mins}m`;
+    } else {
+      return `${mins}m`;
+    }
   };
 
   const getTotalTravelers = () => {
@@ -59,7 +100,7 @@ export default function BookingSummaryCard({
   };
 
   const calculateGST = () => {
-    return calculateSubtotal() * 0.18; // 18% GST
+    return calculateSubtotal() * 0.18;
   };
 
   const calculateTotalPrice = () => {
@@ -68,7 +109,7 @@ export default function BookingSummaryCard({
 
   return (
     <div className="space-y-4">
-      {/* Timer Banner */}
+      
       <div className="bg-pink-100 border border-pink-200 rounded-lg p-3 flex items-center justify-center gap-2">
         <Clock className="w-5 h-5 text-pink-600" />
         <span className="text-sm font-medium text-gray-900">
@@ -77,9 +118,9 @@ export default function BookingSummaryCard({
         </span>
       </div>
 
-      {/* Main Summary Card */}
+      
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
-        {/* Activity Image & Title */}
+        
         <div className="flex gap-4">
           {activity?.images?.[0] && (
             <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0">
@@ -98,9 +139,9 @@ export default function BookingSummaryCard({
           </div>
         </div>
 
-        {/* Travelers, Date, Price */}
+        
         <div className="space-y-3 pb-6 border-b border-gray-200">
-          {/* Travelers */}
+          
           <div className="flex items-center gap-2 text-sm">
             <Users className="w-5 h-5 text-gray-600" />
             <span className="text-gray-900 font-roboto">
@@ -108,7 +149,7 @@ export default function BookingSummaryCard({
             </span>
           </div>
 
-          {/* Date & Time */}
+          
           {date && (
             <div className="flex items-center gap-2 text-sm">
               <Calendar className="w-5 h-5 text-gray-600" />
@@ -118,7 +159,7 @@ export default function BookingSummaryCard({
             </div>
           )}
 
-          {/* Subtotal */}
+          
           <div className="flex items-baseline justify-between pt-2">
             <span className="text-sm text-gray-600 font-roboto">Subtotal</span>
             <span className="text-lg font-semibold text-gray-900 font-roboto">
@@ -126,7 +167,7 @@ export default function BookingSummaryCard({
             </span>
           </div>
 
-          {/* GST (18%) */}
+          
           <div className="flex items-baseline justify-between">
             <span className="text-sm text-gray-600 font-roboto">GST (18%)</span>
             <span className="text-sm font-medium text-gray-900 font-roboto">
@@ -134,7 +175,7 @@ export default function BookingSummaryCard({
             </span>
           </div>
 
-          {/* Total */}
+          
           <div className="flex items-baseline justify-between pt-2 border-t border-gray-200">
             <span className="text-sm font-semibold text-gray-900 font-roboto">
               Total price
@@ -145,43 +186,133 @@ export default function BookingSummaryCard({
           </div>
         </div>
 
-        {/* Free Cancellation */}
-        <div className="flex items-start gap-2 text-sm pb-6 border-b border-gray-200">
-          <div className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center shrink-0 mt-0.5">
-            <svg
-              className="w-3 h-3 text-white"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path d="M5 13l4 4L19 7"></path>
-            </svg>
+        
+        <div className="pb-6 border-b border-gray-200 space-y-3">
+          <div className="flex items-start gap-2 text-sm">
+            <div className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center shrink-0 mt-0.5">
+              <svg
+                className="w-3 h-3 text-white"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <div>
+              <span className="font-semibold text-gray-900">
+                Free cancellation
+              </span>{" "}
+              +{" "}
+              <span className="font-semibold text-gray-900">
+                Unlimited rescheduling
+              </span>{" "}
+              <span className="text-gray-600">
+                before{" "}
+                {date && format(new Date(date), "h:mm a 'on' MMM dd, yyyy")}
+              </span>
+            </div>
           </div>
-          <div>
-            <span className="font-semibold text-gray-900">
-              Free cancellation
-            </span>{" "}
-            +{" "}
-            <span className="font-semibold text-gray-900">
-              Unlimited rescheduling
-            </span>{" "}
-            <span className="text-gray-600">
-              before{" "}
-              {date && format(new Date(date), "h:mm a 'on' MMM dd, yyyy")}
-            </span>
+
+          
+          {cancellationTimeLeft !== null && cancellationTimeLeft > 0 && (
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-orange-600" />
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-orange-900">
+                  Cancellation deadline in{" "}
+                  {formatCancellationTime(cancellationTimeLeft)}
+                </p>
+                <p className="text-xs text-orange-700">
+                  Cancel before{" "}
+                  {date &&
+                    activity?.cancellationPolicy?.cancellationWindowHours &&
+                    format(
+                      new Date(
+                        new Date(date).getTime() -
+                          activity.cancellationPolicy.cancellationWindowHours *
+                            60 *
+                            60 *
+                            1000
+                      ),
+                      "MMM dd, h:mm a"
+                    )}{" "}
+                  for a full refund
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        
+        <div className="space-y-3">
+          <button className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
+            <Tag className="w-4 h-4" />
+            <span>Enter Promo Code</span>
+          </button>
+
+          
+          <div className="border-t pt-4">
+            <h4 className="text-sm font-semibold text-gray-900 mb-3">
+              What's included
+            </h4>
+            <ul className="space-y-2">
+              <li className="flex items-start gap-2 text-sm text-gray-700">
+                <div className="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center shrink-0 mt-0.5">
+                  <svg
+                    className="w-2.5 h-2.5 text-green-600"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <span>Professional guide</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-gray-700">
+                <div className="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center shrink-0 mt-0.5">
+                  <svg
+                    className="w-2.5 h-2.5 text-green-600"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <span>All necessary equipment</span>
+              </li>
+              <li className="flex items-start gap-2 text-sm text-gray-700">
+                <div className="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center shrink-0 mt-0.5">
+                  <svg
+                    className="w-2.5 h-2.5 text-green-600"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <span>Travel insurance included</span>
+              </li>
+            </ul>
           </div>
         </div>
 
-        {/* Enter Promo Code */}
-        <button className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
-          <Tag className="w-4 h-4" />
-          <span>Enter Promo Code</span>
-        </button>
-
-        {/* Total Price Summary */}
+        
         <div className="bg-gray-50 rounded-lg p-4">
           <div className="flex items-baseline justify-between">
             <span className="text-sm font-medium text-gray-900 font-roboto">
@@ -194,13 +325,13 @@ export default function BookingSummaryCard({
         </div>
       </div>
 
-      {/* Book with Confidence Section */}
+      
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
         <h3 className="font-semibold text-gray-900 text-base">
           Book with confidence
         </h3>
 
-        {/* Trustpilot Rating */}
+        
         <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
           <div className="flex items-center gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -224,9 +355,9 @@ export default function BookingSummaryCard({
           Based on 289,825 traveler reviews
         </p>
 
-        {/* Benefits */}
+        
         <div className="space-y-3">
-          {/* Exceptional Flexibility */}
+          
           <div>
             <h4 className="text-sm font-semibold text-gray-900 mb-1">
               Exceptional flexibility
@@ -236,7 +367,7 @@ export default function BookingSummaryCard({
             </p>
           </div>
 
-          {/* 24/7 Global Support */}
+          
           <div>
             <h4 className="text-sm font-semibold text-gray-900 mb-1 flex items-center gap-2">
               24/7 global support
@@ -249,7 +380,7 @@ export default function BookingSummaryCard({
               className="flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700"
             >
               <Phone className="w-3 h-3" />
-              <span>+1(702) 444-3858</span>
+              <span>+91XXXXXXXXXX</span>
             </a>
           </div>
         </div>

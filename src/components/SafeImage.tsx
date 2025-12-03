@@ -15,7 +15,6 @@ export default function SafeImage({
     src.includes("192.168.") ||
     src.includes("10.0.");
 
-  // In development with localhost URLs, use regular img tag
   if (process.env.NODE_ENV === "development" && isLocalhost) {
     return (
       <img
