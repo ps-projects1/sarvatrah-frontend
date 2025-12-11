@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/popover";
 import { format } from "date-fns";
 import Link from "next/link";
-import { Activity } from "@/types/activity";
+import { Activity, Experience } from "@/types/activity";
 
 interface PricingCardProps {
-  activity: Activity;
+  activity: Activity | Experience;
 }
 
 const ImprovedPricingCard = ({ activity }: PricingCardProps) => {
@@ -38,7 +38,7 @@ const ImprovedPricingCard = ({ activity }: PricingCardProps) => {
     "05:00 PM",
   ];
 
-  const lowestPrice = activity.pricePerPerson || activity.price || 0;
+  const lowestPrice = (activity as Activity).pricePerPerson || (activity as Activity).price || 0;
 
   const discount = 40;
 
@@ -293,17 +293,17 @@ const ImprovedPricingCard = ({ activity }: PricingCardProps) => {
         Book Now
       </Link>
 
-      {activity?.cancellationPolicy && (
+      {(activity as Activity)?.cancellationPolicy && (
         <div
           className={`border rounded-lg p-3 flex items-start gap-2 ${
-            activity.cancellationPolicy.isRefundable
+            (activity as Activity).cancellationPolicy!.isRefundable
               ? "bg-green-50 border-green-200"
               : "bg-red-50 border-red-200"
           }`}
         >
           <div
             className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-              activity.cancellationPolicy.isRefundable
+              (activity as Activity).cancellationPolicy!.isRefundable
                 ? "bg-green-600"
                 : "bg-red-600"
             }`}
@@ -317,7 +317,7 @@ const ImprovedPricingCard = ({ activity }: PricingCardProps) => {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              {activity.cancellationPolicy.isRefundable ? (
+              {(activity as Activity).cancellationPolicy!.isRefundable ? (
                 <path d="M5 13l4 4L19 7"></path>
               ) : (
                 <path d="M6 18L18 6M6 6l12 12"></path>
@@ -326,15 +326,15 @@ const ImprovedPricingCard = ({ activity }: PricingCardProps) => {
           </div>
           <div className="text-sm">
             <span className="font-semibold text-gray-900">
-              {activity.cancellationPolicy.isRefundable
-                ? `${activity.cancellationPolicy.refundPercentage}% Refundable`
+              {(activity as Activity).cancellationPolicy!.isRefundable
+                ? `${(activity as Activity).cancellationPolicy!.refundPercentage}% Refundable`
                 : "Non-refundable"}
             </span>
             <span className="text-gray-700">
               {" "}
-              {activity.cancellationPolicy.policyDescription ||
-                (activity.cancellationPolicy.cancellationWindowHours
-                  ? `if canceled ${activity.cancellationPolicy.cancellationWindowHours} hours before the start`
+              {(activity as Activity).cancellationPolicy!.policyDescription ||
+                ((activity as Activity).cancellationPolicy!.cancellationWindowHours
+                  ? `if canceled ${(activity as Activity).cancellationPolicy!.cancellationWindowHours} hours before the start`
                   : "")}
             </span>
           </div>

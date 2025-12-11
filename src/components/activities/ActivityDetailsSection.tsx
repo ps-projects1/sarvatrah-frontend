@@ -1,7 +1,7 @@
 import React from "react";
 import ImageCarousel from "./ImageCarousel";
 import TourInfoSection from "./TourInfoSection";
-import { Activity, ActivityImage } from "@/types/activity";
+import { Activity, ActivityImage, Experience } from "@/types/activity";
 import { experienceService } from "@/lib/services/experienceService";
 
 interface ActivityDetailsSectionProps {
@@ -14,7 +14,7 @@ interface ImageDisplay {
 }
 
 const ActivityDetailsSection = async ({ id }: ActivityDetailsSectionProps) => {
-  let activity: Activity;
+  let activity: Activity | Experience;
 
   try {
     // Try fetching from experience endpoint
@@ -26,8 +26,8 @@ const ActivityDetailsSection = async ({ id }: ActivityDetailsSectionProps) => {
 
   let images: ImageDisplay[] = [];
 
-  if (activity?.img && typeof activity.img === "object") {
-    const path = activity.img.path;
+  if ((activity as Activity)?.img && typeof (activity as Activity).img === "object") {
+    const path = (activity as Activity).img!.path;
 
     if (path?.startsWith("data:image")) {
       images = [{ src: path, alt: activity?.title || "Activity image" }];

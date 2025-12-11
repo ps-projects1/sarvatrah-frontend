@@ -10,12 +10,12 @@ import ContactDetailsSection from "../../../components/activity-booking/ContactD
 import ActivityDetailsSection from "@/components/activity-booking/ActivityDetailsSection";
 import BookingSummaryCard from "@/components/activity-booking/BookingSummaryCard";
 import PaymentSection from "@/components/activity-booking/PaymentSection";
-import { Activity } from "@/types/activity";
+import { Activity, Experience } from "@/types/activity";
 import { experienceService } from "@/lib/services/experienceService";
 
 function ActivityBookingContent({ id }: Readonly<{ id: string }>) {
   const searchParams = useSearchParams();
-  const [activity, setActivity] = useState<Activity | null>(null);
+  const [activity, setActivity] = useState<Experience | null>(null);
   const [loading, setLoading] = useState(true);
   const [showMobileCTA, setShowMobileCTA] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -73,7 +73,7 @@ function ActivityBookingContent({ id }: Readonly<{ id: string }>) {
       const lowestPrice =
         activity?.pricing && activity.pricing.length > 0
           ? Math.min(...activity.pricing.map((p: any) => p.price))
-          : activity.pricePerPerson || activity.price || 0;
+          : (activity as Activity).pricePerPerson || (activity as Activity).price || 0;
       const totalTravelers = numAdults + numSeniors + numChildren;
       const subtotal = lowestPrice * totalTravelers;
       const gst = subtotal * 0.18;

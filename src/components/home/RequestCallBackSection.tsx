@@ -37,7 +37,7 @@ const RequestCallBackSection = () => {
             placeholder="Enter phone or email"
             className="flex-1 outline-none text-sm sm:text-base px-2"
           />
-          <button className="bg-[#2789FF] p-2 sm:p-3 rounded-full text-white hover:bg-[#1a6fd4] transition-colors shrink-0">
+          <button className="bg-[#2789FF] p-2 sm:p-3 rounded-full text-white hover:bg-[#1a6fd4] shrink-0">
             <Send className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>

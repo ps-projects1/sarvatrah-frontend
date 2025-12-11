@@ -7,10 +7,10 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Activity } from "@/types/activity";
+import { Activity, Experience } from "@/types/activity";
 
 interface PaymentSectionProps {
-  activity: Activity;
+  activity: Activity | Experience;
   tourLanguage: string;
   isOpen?: boolean;
   onToggle?: () => void;
@@ -85,11 +85,11 @@ export default function PaymentSection({
             </h3>
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-sm text-gray-900 font-medium mb-2">
-                {activity?.meetingPointName || "White World Expeditions"}
+                {(activity as Activity)?.meetingPointName || "White World Expeditions"}
               </p>
               <div className="flex items-start gap-2 text-sm text-gray-600">
                 <p>
-                  {activity?.meetingPoint ||
+                  {(activity as Activity)?.meetingPoint ||
                     "1st Floor, Badrinath Rd, opposite Sai Ganga Cottage, Tapovan, Rishikesh, Uttarakhand 249192, India"}
                 </p>
               </div>

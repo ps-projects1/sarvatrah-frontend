@@ -3,10 +3,10 @@
 import { MapPin, Clock, Users, Bus, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import PricingCard from "./PricingCard";
-import { Activity } from "@/types/activity";
+import { Activity, Experience } from "@/types/activity";
 
 interface TourInfoSectionProps {
-  activity: Activity;
+  activity: Activity | Experience;
 }
 
 const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
@@ -111,8 +111,8 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                         <span className="text-sm">Travel Facility</span>
                       </div>
                       <div className="text-lg font-semibold text-clr">
-                        {activity.publicTransportUsed && activity.publicTransportUsed.length > 0
-                          ? activity.publicTransportUsed.join(", ")
+                        {(activity as Activity).publicTransportUsed && (activity as Activity).publicTransportUsed!.length > 0
+                          ? (activity as Activity).publicTransportUsed!.join(", ")
                           : activity.traveller_facilty === "meet_on_location"
                           ? "Meet on Location"
                           : activity.traveller_facilty === "pickup_available"
@@ -145,10 +145,10 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                       <h3 className="text-clr font-roboto text-xl font-semibold mb-3">
                         Overview
                       </h3>
-                      
-                      {activity?.overview && typeof activity.overview === 'string' && (
+
+                      {(activity as Activity)?.overview && typeof (activity as Activity).overview === 'string' && (
                         <p className="text-gray-700 text-sm leading-relaxed mb-2">
-                          {activity.overview}
+                          {(activity as Activity).overview}
                         </p>
                       )}
                       {activity?.description && typeof activity.description === 'string' && (
@@ -181,28 +181,28 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                           Available languages
                         </h3>
                         <p className="text-gray-700 text-sm">
-                          {activity?.availableLanguages && activity.availableLanguages.length > 0
-                            ? activity.availableLanguages.join(", ")
+                          {(activity as Activity)?.availableLanguages && (activity as Activity).availableLanguages!.length > 0
+                            ? (activity as Activity).availableLanguages!.join(", ")
                             : "English"}
                         </p>
                       </div>
 
-                      
+
                       <div>
                         <h3 className="text-clr font-roboto text-base font-semibold mb-3">
                           Cancellation policy
                         </h3>
                         <p className="text-gray-700 text-sm">
-                          {activity?.cancellationPolicy?.policyDescription ? (
-                            activity.cancellationPolicy.policyDescription
-                          ) : activity?.cancellationPolicy ? (
-                            `${activity.cancellationPolicy.isRefundable ? 'Refundable' : 'Non-refundable'}${
-                              activity.cancellationPolicy.refundPercentage
-                                ? ` - ${activity.cancellationPolicy.refundPercentage}% refund`
+                          {(activity as Activity)?.cancellationPolicy?.policyDescription ? (
+                            (activity as Activity).cancellationPolicy!.policyDescription
+                          ) : (activity as Activity)?.cancellationPolicy ? (
+                            `${(activity as Activity).cancellationPolicy!.isRefundable ? 'Refundable' : 'Non-refundable'}${
+                              (activity as Activity).cancellationPolicy!.refundPercentage
+                                ? ` - ${(activity as Activity).cancellationPolicy!.refundPercentage}% refund`
                                 : ''
                             }${
-                              activity.cancellationPolicy.cancellationWindowHours
-                                ? ` if canceled ${activity.cancellationPolicy.cancellationWindowHours} hours before`
+                              (activity as Activity).cancellationPolicy!.cancellationWindowHours
+                                ? ` if canceled ${(activity as Activity).cancellationPolicy!.cancellationWindowHours} hours before`
                                 : ''
                             }`
                           ) : (
@@ -212,14 +212,14 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                       </div>
                     </div>
 
-                    
-                    {activity?.targetPlaces && activity.targetPlaces.length > 0 && (
+
+                    {(activity as Activity)?.targetPlaces && (activity as Activity).targetPlaces!.length > 0 && (
                       <div className="mb-6 border-b border-[#EBEBEB] pb-8">
                         <h3 className="text-clr font-roboto text-xl font-semibold mb-3">
                           Target Places
                         </h3>
                         <ul className="space-y-2">
-                          {activity.targetPlaces.map((place: string, index: number) => (
+                          {(activity as Activity).targetPlaces!.map((place: string, index: number) => (
                             <li key={index} className="text-gray-700 text-sm flex items-start">
                               <span className="mr-2">•</span>
                               <span>{place}</span>
@@ -237,9 +237,9 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                       <div className="grid grid-cols-2 gap-4">
                         
                         <div className="space-y-2">
-                          
-                          {activity?.included && Array.isArray(activity.included) && activity.included.length > 0 ? (
-                            activity.included.map((item: string, index: number) => (
+
+                          {(activity as Activity)?.included && Array.isArray((activity as Activity).included) && (activity as Activity).included!.length > 0 ? (
+                            (activity as Activity).included!.map((item: string, index: number) => (
                               <div key={`inc-${index}`} className="flex items-start text-sm">
                                 <span className="text-green-600 mr-2 mt-0.5">✓</span>
                                 <span className="text-gray-700">{item}</span>
@@ -268,11 +268,12 @@ const TourInfoSection = ({ activity }: TourInfoSectionProps) => {
                           )}
                         </div>
 
-                        
+
+
                         <div className="space-y-2">
-                          
-                          {activity?.excluded && Array.isArray(activity.excluded) && activity.excluded.length > 0 ? (
-                            activity.excluded.map((item: string, index: number) => (
+
+                          {(activity as Activity)?.excluded && Array.isArray((activity as Activity).excluded) && (activity as Activity).excluded!.length > 0 ? (
+                            (activity as Activity).excluded!.map((item: string, index: number) => (
                               <div key={`exc-${index}`} className="flex items-start text-sm">
                                 <span className="text-red-600 mr-2 mt-0.5">✕</span>
                                 <span className="text-gray-700">{item}</span>

@@ -51,7 +51,7 @@ const PilgrimageSection: React.FC<PilgrimageSectionProps> = ({
               <Button
                 onClick={onViewPilgrimages}
                 variant="outline"
-                className="px-10 py-2.5 text-sm font-medium border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-300 rounded-full"
+                className="px-10 py-2.5 text-sm font-medium border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white rounded-full"
               >
                 View pilgrimages
               </Button>
@@ -69,12 +69,13 @@ const PilgrimageSection: React.FC<PilgrimageSectionProps> = ({
                 {packages[0].duration}
               </p>
 
-              
+
+
               <div className="flex items-center justify-between">
                 <span className="text-2xl sm:text-3xl font-bold text-red-500">
                   {packages[0].price}
                 </span>
-                <button className="w-10 h-10 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center transition-colors duration-300">
+                <button className="w-10 h-10 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center">
                   <ChevronRight size={20} strokeWidth={2.5} />
                 </button>
               </div>

@@ -94,7 +94,7 @@ const DestinationGallerySection: React.FC<DestinationGallerySectionProps> = ({
               <Button
                 onClick={onViewDestinations}
                 variant="outline"
-                className="px-10 py-2.5 text-sm font-medium border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-300 rounded-full"
+                className="px-10 py-2.5 text-sm font-medium border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white rounded-full"
               >
                 View Destinations
               </Button>
@@ -136,10 +136,11 @@ const DestinationGallerySection: React.FC<DestinationGallerySectionProps> = ({
               ))}
             </div>
 
-            
+
+
             <button
               onClick={handlePrev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 shadow-sm z-30"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center hover:bg-gray-50 shadow-sm z-30"
               aria-label="Previous destination"
             >
               <ChevronLeft
@@ -149,10 +150,10 @@ const DestinationGallerySection: React.FC<DestinationGallerySectionProps> = ({
               />
             </button>
 
-            
+
             <button
               onClick={handleNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 shadow-sm z-30"
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center hover:bg-gray-50 shadow-sm z-30"
               aria-label="Next destination"
             >
               <ChevronRight

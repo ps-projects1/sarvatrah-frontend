@@ -10,10 +10,10 @@ import {
 import TravelerForm from "./Travelerform";
 import { format } from "date-fns";
 import Image from "next/image";
-import { Activity } from "@/types/activity";
+import { Activity, Experience } from "@/types/activity";
 
 interface ActivityDetailsSectionProps {
-  activity: Activity;
+  activity: Activity | Experience;
   date: string | null;
   numAdults: number;
   numSeniors: number;
@@ -149,10 +149,10 @@ export default function ActivityDetailsSection({
 
         <CollapsibleContent>
           <div className="flex gap-4 mb-6 pb-6 border-b border-gray-200">
-            {activity?.images?.[0] && (
+            {(activity as Activity)?.images?.[0] && (
               <div className="relative w-24 h-24 rounded-lg overflow-hidden shrink-0">
                 <Image
-                  src={activity.images[0]}
+                  src={(activity as Activity).images![0]}
                   alt={activity.title}
                   fill
                   className="object-cover"
@@ -266,7 +266,7 @@ export default function ActivityDetailsSection({
             </h3>
             <div className="flex items-start gap-2 text-sm text-gray-700">
               <MapPin className="w-5 h-5 text-gray-600 shrink-0 mt-0.5" />
-              <p>{activity?.meetingPoint || ""}</p>
+              <p>{(activity as Activity)?.meetingPoint || ""}</p>
             </div>
           </div>
 

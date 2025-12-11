@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Calendar, Users, Clock, Tag, Phone } from "lucide-react";
 import { format } from "date-fns";
 import Image from "next/image";
-import { Activity, ActivityPricing } from "@/types/activity";
+import { Activity, ActivityPricing, Experience } from "@/types/activity";
 
 interface BookingSummaryCardProps {
-  activity: Activity;
+  activity: Activity | Experience;
   date: string | null;
   numAdults: number;
   numSeniors: number;
@@ -37,10 +37,10 @@ export default function BookingSummaryCard({
 
   useEffect(() => {
 
-    if (date && activity?.cancellationPolicy?.cancellationWindowHours) {
+    if (date && (activity as Activity)?.cancellationPolicy?.cancellationWindowHours) {
       const bookingDate = new Date(date);
       const hoursBeforeTrip =
-        activity.cancellationPolicy.cancellationWindowHours;
+        (activity as Activity).cancellationPolicy!.cancellationWindowHours!;
       const cancellationDeadline = new Date(
         bookingDate.getTime() - hoursBeforeTrip * 60 * 60 * 1000
       );
@@ -122,10 +122,10 @@ export default function BookingSummaryCard({
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
         
         <div className="flex gap-4">
-          {activity?.images?.[0] && (
+          {(activity as Activity)?.images?.[0] && (
             <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0">
               <Image
-                src={activity.images[0]}
+                src={(activity as Activity).images![0]}
                 alt={activity.title}
                 fill
                 className="object-cover"
@@ -229,11 +229,11 @@ export default function BookingSummaryCard({
                 <p className="text-xs text-orange-700">
                   Cancel before{" "}
                   {date &&
-                    activity?.cancellationPolicy?.cancellationWindowHours &&
+                    (activity as Activity)?.cancellationPolicy?.cancellationWindowHours &&
                     format(
                       new Date(
                         new Date(date).getTime() -
-                          activity.cancellationPolicy.cancellationWindowHours *
+                          (activity as Activity).cancellationPolicy!.cancellationWindowHours! *
                             60 *
                             60 *
                             1000
