@@ -159,7 +159,7 @@ function HolidayContent() {
 
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 9;
 
 
   const calculatePriceRange = (packageList: HolidayPackage[]) => {
@@ -404,7 +404,7 @@ function HolidayContent() {
   };
 
   const getPackagePrice = (pkg: HolidayPackage): number => {
-    return pkg.vehiclePrices?.[0]?.price || 0;
+    return pkg.availableVehicle?.[0]?.price || 0;
   };
 
   const formatPrice = (price: number): string => {

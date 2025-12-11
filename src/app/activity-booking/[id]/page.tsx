@@ -11,6 +11,7 @@ import ActivityDetailsSection from "@/components/activity-booking/ActivityDetail
 import BookingSummaryCard from "@/components/activity-booking/BookingSummaryCard";
 import PaymentSection from "@/components/activity-booking/PaymentSection";
 import { Activity } from "@/types/activity";
+import { experienceService } from "@/lib/services/experienceService";
 
 function ActivityBookingContent({ id }: Readonly<{ id: string }>) {
   const searchParams = useSearchParams();
@@ -46,15 +47,7 @@ function ActivityBookingContent({ id }: Readonly<{ id: string }>) {
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/experience/${id}`
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
+        const data = await experienceService.getExperienceById(id);
         setActivity(data);
       } catch (error) {
         console.error("Error fetching activity:", error);

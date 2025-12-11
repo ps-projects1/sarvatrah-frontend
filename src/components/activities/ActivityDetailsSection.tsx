@@ -2,6 +2,7 @@ import React from "react";
 import ImageCarousel from "./ImageCarousel";
 import TourInfoSection from "./TourInfoSection";
 import { Activity, ActivityImage } from "@/types/activity";
+import { experienceService } from "@/lib/services/experienceService";
 
 interface ActivityDetailsSectionProps {
   id: string;
@@ -13,38 +14,11 @@ interface ImageDisplay {
 }
 
 const ActivityDetailsSection = async ({ id }: ActivityDetailsSectionProps) => {
-  let response;
   let activity: Activity;
 
   try {
-    response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/activityDetails/activity/${id}`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (response.ok) {
-      const result = await response.json();
-      activity = result.success ? result.data : result;
-    } else if (response.status === 404) {
-      response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/experience/${id}`,
-        {
-          cache: "no-store",
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch activity from both endpoints: ${response.status}`
-        );
-      }
-
-      activity = await response.json();
-    } else {
-      throw new Error(`Failed to fetch activity: ${response.status}`);
-    }
+    // Try fetching from experience endpoint
+    activity = await experienceService.getExperienceById(id);
   } catch (error) {
     console.error("Error fetching activity:", error);
     throw error;

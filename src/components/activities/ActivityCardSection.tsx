@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, Clock, ArrowRight, Zap } from "lucide-react";
+import { MapPin, Clock, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -30,87 +30,85 @@ const ActivityCardSection = ({
   badge,
   instantConfirmation = true,
 }: ActivityCardSectionProps) => {
+  const formatPrice = (price: number): string => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
   return (
-    <Link href={`/activities/${id}`}>
-      <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 h-[600px] flex flex-col">
-        
-        <div className="relative h-64 w-full overflow-hidden shrink-0">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover"
-            onError={(e) => {
-              e.currentTarget.src = "/logo.svg";
-            }}
-          />
-          
-          <div className="absolute bottom-4 right-4 flex flex-col gap-2 items-end">
-            {instantConfirmation && (
-              <div className="bg-green-600 text-white px-3 py-1.5 rounded-full font-semibold text-xs flex items-center gap-1 shadow-md">
-                <Zap className="w-3 h-3" />
-                Instant Confirmation
-              </div>
-            )}
+    <Link href={`/activities/${id}`} className="block">
+      <div className="bg-white rounded-2xl shadow-sm border border-[#E6E6E6] overflow-hidden hover:shadow-lg transition-shadow duration-300">
+        {/* Image Section */}
+        <div className="relative w-full aspect-[4/3] p-4">
+          <div className="relative w-full h-full rounded-2xl overflow-hidden">
+            <Image
+              src={image}
+              alt={title}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover"
+              loading="lazy"
+              onError={(e) => {
+                e.currentTarget.src = "/logo.svg";
+              }}
+            />
+
+            {/* Duration Badge */}
             {badge && (
-              <div className="bg-white px-4 py-2 rounded-full font-bold text-red-500 shadow-md">
-                {badge}
+              <div className="absolute bottom-3 right-3 bg-white rounded-full px-3 py-1.5 shadow-md">
+                <span className="text-[#EE0405] text-sm font-semibold">
+                  {badge}
+                </span>
               </div>
             )}
           </div>
         </div>
 
-        
-        <div className="p-5 flex flex-col flex-1">
-          
-          <h3 className="text-xl font-bold text-gray-900 mb-4 line-clamp-2 min-h-14">
+        {/* Content Section */}
+        <div className="p-4 space-y-3">
+          {/* Activity Name */}
+          <h3 className="text-[#1F2937] text-lg font-semibold line-clamp-2 min-h-[3.5rem]">
             {title}
           </h3>
 
-          
-          <div className="flex items-center gap-2 text-gray-700 mb-3">
-            <MapPin size={18} className="shrink-0" />
-            <span className="text-sm font-medium line-clamp-1">
+          {/* Location */}
+          <div className="flex items-center gap-2 text-[#6B7280] text-sm">
+            <MapPin className="w-4 h-4 flex-shrink-0" />
+            <span className="line-clamp-1">
               {locationFrom} to {locationTo}
             </span>
           </div>
 
-          
-          <div className="flex items-center gap-2 text-gray-700 mb-4">
-            <Clock size={18} className="shrink-0" />
-            <span className="text-sm font-medium">Duration {duration}</span>
-          </div>
-
-          
-          <div className="flex items-center gap-2 text-gray-600 mb-4 pb-4 border-b border-gray-200">
-            <MapPin size={18} className="shrink-0" />
-            <span className="text-sm line-clamp-1">
-              Start Location {startLocation}
+          {/* Duration */}
+          <div className="flex items-center gap-2 text-[#6B7280] text-sm">
+            <Clock className="w-4 h-4 flex-shrink-0" />
+            <span>
+              Duration <span className="font-semibold text-[#1F2937]">{duration}</span>
             </span>
           </div>
 
-          
-          <div className="flex-1"></div>
+          {/* Start Location */}
+          <div className="flex items-center gap-2 text-[#6B7280] text-sm">
+            <MapPin className="w-4 h-4 flex-shrink-0" />
+            <span>
+              Start Location <span className="font-semibold text-[#1F2937]">{startLocation}</span>
+            </span>
+          </div>
 
-          
-          <div className="flex items-center justify-between mt-auto">
+          {/* Price Section */}
+          <div className="flex items-center justify-between pt-2 border-t border-[#E6E6E6]">
             <div>
-              {originalPrice && (
-                <p className="text-gray-400 line-through text-sm">
-                  INR {originalPrice.toLocaleString("en-IN")}
-                </p>
-              )}
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold text-red-500">
-                  INR {currentPrice.toLocaleString("en-IN")}
-                </span>
-                <span className="text-gray-600 text-sm">Per Person</span>
-              </div>
+              <p className="text-xs text-[#6B7280] mb-1">Starting from</p>
+              <p className="text-[#EE0405] text-xl font-bold">
+                {formatPrice(currentPrice)}
+                <span className="text-sm font-normal text-[#6B7280]"> Per Person</span>
+              </p>
             </div>
-
-            
-            <button className="w-10 h-10 rounded-full border-2 border-gray-900 flex items-center justify-center hover:bg-gray-900 hover:text-white transition-colors shrink-0">
-              <ArrowRight size={20} />
+            <button className="bg-[#2789FF] hover:bg-[#1a73e8] text-white rounded-full p-3 transition-colors">
+              <ArrowRight className="w-5 h-5" />
             </button>
           </div>
         </div>
