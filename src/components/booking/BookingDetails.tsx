@@ -111,16 +111,34 @@ const BookingDetails = ({ params }: BookingDetailsProps) => {
     );
   }
 
+  // Get package price from URL params or from package data
+  const getPackagePrice = (): number => {
+    // First try to get from URL params (most accurate, comes from booking calculation)
+    const urlPrice = searchParams.get("price");
+    if (urlPrice) {
+      // URL price is already the TOTAL price for all travelers
+      return Number(urlPrice);
+    }
+
+    // Fallback to vehiclePrices or availableVehicle (these are per-person prices)
+    const vehiclePrice = packageData.vehiclePrices?.[0]?.price;
+    const availablePrice = packageData.availableVehicle?.[0]?.price;
+    const basePrice = vehiclePrice || availablePrice || 0;
+
+    // If we're using the fallback, multiply by number of travelers
+    return basePrice * (numAdults + numChildren);
+  };
+
+  const totalPrice = getPackagePrice();
+
   const bookingSummaryData = {
     id: params.id,
     name: packageData.packageName || searchParams.get("name"),
-    price: packageData.packagePrice?.toString() || searchParams.get("price"),
+    price: totalPrice.toString(),
     days: packageData.packageDuration?.days?.toString() || searchParams.get("days"),
     nights: packageData.packageDuration?.nights?.toString() || searchParams.get("nights"),
     destination: packageData.destinationCity?.map(city => typeof city === 'string' ? city : city.name).join(", ") || null,
   };
-
-  const totalPrice = (packageData.packagePrice || 0) * (numAdults + numChildren);
 
   return (
     <div className="w-full bg-gray-50 min-h-screen">

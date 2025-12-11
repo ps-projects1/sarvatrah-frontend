@@ -45,9 +45,10 @@ export default function BookingSummaryCard({
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const basePrice = parseFloat(packageData.price || "0");
+  // The price from packageData is already the TOTAL price for all travelers
+  const packageTotalPrice = parseFloat(packageData.price || "0");
   const totalTravelers = numAdults + numChildren;
-  const subtotal = basePrice * totalTravelers;
+  const subtotal = packageTotalPrice; // Already includes all travelers
   const gst = subtotal * 0.18;
   const totalPrice = subtotal + gst;
 
@@ -141,7 +142,7 @@ export default function BookingSummaryCard({
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">
-              Base Price (₹{basePrice.toLocaleString()} × {totalTravelers}{" "}
+              Package Price ({totalTravelers}{" "}
               {totalTravelers === 1 ? "traveler" : "travelers"})
             </span>
             <span className="font-medium text-gray-900">

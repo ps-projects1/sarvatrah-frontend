@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   Card,
   CardContent,
@@ -9,14 +9,13 @@ import {
 } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { DestinationCity } from "@/types/holiday";
+import type { CalculateBookingResponse } from "@/types/booking";
 
 interface PackageData {
   _id: string;
   packageName: string;
-  packagePrice?: number;
   packageDuration: {
     days: number;
     nights: number;
@@ -28,22 +27,111 @@ interface PackageData {
   highlights: string;
   include: string;
   exclude: string;
+  partialPayment: boolean;
+  partialPaymentDueDays: number;
+  partialPaymentPercentage: number;
+  roomLimit: number;
+  inflatedPercentage: number;
+  vehiclePrices?: Array<{
+    vehicle_id: string;
+    vehicleType: string;
+    price: number;
+  }>;
+  availableVehicle?: Array<{
+    vehicleType: string;
+    price: number;
+    seatLimit: number;
+    vehicle_id: string;
+    brandName: string;
+    modelName: string;
+  }>;
 }
 
 interface BookingSidebarProps {
   packageData: PackageData;
+  bookingCalculation?: CalculateBookingResponse | null;
+  selectedVehicleId?: string | null;
+  selectedRoomType?: string;
+  numberOfAdults?: number;
+  numberOfChildren?: number;
+  travelStartDate?: string;
 }
 
-const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
-  const [couponCode, setCouponCode] = useState("");
-  const [appliedCoupons, setAppliedCoupons] = useState<string[]>([]);
-  const [showAllOffers, setShowAllOffers] = useState(false);
+const BookingSidebar = ({
+  packageData,
+  bookingCalculation,
+  selectedVehicleId,
+  selectedRoomType,
+  numberOfAdults = 2,
+  numberOfChildren = 0,
+  travelStartDate,
+}: BookingSidebarProps) => {
+
+  // Get package price from vehiclePrices or availableVehicle
+  const getPackagePrice = (): number => {
+    const vehiclePrice = packageData.vehiclePrices?.[0]?.price;
+    const availablePrice = packageData.availableVehicle?.[0]?.price;
+    return vehiclePrice || availablePrice || 0;
+  };
+
+  // Calculate estimated price based on number of people when API calculation is unavailable
+  const getEstimatedPrice = (): number => {
+    const basePrice = getPackagePrice();
+    if (basePrice === 0) return 0;
+
+    // Simple estimation: base price is per person, multiply by total travelers
+    const totalTravelers = numberOfAdults + numberOfChildren;
+    return basePrice * totalTravelers;
+  };
+
+  // Use calculated price if available, otherwise use estimated price
+  const displayPrice = bookingCalculation?.finalPackage || getEstimatedPrice();
+  const hasCalculatedPrice = bookingCalculation?.success && bookingCalculation.finalPackage;
+
+  // Calculate total travelers for conditional display
+  const totalTravelers = numberOfAdults + numberOfChildren;
+  const isSingleTraveler = totalTravelers === 1;
+
+  // Calculate travel dates
+  const getFormattedDates = () => {
+    if (!travelStartDate) return null;
+
+    const startDate = new Date(travelStartDate);
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + packageData.packageDuration.days - 1);
+
+    const formatDate = (date: Date) => {
+      return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+    };
+
+    return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+  };
+
+  const formattedDateRange = getFormattedDates();
+
+  // Calculate original price and discount
+  const getOriginalPriceAndDiscount = () => {
+    if (packageData.inflatedPercentage && packageData.inflatedPercentage > 0) {
+      const originalPrice = displayPrice * (1 + packageData.inflatedPercentage / 100);
+      const discountPercentage = packageData.inflatedPercentage;
+      return { originalPrice: Math.round(originalPrice), discountPercentage };
+    }
+    return { originalPrice: null, discountPercentage: 0 };
+  };
+
+  const { originalPrice, discountPercentage } = getOriginalPriceAndDiscount();
+
+  // Calculate partial payment amount
+  const partialPaymentAmount = packageData.partialPayment
+    ? (displayPrice * packageData.partialPaymentPercentage) / 100
+    : 0;
+  const remainingPaymentAmount = displayPrice - partialPaymentAmount;
 
   const bookingUrl =
     `/booking/${packageData._id}?` +
     new URLSearchParams({
       name: packageData.packageName,
-      price: (packageData.packagePrice || 0).toString(),
+      price: displayPrice.toString(),
       days: packageData.packageDuration.days.toString(),
       nights: packageData.packageDuration.nights.toString(),
       startCity: packageData.startCity,
@@ -53,17 +141,9 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
       highlights: packageData.highlights,
       include: packageData.include,
       exclude: packageData.exclude,
+      adults: numberOfAdults.toString(),
+      children: numberOfChildren.toString(),
     }).toString();
-
-  const handleApplyCoupon = () => {
-    if (
-      couponCode.trim() &&
-      !appliedCoupons.includes(couponCode.toUpperCase())
-    ) {
-      setAppliedCoupons([...appliedCoupons, couponCode.toUpperCase()]);
-      setCouponCode("");
-    }
-  };
 
   return (
     <div className="space-y-4">
@@ -73,36 +153,50 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
           <div className="flex items-start justify-between">
             
             <div>
-              
-              <p className="text-clr font-roboto line-through text-lg font-normal">
-                ₹25,397
-              </p>
 
-              
+              {originalPrice && (
+                <p className="text-clr font-roboto line-through text-lg font-normal">
+                  ₹{originalPrice.toLocaleString("en-IN")}
+                </p>
+              )}
+
+
               <div className="flex items-baseline gap-2">
                 <h2 className="text-3xl font-bold text-red-600 font-roboto">
-                  ₹{(packageData.packagePrice || 0).toLocaleString("en-IN")}
+                  ₹{displayPrice.toLocaleString("en-IN")}
                 </h2>
                 <span className="text-sm text-clr font-roboto">
-                  per person*
+                  {isSingleTraveler
+                    ? "per person*"
+                    : `for ${totalTravelers} ${totalTravelers === 2 ? "travelers" : "travelers"}*`
+                  }
                 </span>
               </div>
 
-              
+
               <p className="text-xs text-clr font-roboto mt-1">
-                *Excluding applicable taxes
+                {hasCalculatedPrice ? (
+                  <>
+                    *Calculated price for {bookingCalculation?.days} days
+                    {selectedRoomType && <> • Room: {selectedRoomType}</>}
+                  </>
+                ) : (
+                  "*Excluding applicable taxes"
+                )}
               </p>
             </div>
 
-            
-            <span className="bg-red-600 text-white text-xs font-semibold font-roboto px-3 py-1 rounded whitespace-nowrap">
-              40% OFF
-            </span>
+
+            {discountPercentage > 0 && (
+              <span className="bg-red-600 text-white text-xs font-semibold font-roboto px-3 py-1 rounded whitespace-nowrap">
+                {Math.round(discountPercentage)}% OFF
+              </span>
+            )}
           </div>
         </CardHeader>
 
         <CardContent className="space-y-4">
-          
+
           <div className="border-b pb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -112,18 +206,90 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
                     {packageData.packageDuration.days} Days /{" "}
                     {packageData.packageDuration.nights} Nights
                   </p>
-                  <p className="text-xs text-gray-500">18 Aug - 21 Aug</p>
+                  {formattedDateRange && (
+                    <p className="text-xs text-gray-500">{formattedDateRange}</p>
+                  )}
                 </div>
               </div>
-              <button className="text-[#2789FF] rounded-3xl font-roboto text-sm font-semibold hover:underline">
+              <button
+                onClick={() => {
+                  // Scroll to top where SearchSection is located
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="text-[#2789FF] rounded-3xl font-roboto text-sm font-semibold hover:underline"
+              >
                 MODIFY
               </button>
             </div>
           </div>
+
+          {/* Price Breakdown */}
+          {hasCalculatedPrice && bookingCalculation?.breakdown && (
+            <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+              <h3 className="font-semibold text-sm text-gray-900 mb-3">Price Breakdown</h3>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between text-gray-700">
+                  <span>Hotel Cost ({bookingCalculation.days} days)</span>
+                  <span className="font-medium">₹{bookingCalculation.breakdown.hotelCost.toLocaleString("en-IN")}</span>
+                </div>
+                <div className="flex justify-between text-gray-700">
+                  <span>Per Day Rate</span>
+                  <span className="font-medium">₹{bookingCalculation.breakdown.perDayAmount.toLocaleString("en-IN")}</span>
+                </div>
+                <div className="flex justify-between text-gray-700">
+                  <span>Vehicle Cost (incl. markup)</span>
+                  <span className="font-medium">₹{bookingCalculation.breakdown.vehicleFinal.toLocaleString("en-IN")}</span>
+                </div>
+                <div className="border-t border-gray-300 pt-2 mt-2 flex justify-between font-semibold text-sm text-gray-900">
+                  <span>Total</span>
+                  <span className="text-blue-600">₹{bookingCalculation.finalPackage?.toLocaleString("en-IN")}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {!hasCalculatedPrice && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <p className="text-xs text-blue-800 font-roboto font-medium">Estimated Pricing</p>
+                  <p className="text-xs text-blue-700 font-roboto mt-1">Price shown is an estimate. Final price will be calculated after selecting your preferences.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Partial Payment Option */}
+          {packageData.partialPayment && displayPrice > 0 && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-sm text-blue-900">Partial Payment Available</h3>
+                <span className="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
+                  {packageData.partialPaymentPercentage}% Now
+                </span>
+              </div>
+              <div className="space-y-1 text-xs text-blue-800">
+                <div className="flex justify-between">
+                  <span>Pay Now ({packageData.partialPaymentPercentage}%):</span>
+                  <span className="font-semibold">₹{partialPaymentAmount.toLocaleString("en-IN")}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Pay Later:</span>
+                  <span className="font-semibold">₹{remainingPaymentAmount.toLocaleString("en-IN")}</span>
+                </div>
+                <div className="pt-2 border-t border-blue-300 text-blue-700">
+                  <p>Remaining amount due {packageData.partialPaymentDueDays} days before travel</p>
+                </div>
+              </div>
+            </div>
+          )}
         </CardContent>
 
         <CardFooter className="flex flex-col gap-3">
-          
+
           <Link href={bookingUrl} className="block w-full">
             <Button className="w-full bg-[#2789FF] font-roboto rounded-3xl text-white py-6 text-base font-semibold hover:bg-[#1a73e8] transition-colors">
               Proceed to Book Online
@@ -131,126 +297,6 @@ const BookingSidebar = ({ packageData }: BookingSidebarProps) => {
           </Link>
         </CardFooter>
       </Card>
-
-      
-      <Card className="rounded-none py-0">
-        <CardHeader className="pb-4 pt-4 bg-[#F1F7FF]">
-          <h2 className="font-semibold text-2xl font-roboto text-clr">
-            Coupons & Offers
-          </h2>
-        </CardHeader>
-
-        <CardContent className="">
-          
-          <div className="pb-4">
-            <div className="flex flex-col items-start gap-3">
-              <span className="bg-linear-to-r from-[#2789FF] to-[#EE0405] rounded-full text-white text-xs font-bold px-2 py-1 font-roboto">
-                EMI
-              </span>
-              <div className="flex-1">
-                <p className="font-semibold text-sm text-clr font-roboto">
-                  No cost EMI @ ₹5,152
-                </p>
-                <p className="text-xs text-gray-600 mt-1 font-roboto">
-                  Book your holidays with Easy EMI options
-                </p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      
-      <Card className="rounded-none bg-[#F0F0F0]">
-        <div className="px-2">
-          <div className="bg-[#FFFFFF] rounded-lg">
-            <CardContent className="px-0">
-              <div className="flex gap-2">
-                <Input
-                  type="text"
-                  placeholder="Have a coupon?"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
-                  className="flex-3 font-roboto uppercase border-none shadow-none focus:outline-none focus:ring-0"
-                />
-                <Button
-                  onClick={handleApplyCoupon}
-                  className="px-6 bg-transparent text-[#2789FF] font-semibold text-sm font-roboto hover:bg-transparent cursor-pointer flex-1"
-                >
-                  APPLY
-                </Button>
-              </div>
-            </CardContent>
-          </div>
-        </div>
-      </Card>
-
-      
-      <div className="bg-white">
-        <div className="flex items-center gap-4 py-4">
-          <div className="flex-1 h-px bg-gray-300"></div>
-          <span className="text-sm text-gray-500 font-roboto">OR</span>
-          <div className="flex-1 h-px bg-gray-300"></div>
-        </div>
-
-        
-        <div className="space-y-3">
-          
-          <div className="flex items-start justify-between gap-2 pb-3 border-b px-4">
-            <div className="bg-[#D1F8E6] py-4 px-2 rounded-xl w-full">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 pb-1">
-                    <span className="bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded font-roboto">
-                      ✓
-                    </span>
-                    <p className="font-semibold text-sm text-clr font-roboto">
-                      SAVEONFLIGHTS
-                    </p>
-                  </div>
-                  <p className="text-xs text-clr font-roboto">
-                    Book now and use your booking id as coupon to get Flat 1000
-                    OFF on Flight bookings with MMT
-                  </p>
-                  <p className="text-xs text-green-600 font-semibold mt-1 font-roboto">
-                    -₹9,041
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          
-          <div className="flex items-start justify-between gap-2 pb-3 border-b px-4 w-full">
-            <div className="bg-[#DBDBDB] w-full py-2 px-4 rounded-xl">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <p className="font-semibold text-sm text-clr font-roboto mb-1">
-                    NOKIDDING
-                  </p>
-                  <p className="text-xs text-gray-600 font-roboto">
-                    Get Flat 45% discount!!!
-                  </p>
-                  <p className="text-xs text-green-600 font-semibold mt-1 font-roboto">
-                    -₹10,686
-                  </p>
-                </div>
-                <button className="text-[#2789FF] text-xs font-semibold hover:underline shrink-0 font-roboto ml-2">
-                  APPLY
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        
-        <button
-          onClick={() => setShowAllOffers(!showAllOffers)}
-          className="w-full text-center text-[#2789FF] text-sm font-semibold mt-4 hover:underline font-roboto pb-4"
-        >
-          {showAllOffers ? "VIEW LESS" : "VIEW 4 MORE"}
-        </button>
-      </div>
     </div>
   );
 };

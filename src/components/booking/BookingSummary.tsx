@@ -35,7 +35,7 @@ interface Itinerary {
   stay: boolean;
   hotel_id?: string;
   state?: string;
-  city?: string;
+  city?: string | DestinationCity;
   mealsIncluded: string[];
   transport?: Transport;
   placesToVisit?: string[];

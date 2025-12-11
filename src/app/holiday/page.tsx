@@ -21,6 +21,7 @@ import RequestCallBackSection from "@/components/home/RequestCallBackSection";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { DestinationCity } from "@/types/holiday";
+import HolidayCard from "@/components/holiday/HolidayCard";
 
 interface PackageDuration {
   days: number;
@@ -67,6 +68,16 @@ interface VehiclePrice {
   price: number;
 }
 
+interface AvailableVehicle {
+  vehicleType: string;
+  price: number;
+  seatLimit: number;
+  vehicle_id: string;
+  brandName: string;
+  modelName: string;
+  _id?: string;
+}
+
 interface HolidayPackage {
   _id: string;
   packageDuration: PackageDuration;
@@ -101,7 +112,7 @@ interface HolidayPackage {
   }>;
   itinerary: ItineraryDay[];
   vehiclePrices: VehiclePrice[];
-  availableVehicle: unknown[];
+  availableVehicle: AvailableVehicle[];
 }
 
 interface HolidayPackagesResponse {
@@ -727,132 +738,7 @@ function HolidayContent() {
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                     {getPaginatedPackages().map((pkg) => (
-                      <Link
-                        key={pkg._id}
-                        href={`/holiday/${pkg._id}`}
-                        className="block"
-                      >
-                        <div className="bg-white rounded-xl shadow-[0_2px_16px_rgba(0,0,0,0.08)] overflow-hidden hover:shadow-[0_4px_24px_rgba(0,0,0,0.12)] transition-shadow duration-300 cursor-pointer group">
-                          
-                          <div className="relative h-[200px] sm:h-60 lg:h-[280px] bg-[#F1F7FF] overflow-hidden">
-                            {pkg.themeImg ? (
-                              <Image
-                                src={pkg.themeImg.path}
-                                alt={pkg.packageName}
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                loading="lazy"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none";
-                                }}
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-[#F1F7FF] to-[#E6F0FF]">
-                                <svg
-                                  className="w-12 h-12 text-[#2789FF]"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={1.5}
-                                    d="m4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                  />
-                                </svg>
-                              </div>
-                            )}
-
-                            
-                            <div className="absolute top-3 sm:top-4 right-3 sm:right-4 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-clr text-white text-[12px] sm:text-[14px] font-semibold capitalize">
-                              {pkg.packageType}
-                            </div>
-                          </div>
-
-                          
-                          <div className="p-4 sm:p-5">
-                            
-                            <h4 className="text-[15px] sm:text-[16px] lg:text-[18px] font-semibold text-clr line-clamp-2 mb-2">
-                              {pkg.packageName}
-                            </h4>
-
-                            
-                            <div className="flex items-center gap-2 text-[12px] sm:text-[14px] text-clr mb-3">
-                              <svg
-                                width="12"
-                                height="16"
-                                viewBox="0 0 14 18"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="text-clr shrink-0"
-                              >
-                                <path
-                                  d="M7 17s6-4.46 6-10A6 6 0 1 0 1 7c0 5.54 6 10 6 10Z"
-                                  stroke="currentColor"
-                                  strokeWidth="1.2"
-                                  fill="none"
-                                />
-                                <circle
-                                  cx="7"
-                                  cy="7"
-                                  r="2"
-                                  stroke="currentColor"
-                                  strokeWidth="1.2"
-                                />
-                              </svg>
-                              <span className="line-clamp-1">
-                                {pkg.destinationCity.map(city => typeof city === 'string' ? city : city.name).join(", ")}
-                              </span>
-                            </div>
-
-                            
-                            <div className="text-[12px] sm:text-[14px] text-[#666] mb-3">
-                              {pkg.packageDuration.days} Days /{" "}
-                              {pkg.packageDuration.nights} Nights
-                            </div>
-
-                            
-                            <div className="mb-4">
-                              <div className="text-[#EE0405] text-[18px] sm:text-[20px] lg:text-[22px] font-bold leading-none">
-                                {formatPrice(getPackagePrice(pkg))}
-                              </div>
-                              <div className="text-[#999FA8] text-[11px] sm:text-[12px] lg:text-[13px] mt-1">
-                                Starting Price
-                              </div>
-                            </div>
-
-                            
-                            <div className="grid grid-cols-2 gap-2 sm:gap-3 text-[11px] sm:text-[12px] lg:text-[13px] text-clr border-t border-[#E6E6E6] pt-3">
-                              <div className="text-center">
-                                <div className="font-semibold text-clr capitalize">
-                                  {pkg.selectType}
-                                </div>
-                                <span className="text-[#999FA8]">Type</span>
-                              </div>
-                              <div className="text-center">
-                                <div className="font-semibold text-clr">
-                                  {pkg.itinerary?.length || 0}
-                                </div>
-                                <span className="text-[#999FA8]">Days</span>
-                              </div>
-                              <div className="text-center col-span-2">
-                                <div className="font-semibold text-clr truncate">
-                                  From {pkg.startCity}
-                                </div>
-                                <span className="text-[#999FA8]">
-                                  Starting Point
-                                </span>
-                              </div>
-                            </div>
-
-                            
-                            <button className="w-full mt-4 py-2 sm:py-2.5 bg-[#2789FF] text-white rounded-lg font-medium text-[12px] sm:text-[14px] hover:bg-[#1a73e8] transition-colors">
-                              View Details
-                            </button>
-                          </div>
-                        </div>
-                      </Link>
+                      <HolidayCard key={pkg._id} package={pkg} />
                     ))}
                   </div>
 

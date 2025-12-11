@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "../../../components/Header";
-import SearchSection from "@/components/holidayDetails/SearchSection";
-import DetailsSection from "@/components/holidayDetails/DetailsSection";
+import HolidayDetailsClient from "@/components/holidayDetails/HolidayDetailsClient";
 import RequestCallBackSection from "@/components/home/RequestCallBackSection";
 import Footer from "@/components/Footer";
 
@@ -15,8 +14,7 @@ const HolidayDetailsPage = async ({
   return (
     <>
       <Header />
-      <SearchSection />
-      <DetailsSection params={resolvedParams} />
+      <HolidayDetailsClient params={resolvedParams} />
       <RequestCallBackSection />
       <Footer />
     </>

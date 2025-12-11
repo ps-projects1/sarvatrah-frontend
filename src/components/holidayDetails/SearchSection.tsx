@@ -19,7 +19,18 @@ import {
 } from "@/components/ui/popover";
 import { format } from "date-fns";
 
-const SearchSection = () => {
+interface SearchParams {
+  startingFrom: string;
+  travelDate: Date | undefined;
+  numAdults: number;
+  numChildren: number;
+}
+
+interface SearchSectionProps {
+  onSearchUpdate?: (params: SearchParams) => void;
+}
+
+const SearchSection = ({ onSearchUpdate }: SearchSectionProps) => {
   const [startingFrom, setStartingFrom] = useState("New Delhi");
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [numAdults, setNumAdults] = useState(2);
@@ -179,9 +190,21 @@ const SearchSection = () => {
               </PopoverContent>
             </Popover>
 
-            <button className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-6 sm:px-8 py-2.5 sm:py-3 flex items-center justify-center gap-2 transition-colors w-full lg:w-auto">
+            <button
+              onClick={() => {
+                if (onSearchUpdate) {
+                  onSearchUpdate({
+                    startingFrom,
+                    travelDate: date,
+                    numAdults,
+                    numChildren,
+                  });
+                }
+              }}
+              className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-6 sm:px-8 py-2.5 sm:py-3 flex items-center justify-center gap-2 transition-colors w-full lg:w-auto"
+            >
               <Search className="w-4 h-4" />
-              <span className="font-medium text-sm sm:text-base">Search</span>
+              <span className="font-medium text-sm sm:text-base">Update</span>
             </button>
           </div>
         </div>

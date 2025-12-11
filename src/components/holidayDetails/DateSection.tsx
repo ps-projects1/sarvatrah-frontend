@@ -3,15 +3,18 @@ import { Share2, Download } from "lucide-react";
 
 interface DateSectionProps {
   totalDays: number;
+  onDownload?: () => void;
+  onShare?: () => void;
+  travelStartDate?: string;
 }
 
-const generateDates = (numDays: number) => {
+const generateDates = (numDays: number, startDate?: string) => {
   const dates = [];
-  const today = new Date();
+  const baseDate = startDate ? new Date(startDate) : new Date();
 
   for (let i = 0; i < numDays; i++) {
-    const date = new Date(today);
-    date.setDate(today.getDate() + i);
+    const date = new Date(baseDate);
+    date.setDate(baseDate.getDate() + i);
 
     const formatted = date.toLocaleDateString("en-US", {
       day: "2-digit",
@@ -25,18 +28,18 @@ const generateDates = (numDays: number) => {
   return dates;
 };
 
-const DateSection = ({ totalDays }: DateSectionProps) => {
+const DateSection = ({ totalDays, onDownload, onShare, travelStartDate }: DateSectionProps) => {
   const [selectedDate, setSelectedDate] = useState("");
-  const dates = generateDates(totalDays);
+  const dates = generateDates(totalDays, travelStartDate);
 
   return (
     <div className="bg-[#F1F7FF] w-full px-3 sm:px-4 lg:px-6 py-3 sm:pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
-        <h3 className="font-roboto font-semibold text-base sm:text-lg">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
+        <h3 className="font-roboto font-semibold text-base sm:text-lg shrink-0">
           {totalDays} Day Plan:
         </h3>
 
-        <div className="flex gap-2 sm:gap-3 overflow-x-auto no-scrollbar pb-2 sm:pb-0 w-full sm:w-auto">
+        <div className="flex gap-2 sm:gap-3 overflow-x-auto no-scrollbar pb-2 sm:pb-0 w-full sm:flex-1 sm:min-w-0">
           {dates.map((date) => (
             <button
               key={date}
@@ -52,13 +55,21 @@ const DateSection = ({ totalDays }: DateSectionProps) => {
           ))}
         </div>
       </div>
-      <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto justify-end sm:justify-start">
+      <div className="flex items-center gap-3 sm:gap-4 shrink-0 w-full sm:w-auto justify-end sm:justify-start">
         <div className="hidden sm:block h-8 w-0.5 bg-gray-300"></div>
-        <button className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#2789FF] flex items-center justify-center text-white hover:bg-blue-600 transition">
+        <button
+          onClick={onShare}
+          className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#2789FF] flex items-center justify-center text-white hover:bg-blue-600 transition"
+          aria-label="Share itinerary"
+        >
           <Share2 size={16} className="sm:w-[18px] sm:h-[18px]" />
         </button>
 
-        <button className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#2789FF] flex items-center justify-center text-white hover:bg-blue-600 transition">
+        <button
+          onClick={onDownload}
+          className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#2789FF] flex items-center justify-center text-white hover:bg-blue-600 transition"
+          aria-label="Download itinerary"
+        >
           <Download size={18} className="sm:w-[18px] sm:h-[18px]" />
         </button>
       </div>

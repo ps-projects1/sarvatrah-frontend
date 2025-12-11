@@ -8,13 +8,25 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
-const Policies = () => {
+interface PoliciesProps {
+  cancellationPolicyType?: "refundble" | "non-refundble";
+  refundablePercentage?: number;
+  refundableDays?: number;
+}
+
+const Policies = ({
+  cancellationPolicyType = "non-refundble",
+  refundablePercentage = 0,
+  refundableDays = 0,
+}: PoliciesProps) => {
   const [openCancellation, setOpenCancellation] = useState(true);
   const [openTerms, setOpenTerms] = useState(false);
 
+  const isRefundable = cancellationPolicyType === "refundble";
+
   return (
     <div className="w-full space-y-4 pb-4">
-      
+
       <Collapsible
         open={openCancellation}
         onOpenChange={setOpenCancellation}
@@ -32,23 +44,49 @@ const Policies = () => {
         </CollapsibleTrigger>
 
         <CollapsibleContent className="px-4 sm:px-6 pb-6 space-y-6">
-          
+
           <div>
             <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
               Package Cancellation Policy
             </h3>
-            <p className="text-[14px] sm:text-[16px] text-[#666666]">
-              Cancellation not possible after booking
-            </p>
+            {isRefundable ? (
+              <div className="space-y-2">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <p className="text-[14px] sm:text-[16px] text-green-800 font-semibold mb-2">
+                    Refundable Package
+                  </p>
+                  <p className="text-[14px] sm:text-[16px] text-[#666666]">
+                    You can cancel this booking and receive {refundablePercentage}% refund if cancelled at least {refundableDays} days before the travel date.
+                  </p>
+                </div>
+                <div className="text-[14px] sm:text-[16px] text-[#666666] mt-3">
+                  <p className="font-semibold text-clr mb-2">Refund Details:</p>
+                  <ul className="space-y-1 ml-4">
+                    <li>• Cancellation {refundableDays}+ days before travel: {refundablePercentage}% refund</li>
+                    <li>• Cancellation within {refundableDays} days: No refund</li>
+                    <li>• Refund will be processed within 7-10 business days</li>
+                  </ul>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <p className="text-[14px] sm:text-[16px] text-red-800 font-semibold mb-2">
+                  Non-Refundable Package
+                </p>
+                <p className="text-[14px] sm:text-[16px] text-[#666666]">
+                  This package is non-refundable. Cancellation is not possible after booking.
+                </p>
+              </div>
+            )}
           </div>
 
-          
+
           <div>
             <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
               Package Date Change Policy
             </h3>
             <p className="text-[14px] sm:text-[16px] text-[#666666]">
-              Date Change not possible after booking
+              Date change requests are subject to availability and may incur additional charges. Please contact customer support for assistance.
             </p>
           </div>
         </CollapsibleContent>
@@ -297,66 +335,3 @@ const Policies = () => {
 };
 
 export default Policies;
-<div className="px-4 sm:px-6 pb-6 space-y-6">
-  
-  <div>
-    <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
-      Exclusions
-    </h3>
-    <ul className="space-y-2 text-[14px] sm:text-[16px] text-[#666666]">
-      <li className="flex gap-2">
-        <span className="shrink-0">•</span>
-        <span>Expenses of personal nature</span>
-      </li>
-      <li className="flex gap-2">
-        <span className="shrink-0">•</span>
-        <span>Mentioned cost is not valid between 6 pm and 8 am</span>
-      </li>
-      <li className="flex gap-2">
-        <span className="shrink-0">•</span>
-        <span>Anything not mentioned under inclusions</span>
-      </li>
-      <li className="flex gap-2">
-        <span className="shrink-0">•</span>
-        <span>
-          Package price does not include Gala dinner charges applicable on
-          Christmas and New Year&apos;s Eve
-        </span>
-      </li>
-    </ul>
-  </div>
-
-  
-  <div>
-    <h3 className="text-[16px] sm:text-[18px] font-semibold text-clr mb-3">
-      Terms and Conditions
-    </h3>
-    <ul className="space-y-3 text-[14px] sm:text-[16px] text-[#666666]">
-      <li className="flex gap-2">
-        <span className="shrink-0">•</span>
-        <span>
-          Standard check-in time at the hotel is normally 2:00 pm and check-out
-          is 11:00 am. An early check-in, or a late check-out is solely based on
-          the discretion of the hotel.
-        </span>
-      </li>
-      <li className="flex gap-2">
-        <span className="shrink-0">•</span>
-        <span>
-          A maximum of 3 adults are allowed in one room. The third occupant
-          shall be provided a mattress/rollaway bed.
-        </span>
-      </li>
-      <li className="flex gap-2">
-        <span className="shrink-0">•</span>
-        <span>
-          The itinerary is fixed and cannot be modified. Transportation shall be
-          provided as per the itinerary and will not be at disposal. For any
-          paid activity which is non-operational due to any unforeseen reason,
-          we will process refund & same should reach the guest within 30 days of
-          processing the refund.
-        </span>
-      </li>
-    </ul>
-  </div>
-</div>;
