@@ -67,6 +67,14 @@ const HolidayCard: React.FC<HolidayCardProps> = ({ package: pkg }) => {
     return typeof firstCity === "string" ? firstCity : firstCity?.name || "";
   };
 
+  const getImageUrl = (path: string | undefined): string => {
+    if (!path) return "/images/holiday/holiday_list.png";
+    // If path already starts with http/https, use it as is
+    if (path.startsWith("http")) return path;
+    // Otherwise, prepend the base URL
+    return `${process.env.NEXT_PUBLIC_BASE_URL}${path}`;
+  };
+
   return (
     <Link href={`/holiday/${pkg._id}`} className="block">
       <div className="bg-white rounded-2xl shadow-sm border border-[#E6E6E6] overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -75,7 +83,7 @@ const HolidayCard: React.FC<HolidayCardProps> = ({ package: pkg }) => {
           <div className="relative w-full h-full rounded-2xl overflow-hidden">
             {pkg.themeImg ? (
               <Image
-                src={pkg.themeImg.path}
+                src={getImageUrl(pkg.themeImg.path)}
                 alt={pkg.packageName}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
